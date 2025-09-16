@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Constructor Modular con CSS + JS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      margin: 1rem;
+      color: #2c3e50;
+    }
+    .layout {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .left-column {
+      flex: 2;
+      max-width: 60%;
+    }
+    .right-column {
+      flex: 1;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      max-height: 90vh;
+      overflow-y: auto;
+      position: sticky;
+      top: 1rem;
+    }
+    .bloque {
+      background: white;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .input-group {
+      display: none;
+    }
+    .input-group label {
+      font-weight: bold;
+    }
+    button {
+      padding: 0.6rem 1.2rem;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .render {
+      margin-top: 1rem;
+      border-top: 1px dashed #ccc;
+      padding-top: 1rem;
+    }
+    .contenedor-modulos-generados {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>🧱 Constructor Modular con CSS + JS</h1>
+
+<div class="layout">
+  <div class="left-column">
+    <div id="modulos-container"></div>
+    <button onclick="agregarModulo()">➕ Agregar módulo</button>
+    <button onclick="generarVistaGlobal()">🔄 Generar vista global</button>
+    <button onclick="descargarHTML()">⬇️ Descargar HTML final</button>
+  </div>
+
+  <div class="right-column">
+    <h2>🌐 Vista global</h2>
+    <div id="resultado-concatenado"></div>
+  </div>
+</div>
+
+<script>
+  let contador = 0;
+
+  const inputMap = {
+    img_1: ["img1"],
+    txt_1: ["text"],
+    btn_3: ["img_a", "img_b", "img_c"]
+  };
+
+  function agregarModulo() {
+    contador++;
+    const id = `modulo-${contador}`;
+    const container = document.getElementById("modulos-container");
+
+    const div = document.createElement("div");
+    div.className = "bloque";
+    div.id = id;
+    div.innerHTML = `
+      <h2>Módulo ${contador}</h2>
+      <label>Tipo de módulo:</label>
+      <select onchange="mostrarInputs('${id}')" id="${id}-tipo">
+        <option value="">-- Selecciona --</option>
+        ${Object.keys(inputMap).map(k => `<option value="${k}">${k}</option>`).join('')}
+      </select>
+      <div id="${id}-inputs">
+        ${Object.keys(inputMap).flatMap(mod => inputMap[mod])
+          .map(f => `
+            <div class="input-group" data-field="${f}">
+              <label>${f}:</label>
+              <input type="text" id="${id}-${f}">
+            </div>`).join('')}
+      </div>
+      <div class="render" id="${id}-render"></div>
+    `;
+    container.appendChild(div);
+  }
+
+  function mostrarInputs(id) {
+    const tipo = document.getElementById(`${id}-tipo`).value;
+    const grupos = document.querySelectorAll(`#${id}-inputs .input-group`);
+    grupos.forEach(g => g.style.display = "none");
+
+    if (inputMap[tipo]) {
+      inputMap[tipo].forEach(f => {
+        document.querySelector(`#${id}-inputs [data-field="${f}"]`).style.display = "block";
+      });
+    }
+  }
+
+  function generarVistaGlobal() {
+  const resultado = document.getElementById("resultado-concatenado");
+  resultado.innerHTML = ""; // Limpiar todo
+
+  // Crear contenedor padre
+  const contenedorPadre = document.createElement("div");
+  contenedorPadre.className = "contenedor-modulos-generados";
+
+  // Aplicar estilos directos (opcional si exportas como clase en CSS)
+  contenedorPadre.style.maxWidth = "1200px";
+  contenedorPadre.style.margin = "2rem auto";
+  contenedorPadre.style.padding = "1rem";
+
+  const modulos = document.querySelectorAll(".bloque");
+  modulos.forEach(bloque => {
+    const id = bloque.id;
+    const tipo = document.getElementById(`${id}-tipo`).value;
+    if (!tipo) return;
+
+    const campos = inputMap[tipo] || [];
+    const valores = campos.map(f => document.getElementById(`${id}-${f}`).value);
+    const uid = `${tipo}-${id}`;
+
+    let html = "", css = "", js = "";
+
+    if (tipo === "img_1") {
+      html = `<div class="${uid}"><img src="${valores[0]}" class="${uid}__img"></div>`;
+      css = `.${uid}__img { width: 100%; height: auto; border-radius: 8px; }`;
+    }
+
+    if (tipo === "txt_1") {
+      html = `<div class="${uid}">${valores[0]}</div>`;
+      css = `.${uid} { text-align: center; font-size: 1.3rem; font-weight: bold; margin-bottom: 1rem; }`;
+    }
+
+    if (tipo === "btn_3") {
+      html = `
+        <div class="${uid}">
+          <div class="${uid}__thumbs">
+            ${valores.map((v, i) => `<img src="${v}" data-src="${v}" class="${uid}__thumb ${i === 0 ? 'selected' : ''}">`).join('')}
+          </div>
+          <div class="${uid}__display"><img src="${valores[0]}" class="${uid}__display-img"></div>
+        </div>`;
+      css = `
+        .${uid}__thumbs { display: flex; gap: 0.5rem; justify-content: center; }
+        .${uid}__thumb { width: 60px; cursor: pointer; opacity: 0.6; }
+        .${uid}__thumb.selected { opacity: 1; border: 2px solid #000; }
+        .${uid}__display { text-align: center; margin-top: 1rem; }
+        .${uid}__display-img { max-width: 100%; border-radius: 6px; }
+      `;
+      js = `
+        const thumbs = scope.querySelectorAll('.${uid}__thumb');
+        const display = scope.querySelector('.${uid}__display-img');
+        thumbs.forEach(el => {
+          el.addEventListener('click', () => {
+            thumbs.forEach(t => t.classList.remove('selected'));
+            el.classList.add('selected');
+            display.src = el.dataset.src;
+          });
+        });
+      `;
+    }
+
+    // Agregar CSS al head
+    const style = document.createElement("style");
+    style.innerText = css;
+    document.head.appendChild(style);
+
+    // Agregar HTML al contenedor padre
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = html;
+    const inner = wrapper.firstElementChild;
+    contenedorPadre.appendChild(inner);
+
+    // Ejecutar JS del módulo
+    if (js) ejecutarJS(inner, js);
+  });
+
+  resultado.appendChild(contenedorPadre);
+}
+
+
+  function ejecutarJS(scope, jsCode) {
+    const scopedFunc = new Function("scope", jsCode);
+    scopedFunc(scope);
+  }
+
+function descargarHTML() {
+  const resultado = document.getElementById("resultado-concatenado");
+  const contenedor = resultado.querySelector(".contenedor-modulos-generados");
+  const contenidoHTML = contenedor ? contenedor.outerHTML : resultado.innerHTML;
+
+  const cssBase = `
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f4f4f4;
+}
+.contenedor-modulos-generados {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+`;
+
+  const headCSS = cssBase + '\n' + Array.from(document.head.querySelectorAll("style"))
+    .map(s => s.innerHTML)
+    .join("\n");
+
+  const jsInline = `
+document.querySelectorAll('[class$="__thumbs"]').forEach(container => {
+  const thumbs = container.querySelectorAll('img');
+  const display = container.parentElement.querySelector('img');
+  thumbs.forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      thumbs.forEach(t => t.classList.remove('selected'));
+      thumb.classList.add('selected');
+      display.src = thumb.dataset.src;
+    });
+  });
+});
+`;
+
+  const docCompleto = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Módulos Exportados</title>
+  <style>${headCSS}</style>
+</head>
+<body>
+${contenidoHTML}
+<script>
+${jsInline}
+// evitar cierre prematuro
+</scr` + `ipt>
+</body>
+</html>`;
+
+  const archivos = [
+    { nombre: "modulos-exportados.html", contenido: docCompleto, tipo: "text/html" },
+    { nombre: "modulos-exportados.css", contenido: headCSS, tipo: "text/css" },
+    { nombre: "modulos-exportados.js", contenido: jsInline, tipo: "application/javascript" },
+    { nombre: "modulos-exportados-body.html", contenido: contenidoHTML, tipo: "text/html" }
+  ];
+
+  archivos.forEach(({ nombre, contenido, tipo }) => {
+    const blob = new Blob([contenido], { type: tipo });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = nombre;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+}
+
+
+
+
+</script>
+
+</body>
+</html>
+ 
