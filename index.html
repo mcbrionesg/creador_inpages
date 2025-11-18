@@ -1,315 +1,421 @@
 <!DOCTYPE html> 
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Constructor Modular con CSS + JS</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-    }
-    h1 {
-      text-align: center;
-      margin: 1rem;
-      color: #2c3e50;
-    }
-    .layout {
-      display: flex;
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .left-column {
-      flex: 2;
-      max-width: 60%;
-    }
-    .right-column {
-      flex: 1;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-      max-height: 90vh;
-      overflow-y: auto;
-      position: sticky;
-      top: 1rem;
-    }
-    .bloque {
-      background: white;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    select, input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .input-group {
-      display: none;
-    }
-    .input-group label {
-      font-weight: bold;
-    }
-    button {
-      padding: 0.6rem 1.2rem;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    .render {
-      margin-top: 1rem;
-      border-top: 1px dashed #ccc;
-      padding-top: 1rem;
-    }
-    .contenedor-modulos-generados {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
+<h2 style="text-align:center;margin:12px 0;">Constructor básico de módulos (Texto + Imágenes)</h2>
 
-  </style>
-</head>
-<body>
+<div style="display:flex;gap:12px;padding:12px;align-items:flex-start;">
+  <!-- Columna izquierda: módulos -->
+  <div style="flex:2;max-width:60%;">
+    <div id="mods"></div>
 
-<h1>🧱 Constructor Modular con CSS + JS</h1>
-
-<div class="layout">
-  <div class="left-column">
-    <div id="modulos-container"></div>
-    <button onclick="agregarModulo()">➕ Agregar módulo</button>
-    <button onclick="generarVistaGlobal()">🔄 Generar vista global</button>
-    <button onclick="descargarHTML()">⬇️ Descargar HTML final</button>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button onclick="addMod()" style="padding:8px 12px;background:#3498db;color:#fff;border:0;border-radius:6px;cursor:pointer;">
+        Agregar módulo
+      </button>
+      <button onclick="renderAll()" style="padding:8px 12px;background:#10b981;color:#fff;border:0;border-radius:6px;cursor:pointer;">
+        Generar vista + export
+      </button>
+    </div>
   </div>
 
-  <div class="right-column">
-    <h2>🌐 Vista global</h2>
-    <div id="resultado-concatenado"></div>
+  <!-- Columna derecha: vista + export -->
+  <div style="flex:1;background:#fff;padding:12px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);max-height:90vh;overflow:auto;position:sticky;top:12px;">
+    <h3 style="margin-top:0;">Vista previa (wrapper inpgs)</h3>
+    <div id="preview" style="border:1px dashed #ddd;border-radius:6px;padding:10px;min-height:80px;"></div>
+
+    <button type="button"
+            onclick="toggleExportPanel()"
+            style="margin-top:10px;padding:6px 10px;background:#e5e7eb;border:0;border-radius:6px;cursor:pointer;font-size:13px;">
+      Mostrar / ocultar código (HTML / CSS / JS)
+    </button>
+
+    <div id="export-panel" style="display:none;margin-top:8px;">
+      <h3 style="margin-top:12px;">HTML (solo wrapper)</h3>
+      <textarea id="htmlOut" rows="5" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+
+      <h3 style="margin-top:12px;">CSS (módulos inpgs)</h3>
+      <textarea id="cssOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+
+      <h3 style="margin-top:12px;">JS (si lo hubiera)</h3>
+      <textarea id="jsOut" rows="3" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+
+      <h3 style="margin-top:12px;">HTML final (snippet listo para pegar)</h3>
+      <textarea id="htmlFullOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+    </div>
   </div>
 </div>
 
+<style>
+  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;}
+  .mod-box{background:#fff;padding:8px 12px;margin:8px 0;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);}
+  .mod-header{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:default;}
+  .mod-header-left{display:flex;align-items:center;gap:8px;}
+  .mod-header h4{margin:0;font-size:14px;}
+  .muted{font-size:12px;color:#666;}
+  select,input,textarea{width:100%;padding:8px;margin:4px 0 8px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;}
+  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .checks{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;margin-top:4px;}
+  .checks label{display:flex;align-items:center;gap:4px;}
+  .mod-body{margin-top:6px;}
+</style>
+
 <script>
-  let contador = 0;
+  let modCount = 0;
 
-  const inputMap = {
-    img_1: ["img1"],
-    txt_1: ["text"],
-    btn_3: ["img_a", "img_b", "img_c"]
-  };
-
-  function agregarModulo() {
-    contador++;
-    const id = `modulo-${contador}`;
-    const container = document.getElementById("modulos-container");
-
-    const div = document.createElement("div");
-    div.className = "bloque";
-    div.id = id;
-    div.innerHTML = `
-      <h2>Módulo ${contador}</h2>
-      <label>Tipo de módulo:</label>
-      <select onchange="mostrarInputs('${id}')" id="${id}-tipo">
-        <option value="">-- Selecciona --</option>
-        ${Object.keys(inputMap).map(k => `<option value="${k}">${k}</option>`).join('')}
-      </select>
-      <div id="${id}-inputs">
-        ${Object.keys(inputMap).flatMap(mod => inputMap[mod])
-          .map(f => `
-            <div class="input-group" data-field="${f}">
-              <label>${f}:</label>
-              <input type="text" id="${id}-${f}">
-            </div>`).join('')}
+  /* ====== UI: módulos con acordeón ====== */
+  function addMod(){
+    modCount++;
+    const id = "mod_" + modCount;
+    const box = document.createElement("div");
+    box.className = "mod-box";
+    box.id = id;
+    box.innerHTML = `
+      <div class="mod-header">
+        <div class="mod-header-left">
+          <button type="button" onclick="toggleBody('${id}');event.stopPropagation();" style="padding:3px 6px;background:#e5e7eb;border:0;border-radius:4px;cursor:pointer;font-size:11px;">Mostrar / ocultar</button>
+          <h4>Módulo ${modCount}</h4>
+        </div>
+        <button type="button" onclick="removeMod('${id}')" style="padding:4px 8px;background:#ef4444;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:12px;">Eliminar</button>
       </div>
-      <div class="render" id="${id}-render"></div>
+
+      <div class="mod-body" id="${id}-body">
+        <label>¿Qué quieres crear?</label>
+        <select id="${id}-tipo" onchange="renderInputs('${id}')">
+          <option value="">Elige una opción</option>
+          <option value="texto">Texto</option>
+          <option value="imagen">Imágenes en fila</option>
+        </select>
+
+        <div id="${id}-inputs" class="muted">Selecciona un tipo de módulo para ver sus opciones.</div>
+      </div>
     `;
-    container.appendChild(div);
+    document.getElementById("mods").appendChild(box);
   }
 
-  function mostrarInputs(id) {
-    const tipo = document.getElementById(`${id}-tipo`).value;
-    const grupos = document.querySelectorAll(`#${id}-inputs .input-group`);
-    grupos.forEach(g => g.style.display = "none");
-
-    if (inputMap[tipo]) {
-      inputMap[tipo].forEach(f => {
-        document.querySelector(`#${id}-inputs [data-field="${f}"]`).style.display = "block";
-      });
-    }
+  function toggleBody(id){
+    const body = byId(id + "-body");
+    if(!body) return;
+    body.style.display = body.style.display === "none" ? "" : "none";
   }
 
-  function generarVistaGlobal() {
-  const resultado = document.getElementById("resultado-concatenado");
-  resultado.innerHTML = ""; // Limpiar todo
+  function removeMod(id){
+    const el = document.getElementById(id);
+    if(el) el.remove();
+    renderAll();
+  }
 
-  // Crear contenedor padre
-  const contenedorPadre = document.createElement("div");
-  contenedorPadre.className = "contenedor-modulos-generados";
+  function renderInputs(id){
+    const tipo = val(id + "-tipo");
+    const cont = byId(id + "-inputs");
 
-  // Aplicar estilos directos (opcional si exportas como clase en CSS)
-  contenedorPadre.style.maxWidth = "1200px";
-  contenedorPadre.style.margin = "2rem auto";
-  contenedorPadre.style.padding = "1rem";
+    if(tipo === "texto"){
+      cont.innerHTML = `
+        <label>Texto que quieres mostrar</label>
+        <textarea id="${id}-txt" rows="3" placeholder="Ejemplo: Bienvenido a mi página"></textarea>
 
-  const modulos = document.querySelectorAll(".bloque");
-  modulos.forEach(bloque => {
-    const id = bloque.id;
-    const tipo = document.getElementById(`${id}-tipo`).value;
-    if (!tipo) return;
-
-    const campos = inputMap[tipo] || [];
-    const valores = campos.map(f => document.getElementById(`${id}-${f}`).value);
-    const uid = `${tipo}-${id}`;
-
-    let html = "", css = "", js = "";
-
-    if (tipo === "img_1") {
-      html = `<div class="${uid}"><img src="${valores[0]}" class="${uid}__img"></div>`;
-      css = `.${uid}__img { width: 100%; height: auto; border-radius: 8px; }`;
-    }
-
-    if (tipo === "txt_1") {
-      html = `<div class="${uid}">${valores[0]}</div>`;
-      css = `.${uid} { text-align: center; font-size: 1.3rem; font-weight: bold; margin-bottom: 1rem; }`;
-    }
-
-    if (tipo === "btn_3") {
-      html = `
-        <div class="${uid}">
-          <div class="${uid}__thumbs">
-            ${valores.map((v, i) => `<img src="${v}" data-src="${v}" class="${uid}__thumb ${i === 0 ? 'selected' : ''}">`).join('')}
+        <div class="row-2">
+          <div>
+            <label>Tamaño de letra</label>
+            <select id="${id}-size">
+              <option value="14px">Pequeño</option>
+              <option value="16px" selected>Normal</option>
+              <option value="20px">Grande</option>
+              <option value="28px">Muy grande</option>
+            </select>
           </div>
-          <div class="${uid}__display"><img src="${valores[0]}" class="${uid}__display-img"></div>
-        </div>`;
-      css = `
-        .${uid}__thumbs { display: flex; gap: 0.5rem; justify-content: center; }
-        .${uid}__thumb { width: 60px; cursor: pointer; opacity: 0.6; }
-        .${uid}__thumb.selected { opacity: 1; border: 2px solid #000; }
-        .${uid}__display { text-align: center; margin-top: 1rem; }
-        .${uid}__display-img { max-width: 100%; border-radius: 6px; }
+          <div>
+            <label>Etiqueta de texto</label>
+            <select id="${id}-tag">
+              <option value="p">Párrafo</option>
+              <option value="h1">Título grande (h1)</option>
+              <option value="h2" selected>Título medio (h2)</option>
+              <option value="h3">Título pequeño (h3)</option>
+              <option value="span">Texto en línea</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label>Color de texto</label>
+            <input id="${id}-color" type="color" value="#111111">
+          </div>
+          <div>
+            <label>Color de fondo</label>
+            <input id="${id}-bg" type="color" value="#ffffff">
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div>
+            <label>Alineación</label>
+            <select id="${id}-align">
+              <option value="left">Izquierda</option>
+              <option value="center" selected>Centro</option>
+              <option value="right">Derecha</option>
+              <option value="justify">Justificado</option>
+            </select>
+          </div>
+          <div>
+            <label>Ancho del bloque (%)</label>
+            <input id="${id}-w" type="number" min="10" max="100" value="100">
+          </div>
+        </div>
+
+        <div class="checks">
+          <label><input type="checkbox" id="${id}-b"> Negrita</label>
+          <label><input type="checkbox" id="${id}-i"> Cursiva</label>
+          <label><input type="checkbox" id="${id}-u"> Subrayado</label>
+          <label><input type="checkbox" id="${id}-upper"> Todo en mayúsculas</label>
+        </div>
       `;
-      js = `
-        const thumbs = scope.querySelectorAll('.${uid}__thumb');
-        const display = scope.querySelector('.${uid}__display-img');
-        thumbs.forEach(el => {
-          el.addEventListener('click', () => {
-            thumbs.forEach(t => t.classList.remove('selected'));
-            el.classList.add('selected');
-            display.src = el.dataset.src;
-          });
-        });
+    } else if(tipo === "imagen"){
+      cont.innerHTML = `
+        <label>Cantidad de imágenes en este módulo</label>
+        <input id="${id}-count" type="number" min="1" max="6" value="1" oninput="buildImageItems('${id}')">
+
+        <div id="${id}-items" style="margin-top:4px;"></div>
+
+        <div class="row-2" style="margin-top:8px;">
+          <div>
+            <label>Esquinas redondeadas (px)</label>
+            <input id="${id}-radius" type="number" min="0" max="100" value="8">
+          </div>
+          <div>
+            <label>Posición del grupo</label>
+            <select id="${id}-ialign">
+              <option value="left">Izquierda</option>
+              <option value="center" selected>Centro</option>
+              <option value="right">Derecha</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="checks" style="margin-top:4px;">
+          <label><input type="checkbox" id="${id}-newtab" checked> Abrir enlaces en pestaña nueva</label>
+        </div>
       `;
+      buildImageItems(id);
+    } else {
+      cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
     }
-
-    // Agregar CSS al head
-    const style = document.createElement("style");
-    style.innerText = css;
-    document.head.appendChild(style);
-
-    // Agregar HTML al contenedor padre
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = html;
-    const inner = wrapper.firstElementChild;
-    contenedorPadre.appendChild(inner);
-
-    // Ejecutar JS del módulo
-    if (js) ejecutarJS(inner, js);
-  });
-
-  resultado.appendChild(contenedorPadre);
-}
-
-
-  function ejecutarJS(scope, jsCode) {
-    const scopedFunc = new Function("scope", jsCode);
-    scopedFunc(scope);
   }
 
-function descargarHTML() {
-  const resultado = document.getElementById("resultado-concatenado");
-  const contenedor = resultado.querySelector(".contenedor-modulos-generados");
-  const contenidoHTML = contenedor ? contenedor.outerHTML : resultado.innerHTML;
+  function buildImageItems(id){
+    const raw = val(id + "-count");
+    let n = parseInt(raw || "1", 10);
+    if(isNaN(n) || n < 1) n = 1;
+    if(n > 6) n = 6;
+    byId(id + "-count").value = n;
 
-  const cssBase = `
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f4f4f4;
+    const cont = byId(id + "-items");
+    cont.innerHTML = "";
+    for(let i=1;i<=n;i++){
+      const box = document.createElement("div");
+      box.className = "mod-box";
+      box.style.margin = "6px 0";
+      box.style.padding = "8px";
+      box.innerHTML = `
+        <strong>Imagen ${i}</strong>
+        <label>URL de la imagen</label>
+        <input id="${id}-img${i}" type="text" placeholder="https://mi-sitio.com/imagen${i}.jpg">
+
+        <label>Texto alternativo (descripción corta)</label>
+        <input id="${id}-alt${i}" type="text" placeholder="Ejemplo: Foto ${i}">
+
+        <label>Enlace al hacer clic (opcional)</label>
+        <input id="${id}-link${i}" type="text" placeholder="https://mi-sitio.com/destino${i}">
+      `;
+      cont.appendChild(box);
+    }
+  }
+
+  /* ====== RENDER: genera HTML, CSS, JS para inpgs-wrapper ====== */
+  function renderAll(){
+    let htmlBody = "";
+    let css = "";
+    let js = ""; // reservado para futuros módulos
+    let modIndex = 0;
+
+    document.querySelectorAll("#mods .mod-box").forEach(box=>{
+      const id = box.id;
+      if(!byId(id + "-tipo")) return; // ignora sub-boxes de imágenes
+
+      const tipo = val(id + "-tipo");
+      if(!tipo) return;
+      modIndex++;
+
+      /* === TEXTO → inpgs-txt-N === */
+      if(tipo === "texto"){
+        const o = {
+          text: val(id + "-txt"),
+          tag:  val(id + "-tag") || "p",
+          size: val(id + "-size") || "16px",
+          color: val(id + "-color") || "#111111",
+          bg: val(id + "-bg") || "#ffffff",
+          align: val(id + "-align") || "center",
+          w: clampPct(val(id + "-w")),
+          bold: byId(id + "-b")?.checked,
+          italic: byId(id + "-i")?.checked,
+          underline: byId(id + "-u")?.checked,
+          upper: byId(id + "-upper")?.checked
+        };
+
+        const cls = "inpgs-txt-" + modIndex;
+        const textContent = o.upper ? (o.text || "").toUpperCase() : (o.text || "");
+
+        htmlBody += `<${o.tag} class="${cls}">${escHTML(textContent)}</${o.tag}>\n`;
+
+        const fw = o.bold ? "700" : "400";
+        const fs = o.italic ? "italic" : "normal";
+        const td = o.underline ? "underline" : "none";
+
+        css += `
+.inpgs-wrapper .${cls}{
+  display:block !important;
+  box-sizing:border-box !important;
+  font-family:Arial,Helvetica,sans-serif !important;
+  font-size:${o.size} !important;
+  font-weight:${fw} !important;
+  font-style:${fs} !important;
+  text-decoration:${td} !important;
+  color:${o.color} !important;
+  background:${o.bg} !important;
+  text-align:${o.align} !important;
+  margin:8px 0 !important;
+  padding:4px 0 !important;
+  width:${o.w}% !important;
 }
-.contenedor-modulos-generados {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
+`.trim() + "\n\n";
+      }
+
+      /* === IMÁGENES EN FILA → inpgs-row-N === */
+      if(tipo === "imagen"){
+        const rawCount = val(id + "-count");
+        let count = parseInt(rawCount || "1", 10);
+        if(isNaN(count) || count < 1) count = 1;
+        if(count > 6) count = 6;
+
+        const items = [];
+        for(let i=1;i<=count;i++){
+          const src = val(id + "-img" + i);
+          if(!src) continue;
+          items.push({
+            src,
+            alt: val(id + "-alt" + i) || "",
+            link: val(id + "-link" + i) || ""
+          });
+        }
+        if(items.length === 0) return;
+
+        const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
+        const align = val(id + "-ialign") || "center";
+        const newTab = byId(id + "-newtab")?.checked;
+
+        const rowCls = "inpgs-row-" + modIndex;
+        const cellCls = rowCls + "__cell";
+        const imgCls  = rowCls + "__img";
+
+        htmlBody += `<div class="${rowCls}">\n`;
+        items.forEach(it=>{
+          let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
+          if(it.link){
+            const targetAttr = newTab ? ' target="_blank" rel="noopener noreferrer"' : "";
+            innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+          }
+          htmlBody += `  <div class="${cellCls}">${innerImg}</div>\n`;
+        });
+        htmlBody += `</div>\n`;
+
+        const justify =
+          align === "left"  ? "flex-start" :
+          align === "right" ? "flex-end"   : "center";
+
+        css += `
+.inpgs-wrapper .${rowCls}{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
+  margin:8px 0 !important;
+  align-items:center !important;
+  justify-content:${justify} !important;
 }
-`;
-
-  const headCSS = cssBase + '\n' + Array.from(document.head.querySelectorAll("style"))
-    .map(s => s.innerHTML)
-    .join("\n");
-
-  const jsInline = `
-document.querySelectorAll('[class$="__thumbs"]').forEach(container => {
-  const thumbs = container.querySelectorAll('img');
-  const display = container.parentElement.querySelector('img');
-  thumbs.forEach(thumb => {
-    thumb.addEventListener('click', () => {
-      thumbs.forEach(t => t.classList.remove('selected'));
-      thumb.classList.add('selected');
-      display.src = thumb.dataset.src;
+.inpgs-wrapper .${cellCls}{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+  text-align:center !important;
+}
+.inpgs-wrapper .${imgCls}{
+  width:100% !important;
+  height:auto !important;
+  border-radius:${radius}px !important;
+  display:block !important;
+}
+`.trim() + "\n\n";
+      }
     });
-  });
-});
-`;
 
-  const docCompleto = `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Módulos Exportados</title>
-  <style>${headCSS}</style>
-</head>
-<body>
-${contenidoHTML}
-<script>
-${jsInline}
-// evitar cierre prematuro
-</scr` + `ipt>
-</body>
-</html>`;
+    /* ====== WRAPPER GLOBAL Y SCOPE ====== */
+    if(htmlBody.trim() === ""){
+      byId("preview").innerHTML = "<div class='muted'>No hay módulos válidos.</div>";
+      byId("htmlOut").value = "";
+      byId("cssOut").value = "";
+      byId("jsOut").value = "";
+      byId("htmlFullOut").value = "";
+      return;
+    }
 
-  const archivos = [
-    { nombre: "modulos-exportados.html", contenido: docCompleto, tipo: "text/html" },
-    { nombre: "modulos-exportados.css", contenido: headCSS, tipo: "text/css" },
-    { nombre: "modulos-exportados.js", contenido: jsInline, tipo: "application/javascript" },
-    { nombre: "modulos-exportados-body.html", contenido: contenidoHTML, tipo: "text/html" }
-  ];
+    const wrapperStart = `<div class="inpgs-wrapper">`;
+    const wrapperEnd   = `</div>`;
+    const htmlWrapper  = wrapperStart + "\n" + htmlBody.trim() + "\n" + wrapperEnd;
 
-  archivos.forEach(({ nombre, contenido, tipo }) => {
-    const blob = new Blob([contenido], { type: tipo });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = nombre;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+    const cssWrapper = `
+.inpgs-wrapper{
+  max-width:1200px !important;
+  margin:0 auto !important;
+  padding:8px !important;
 }
+.inpgs-wrapper *{
+  box-sizing:border-box !important;
+}
+`.trim() + "\n\n";
 
+    const finalCSS = cssWrapper + css.trim();
 
+    /* ====== PREVIEW: inyectamos HTML+CSS ====== */
+    const preview = byId("preview");
+    preview.innerHTML = htmlWrapper;
 
+    const styleId = "inpgs-style-preview";
+    let styleEl = document.getElementById(styleId);
+    if(styleEl) styleEl.remove();
+    styleEl = document.createElement("style");
+    styleEl.id = styleId;
+    styleEl.textContent = finalCSS;
+    document.head.appendChild(styleEl);
 
+    /* ====== EXPORTS separados ====== */
+    byId("htmlOut").value = htmlWrapper;
+    byId("cssOut").value = finalCSS;
+    byId("jsOut").value = js;
+
+    /* ====== SNIPPET FINAL: SOLO style + wrapper + script ====== */
+    let fullHtml = "<style>\n" + finalCSS + "\n</style>\n" + htmlWrapper;
+    if (js.trim()) {
+      fullHtml += "\n<script>\n" + js + "\n</scr" + "ipt>\n";
+    }
+    byId("htmlFullOut").value = fullHtml;
+  }
+
+  /* ====== helpers ====== */
+  function toggleExportPanel(){
+    const p = byId("export-panel");
+    if(!p) return;
+    p.style.display = p.style.display === "none" ? "" : "none";
+  }
+
+  function byId(id){ return document.getElementById(id); }
+  function val(id){ const el = byId(id); return el ? el.value : ""; }
+  function clampPct(v){ const n = parseInt(v || "100", 10); if(isNaN(n)) return 100; return Math.min(100, Math.max(10, n)); }
+  function escHTML(s){ return (s || "").replace(/[&<>]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[m])); }
+  function escAttr(s){ return (s || "").replace(/"/g, "&quot;"); }
 </script>
-
-</body>
-</html>
-
- 
-
