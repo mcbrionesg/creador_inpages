@@ -1,8 +1,8 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <div style="display:flex; align-items:center; justify-content:space-between; padding:12px;">
-  <img src="https://images.falabella.com/v3/assets/blt7c5c2f2f888a7cc3/blt9a6cb2faab703fa5/65a68ebb130790558acbf0cb/falabella.com_green_icon.svg" 
-       alt="Falabella" 
-       style="width:150px; height:auto;">
+  <img
+    src="https://images.falabella.com/v3/assets/blt7c5c2f2f888a7cc3/blt9a6cb2faab703fa5/65a68ebb130790558acbf0cb/falabella.com_green_icon.svg"
+    alt="Falabella" style="width:150px; height:auto;">
   <h2 style="flex:1; text-align:center; margin:0;">Constructor de Inpages</h2>
   <div style="width:150px;"></div> <!-- Spacer for centering -->
 </div>
@@ -10,19 +10,43 @@
 <div style="display:flex;gap:12px;padding:12px;align-items:flex-start;">
   <!--  Columna izquierda: módulos  -->
   <div style="flex:2;max-width:60%;">
-    <div style="margin-bottom:10px; display:flex; justify-content:flex-start;">
-      <button onclick="collapseAll()" style="padding:5px 10px;background:#64748b;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;">
+    <div
+      style="margin-bottom:10px; display:flex; justify-content:flex-start; gap:8px; align-items:center; flex-wrap:wrap;">
+      <button onclick="collapseAll()"
+        style="padding:5px 10px;background:#64748b;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;">
         Contraer todo
+      </button>
+      <label
+        style="padding:5px 10px;background:#2563eb;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;display:inline-block;">
+        📁 Cargar Excel
+        <input type="file" id="global-excel-upload" accept=".xlsx,.xls" style="display:none;"
+          onchange="handleGlobalExcelUpload(event)">
+      </label>
+
+      <!-- Row selector (hidden initially) -->
+      <div id="excel-row-selector-container" style="display:none; align-items:center; gap:6px;">
+        <label style="font-size:12px; color:#444;">Fila a visualizar:</label>
+        <select id="excel-row-selector" onchange="renderAll()"
+          style="padding:4px 8px; border:1px solid #ccc; border-radius:4px; font-size:12px;">
+        </select>
+      </div>
+
+      <!-- Generate all button (hidden initially) -->
+      <button id="generate-all-btn" onclick="generateAllHTML()"
+        style="display:none; padding:5px 10px; background:#10b981; color:#fff; border:0; border-radius:4px; cursor:pointer; font-size:12px;">
+        ✨ Generar todos los HTMLs
       </button>
     </div>
     <div id="mods"></div>
 
     <div style="display:flex;gap:8px;margin-top:8px;">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <button onclick="addMod()" style="padding:8px 12px;background:#3498db;color:#fff;border:0;border-radius:6px;cursor:pointer;">
+        <button onclick="addMod()"
+          style="padding:8px 12px;background:#3498db;color:#fff;border:0;border-radius:6px;cursor:pointer;">
           Agregar Bloque
         </button>
-        <button onclick="renderAll()" style="padding:8px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer;">
+        <button onclick="renderAll()"
+          style="padding:8px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer;">
           Generar vista
         </button>
       </div>
@@ -31,90 +55,188 @@
   </div>
 
   <!-- Columna derecha: vista + export -->
-  <div style="flex:1;background:#fff;padding:12px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);max-height:90vh;overflow:auto;position:sticky;top:12px;">
+  <div
+    style="flex:1;background:#fff;padding:12px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);max-height:90vh;overflow:auto;position:sticky;top:12px;">
     <div style="margin-bottom:12px;">
-      <button onclick="renderAll()" style="padding:6px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer; font-size:13px;">
+      <button onclick="renderAll()"
+        style="padding:6px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer; font-size:13px;">
         Generar vista
       </button>
     </div>
     <h3 style="margin-top:0;">Vista previa</h3>
     <div id="preview" style="border:1px dashed #ddd;border-radius:6px;padding:10px;min-height:80px;"></div>
 
-    <button type="button"
-            onclick="toggleExportPanel()"
-            style="margin-top:10px;padding:6px 10px;background:#e5e7eb;border:0;border-radius:6px;cursor:pointer;font-size:13px;">
+    <button type="button" onclick="toggleExportPanel()"
+      style="margin-top:10px;padding:6px 10px;background:#e5e7eb;border:0;border-radius:6px;cursor:pointer;font-size:13px;">
       Mostrar / ocultar código (HTML / CSS / JS)
     </button>
 
     <div id="export-panel" style="display:none;margin-top:8px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
         <h3 style="margin:0;">HTML final (snippet listo para pegar)</h3>
-        <button type="button"
-                onclick="copyHtmlFinal()"
-                style="padding:4px 8px;background:#4b5563;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:12px;">
+        <button type="button" onclick="copyHtmlFinal()"
+          style="padding:4px 8px;background:#4b5563;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:12px;">
           Copiar HTML
         </button>
       </div>
-      <textarea id="htmlFullOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;margin-top:4px;"></textarea>
+      <textarea id="htmlFullOut" rows="6" readonly
+        style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;margin-top:4px;"></textarea>
 
       <h3 style="margin-top:12px;">HTML (solo wrapper)</h3>
-      <textarea id="htmlOut" rows="5" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
+      <textarea id="htmlOut" rows="5" readonly
+        style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
 
       <h3 style="margin-top:12px;">CSS (módulos inpgs)</h3>
-      <textarea id="cssOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
+      <textarea id="cssOut" rows="6" readonly
+        style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
 
       <h3 style="margin-top:12px;">JS (si lo hubiera)</h3>
-      <textarea id="jsOut" rows="3" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
+      <textarea id="jsOut" rows="3" readonly
+        style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
     </div>
   </div>
 </div>
 
 <style>
-  body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;}
-  .mod-box{background:#fff;padding:8px 12px;margin:8px 0;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);}
-  .mod-header{display:flex;justify-content:space-between;align-items:center;gap:8px;cursor:default;}
-  .mod-header-left{display:flex;align-items:center;gap:8px;}
-  .mod-header h4{margin:0;font-size:14px;}
-  .muted{font-size:12px;color:#666;}
-  
-  /* General Inputs */
-  select, input[type="text"], input[type="number"], textarea {
-    width:100%; padding:6px; margin:4px 0 8px; 
-    border:1px solid #ccc; border-radius:4px; box-sizing:border-box; font-size:13px;
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f4f4;
   }
-  label { font-size:12px; color:#444; font-weight:600; display:block; margin-bottom:2px; }
+
+  .mod-box {
+    background: #fff;
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .06);
+  }
+
+  .mod-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+  }
+
+  .mod-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mod-header h4 {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .muted {
+    font-size: 12px;
+    color: #666;
+  }
+
+  /* General Inputs */
+  select,
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 6px;
+    margin: 4px 0 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 13px;
+  }
+
+  label {
+    font-size: 12px;
+    color: #444;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
 
   /* Layout Utils */
-  .row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .checks{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:8px;}
-  .checks label{display:flex;align-items:center;gap:4px;font-weight:normal;cursor:pointer;}
-  .mod-body{margin-top:6px;}
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  .checks label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .mod-body {
+    margin-top: 6px;
+  }
 
   /* Minimalist Controls - Grid Layout */
   .params-grid {
-    display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
     margin-bottom: 8px;
   }
+
   .param-item {
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
-  .param-item label { margin-bottom: 2px; font-size: 11px; color: #555; }
-  
+
+  .param-item label {
+    margin-bottom: 2px;
+    font-size: 11px;
+    color: #555;
+  }
+
   /* Compact inputs in param-item */
-  .param-item select, 
-  .param-item input[type="text"], 
+  .param-item select,
+  .param-item input[type="text"],
   .param-item input[type="number"] {
-    margin: 0; width: auto; max-width: 100px; padding: 4px; font-size: 12px;
+    margin: 0;
+    width: auto;
+    max-width: 100px;
+    padding: 4px;
+    font-size: 12px;
   }
-  
+
   /* Color Picker Minimalist */
   input[type="color"].mini-color {
-    width: 24px; height: 24px; padding: 0; border: 1px solid #ccc; 
-    background: none; cursor: pointer; border-radius: 4px; overflow: hidden;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid #ccc;
+    background: none;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
     vertical-align: bottom;
   }
-  input[type="color"].mini-color::-webkit-color-swatch-wrapper { padding: 0; }
-  input[type="color"].mini-color::-webkit-color-swatch { border: none; border-radius: 3px; }
+
+  input[type="color"].mini-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  input[type="color"].mini-color::-webkit-color-swatch {
+    border: none;
+    border-radius: 3px;
+  }
 </style>
 
 <!-- SheetJS for Excel processing -->
@@ -122,33 +244,173 @@
 
 <script>
   let modCount = 0;
+  /* ========= GLOBAL EXCEL DATA ========= */
+
+  let globalExcelData = {
+
+    columns: [],
+    rows: [],
+    fileName: ""
+  };
+  let currentRenderRowIndex = null;
+
+  /* ========= GLOBAL EXCEL UPLOAD ========= */
+  function handleGlobalExcelUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    console.log('Archivo cargado:', file.name);
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (!jsonData || jsonData.length === 0) {
+          alert('El archivo parece estar vacío.');
+          return;
+        }
+        // Extract column names
+        globalExcelData.columns = Object.keys(jsonData[0]);
+        globalExcelData.rows = jsonData;
+        globalExcelData.fileName = file.name;
+        // Show success message
+        alert(`Excel cargado exitosamente!\\n\\nColumnas detectadas:\\n${globalExcelData.columns.join(', ')}\\n\\nFilas: ${globalExcelData.rows.length}`);
+        // Populate row selector
+        populateRowSelector();
+        // Show row selector and generate button
+        const selectorContainer = byId('excel-row-selector-container');
+        const generateBtn = byId('generate-all-btn');
+        if (selectorContainer) selectorContainer.style.display = 'flex';
+        if (generateBtn) generateBtn.style.display = 'inline-block';
+        // Trigger initial render
+        renderAll();
+      } catch (err) {
+        console.error(err);
+        alert('Error al leer el archivo: ' + err.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  function populateRowSelector() {
+    const selector = byId('excel-row-selector');
+    if (!selector) return;
+    selector.innerHTML = '';
+    const firstCol = globalExcelData.columns[0];
+    globalExcelData.rows.forEach((row, index) => {
+      const opt = document.createElement('option');
+      opt.value = index;
+      opt.textContent = `${row[firstCol]} (Fila ${index + 1})`;
+      selector.appendChild(opt);
+    });
+  }
+
+  function getColumnOptions() {
+    if (!globalExcelData.columns || globalExcelData.columns.length === 0) {
+      return '<option value="manual">Valor manual</option>';
+    }
+
+    let options = '<option value="manual">Valor manual</option>';
+    globalExcelData.columns.forEach(col => {
+      options += `<option value="${col}">${col}</option>`;
+    });
+    return options;
+  }
+
+  function getExcelValue(columnName) {
+    if (!columnName || columnName === 'manual' || !globalExcelData.rows.length) {
+      return null;
+    }
+
+    let rowIndex;
+
+    // Si estamos en generación masiva, usamos el índice forzado
+    if (currentRenderRowIndex !== null) {
+      rowIndex = currentRenderRowIndex;
+    } else {
+      // Modo normal: vista previa con el selector de filas
+      const rowSelector = byId('excel-row-selector');
+      rowIndex = rowSelector ? parseInt(rowSelector.value || '0', 10) : 0;
+    }
+
+    const row = globalExcelData.rows[rowIndex] || {};
+    const value = row[columnName];
+
+    return (value !== undefined && value !== null) ? value : '';
+  }
+
+  function generateAllHTML() {
+    if (!globalExcelData.rows.length) {
+      alert('Primero carga un archivo Excel');
+      return;
+    }
+
+    const results = [];
+    const firstCol = globalExcelData.columns[0];
+
+    // Guardamos la fila actualmente seleccionada en el selector (para restaurar la vista)
+    const rowSelector = byId('excel-row-selector');
+    const originalRowIndex = rowSelector ? parseInt(rowSelector.value || '0', 10) : 0;
+
+    globalExcelData.rows.forEach((row, index) => {
+      // Forzamos que todas las lecturas desde Excel apunten a ESTA fila
+      currentRenderRowIndex = index;
+
+      // Render con los datos de esta fila
+      renderAll();
+
+      const html = byId('htmlFullOut').value;
+
+      results.push({
+        [firstCol]: row[firstCol],
+        HTML: html
+      });
+    });
+
+    // Volvemos a modo normal (vista atada al selector visual)
+    currentRenderRowIndex = null;
+    if (rowSelector) {
+      rowSelector.value = originalRowIndex;
+      renderAll(); // restaurar la preview a la fila que estaba elegida
+    }
+
+    // Descargar Excel con resultados
+    const ws = XLSX.utils.json_to_sheet(results);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'HTMLs Generados');
+    XLSX.writeFile(wb, 'inpages_generados.xlsx');
+    alert(`¡Listo! Se generaron ${results.length} HTMLs y se descargó el archivo Excel.`);
+  }
 
   /* ========= creación / inserción / orden ========= */
 
-  function addMod(){
+  function addMod() {
     addModAt("end", null);
   }
 
-  function addModAt(where, refId){
+  function addModAt(where, refId) {
     modCount++;
     const id = "mod_" + modCount;
     const box = createModuleBox(id, modCount);
     const container = document.getElementById("mods");
 
-    if(!where || where === "end" || !refId){
+    if (!where || where === "end" || !refId) {
       container.appendChild(box);
       return;
     }
 
     const ref = document.getElementById(refId);
-    if(!ref){
+    if (!ref) {
       container.appendChild(box);
       return;
     }
 
-    if(where === "before"){
+    if (where === "before") {
       container.insertBefore(box, ref);
-    } else if(where === "after"){
+    } else if (where === "after") {
       container.insertBefore(box, ref.nextSibling);
     } else {
       container.appendChild(box);
@@ -156,18 +418,18 @@
     updatePositions();
   }
 
-  function updatePositions(){
+  function updatePositions() {
     const container = document.getElementById("mods");
-    if(!container) return;
+    if (!container) return;
     // Only select direct children to avoid nested .mod-box elements
     const boxes = Array.from(container.children).filter(el => el.classList.contains("mod-box"));
     boxes.forEach((box, i) => {
       const posLabel = box.querySelector(".mod-pos");
-      if(posLabel) posLabel.textContent = "Posición " + (i + 1);
+      if (posLabel) posLabel.textContent = "Posición " + (i + 1);
     });
   }
 
-  function createModuleBox(id, index){
+  function createModuleBox(id, index) {
     const box = document.createElement("div");
     box.className = "mod-box";
     box.id = id;
@@ -210,42 +472,42 @@
     return box;
   }
 
-  function moveMod(id, dir){
+  function moveMod(id, dir) {
     const el = document.getElementById(id);
-    if(!el) return;
+    if (!el) return;
     const parent = el.parentElement;
-    if(!parent) return;
+    if (!parent) return;
 
-    if(dir === "up"){
+    if (dir === "up") {
       const prev = el.previousElementSibling;
-      if(prev) parent.insertBefore(el, prev);
-    } else if(dir === "down"){
+      if (prev) parent.insertBefore(el, prev);
+    } else if (dir === "down") {
       const next = el.nextElementSibling;
-      if(next) parent.insertBefore(next, el);
+      if (next) parent.insertBefore(next, el);
     }
     updatePositions();
   }
 
-  function toggleBody(id){
+  function toggleBody(id) {
     const body = byId(id + "-body");
-    if(!body) return;
+    if (!body) return;
     body.style.display = body.style.display === "none" ? "" : "none";
   }
 
-  function removeMod(id){
+  function removeMod(id) {
     const el = document.getElementById(id);
-    if(el) el.remove();
+    if (el) el.remove();
     updatePositions();
     renderAll();
   }
 
   /* ========= inputs por tipo ========= */
 
-  function renderInputs(id){
+  function renderInputs(id) {
     const tipo = val(id + "-tipo");
     const cont = byId(id + "-inputs");
 
-    if(tipo === "texto"){
+    if (tipo === "texto") {
       cont.innerHTML = `
         <div class="params-grid">
           <div class="param-item">
@@ -309,7 +571,7 @@
         </div>
       `;
       updateTextCount(id);
-    } else if(tipo === "imagen"){
+    } else if (tipo === "imagen") {
       cont.innerHTML = `
         <div class="params-grid">
           <div class="param-item">
@@ -355,10 +617,10 @@
         </div>
       `;
       updateImgCount(id);
-    } else if(tipo === "texto-imagen-h"){
+    } else if (tipo === "texto-imagen-h") {
       const defaultLeft = "texto";
       const defaultRight = "imagen";
-      
+
       cont.innerHTML = `
         <div class="params-grid">
           <div class="param-item">
@@ -488,7 +750,7 @@
       `;
       updateHTextCount(id);
       updateHImgCount(id);
-    } else if(tipo === "html"){
+    } else if (tipo === "html") {
       cont.innerHTML = `
         <div style="margin-bottom:12px;">
           <label>Código HTML personalizado</label>
@@ -496,7 +758,7 @@
           <textarea id="${id}-htmlcode" rows="8" placeholder="<div>Tu HTML aquí...</div>" style="font-family:monospace; font-size:12px;"></textarea>
         </div>
       `;
-    } else if(tipo === "excel-merge"){
+    } else if (tipo === "excel-merge") {
       cont.innerHTML = `
         <div style="margin-bottom:12px;">
           <label>Archivo Excel (.xlsx, .xls)</label>
@@ -523,87 +785,91 @@
 
   /* ========= textos con múltiples items ========= */
 
-  function updateTextCount(id){
-    const raw = (val(id + "-tcount") || "").trim();
-    if(raw === ""){
-      // permite borrar completamente y escribir después
-      return;
-    }
-    let n = parseInt(raw, 10);
-    if(isNaN(n) || n < 1) n = 1;
-    if(n > 10) n = 10;
-    byId(id + "-tcount").value = String(n);
-
-    const cont = byId(id + "-titems");
-    if(!cont) return;
-    cont.innerHTML = "";
-
-    for(let i=1;i<=n;i++){
-      const ph = i === 1 ? "Línea 1&#10;Línea 2" : "";
-      const box = document.createElement("div");
-      box.className = "mod-box";
-      box.style.margin = "6px 0";
-      box.style.padding = "8px";
-      box.innerHTML = `
-        <strong>Texto ${i}</strong>
-        <textarea id="${id}-txt${i}" rows="2" placeholder="${ph}"></textarea>
+  function updateTextCount(id) {
+    const count = parseInt(val(id + "-tcount"), 10) || 1;
+    const container = byId(id + "-titems");
+    if (!container) return;
+    container.innerHTML = "";
+    for (let i = 1; i <= count; i++) {
+      const div = document.createElement("div");
+      div.style.marginBottom = "8px";
+      div.innerHTML = `
+        <label>Texto ${i} - Fuente de datos</label>
+        <select id="${id}-txt${i}-source" onchange="handleSourceChange('${id}-txt${i}')">
+          ${getColumnOptions()}
+        </select>
+        <textarea id="${id}-txt${i}" rows="2" placeholder="Ingresa el texto..."></textarea>
       `;
-      cont.appendChild(box);
+      container.appendChild(div);
     }
   }
 
+  function handleSourceChange(fieldId) {
+    const sourceSelect = byId(fieldId + '-source');
+    const field = byId(fieldId);
+
+    if (!sourceSelect || !field) return;
+
+    const source = sourceSelect.value;
+
+    if (source === 'manual') {
+      field.disabled = false;
+      field.placeholder = 'Ingresa el texto...';
+    } else {
+      const excelValue = getExcelValue(source);
+      if (excelValue !== null) {
+        field.value = excelValue;
+        field.disabled = true;
+        field.placeholder = 'Valor desde Excel';
+      }
+    }
+  }
   /* ========= imágenes con input+lista ========= */
 
-  function updateImgCount(id){
-    const raw = (val(id + "-count") || "").trim();
-    if(raw === ""){
-      return;
-    }
-    let n = parseInt(raw, 10);
-    if(isNaN(n) || n < 1) n = 1;
-    if(n > 10) n = 10;
-    byId(id + "-count").value = String(n);
-
-    const cont = byId(id + "-items");
-    if(!cont) return;
-    cont.innerHTML = "";
-    for(let i=1;i<=n;i++){
-      const box = document.createElement("div");
-      box.className = "mod-box";
-      box.style.margin = "6px 0";
-      box.style.padding = "8px";
-      box.innerHTML = `
-        <strong>Imagen ${i}</strong>
-        <label>URL de la imagen</label>
-        <input id="${id}-img${i}" type="text" placeholder="https://mi-sitio.com/imagen${i}.jpg">
-
-        <label>Texto alternativo (descripción corta)</label>
-        <input id="${id}-alt${i}" type="text" placeholder="Ejemplo: Foto ${i}">
-
-        <label>Enlace al hacer clic (opcional)</label>
-        <input id="${id}-link${i}" type="text" placeholder="https://mi-sitio.com/destino${i}">
+  function updateImgCount(id) {
+    const count = parseInt(val(id + "-count"), 10) || 1;
+    const container = byId(id + "-items");
+    if (!container) return;
+    container.innerHTML = "";
+    for (let i = 1; i <= count; i++) {
+      const div = document.createElement("div");
+      div.style.marginBottom = "10px";
+      div.style.padding = "8px";
+      div.style.background = "#f9fafb";
+      div.style.borderRadius = "6px";
+      div.innerHTML = `
+        <label style="font-weight:600;">Imagen ${i}</label>
+        <label style="margin-top:4px;">Fuente de datos</label>
+        <select id="${id}-img${i}-source" onchange="handleSourceChange('${id}-img${i}')">
+          ${getColumnOptions()}
+        </select>
+        <label style="margin-top:4px;">URL</label>
+        <input type="text" id="${id}-img${i}" placeholder="https://example.com/imagen.jpg">
+        <label style="margin-top:4px;">Alt text</label>
+        <input type="text" id="${id}-alt${i}" placeholder="Descripción de la imagen">
+        <label style="margin-top:4px;">Enlace (opcional)</label>
+        <input type="text" id="${id}-link${i}" placeholder="https://...">
       `;
-      cont.appendChild(box);
+      container.appendChild(div);
     }
   }
-
   /* ========= horizontal layout helpers ========= */
-  
-  function updateHTextCount(id){
+
+  function updateHTextCount(id) {
     const raw = (val(id + "-htcount") || "").trim();
-    if(raw === ""){
+    if (raw === "") {
       return;
     }
     let n = parseInt(raw, 10);
-    if(isNaN(n) || n < 1) n = 1;
-    if(n > 10) n = 10;
+    if (isNaN(n) || n < 1) n = 1;
+    if (n > 10) n = 10;
     byId(id + "-htcount").value = String(n);
 
     const cont = byId(id + "-htitems");
-    if(!cont) return;
+    if (!cont) return;
     cont.innerHTML = "";
 
-    for(let i=1;i<=n;i++){
+    for (let i = 1; i <= n; i++) {
       const ph = i === 1 ? "Línea 1&#10;Línea 2" : "";
       const box = document.createElement("div");
       box.className = "mod-box";
@@ -617,20 +883,20 @@
     }
   }
 
-  function updateHImgCount(id){
+  function updateHImgCount(id) {
     const raw = (val(id + "-hicount") || "").trim();
-    if(raw === ""){
+    if (raw === "") {
       return;
     }
     let n = parseInt(raw, 10);
-    if(isNaN(n) || n < 1) n = 1;
-    if(n > 10) n = 10;
+    if (isNaN(n) || n < 1) n = 1;
+    if (n > 10) n = 10;
     byId(id + "-hicount").value = String(n);
 
     const cont = byId(id + "-hitems");
-    if(!cont) return;
+    if (!cont) return;
     cont.innerHTML = "";
-    for(let i=1;i<=n;i++){
+    for (let i = 1; i <= n; i++) {
       const box = document.createElement("div");
       box.className = "mod-box";
       box.style.margin = "6px 0";
@@ -652,53 +918,69 @@
 
   /* ========= RENDER: genera HTML, CSS, JS para inpgs-wrapper ========= */
 
-  function renderAll(){
+  function renderAll() {
     let htmlBody = "";
     let css = "";
     let js = ""; // reservado
     let modIndex = 0;
 
-    document.querySelectorAll("#mods > .mod-box").forEach(box=>{
+    document.querySelectorAll("#mods > .mod-box").forEach(box => {
       const id = box.id;
-      if(!byId(id + "-tipo")) return;
+      if (!byId(id + "-tipo")) return;
 
       const tipo = val(id + "-tipo");
-      if(!tipo) return;
+      if (!tipo) return;
       modIndex++;
 
       /* === TEXTO: varios h2 en una sola fila === */
-      if(tipo === "texto"){
+      if (tipo === "texto") {
         const rawCount = (val(id + "-tcount") || "").trim();
         let count = parseInt(rawCount || "1", 10);
-        if(isNaN(count) || count < 1) count = 1;
-        if(count > 10) count = 10;
+        if (isNaN(count) || count < 1) count = 1;
+        if (count > 10) count = 10;
 
         const textos = [];
-        for(let i=1;i<=count;i++){
-          const t = val(id + "-txt" + i);
-          if(t?.trim()) textos.push(t);
+        for (let i = 1; i <= count; i++) {
+          const sourceSelect = byId(`${id}-txt${i}-source`);
+          const source = sourceSelect ? sourceSelect.value : 'manual';
+
+          let t = '';
+
+          if (source && source !== 'manual') {
+            // Tomar el valor directamente desde la fila de Excel correspondiente
+            const excelVal = getExcelValue(source);
+            t = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+          } else {
+            // Modo manual: lo que haya escrito el usuario
+            t = val(`${id}-txt${i}`);
+          }
+
+          if (t && t.trim()) {
+            textos.push(t);
+          }
         }
-        if(textos.length === 0) return;
+
+        if (textos.length === 0) return;
 
         const sizeToken = val(id + "-size") || "16px";
         let sizeEm;
-        if(sizeToken === "14px") sizeEm = "0.9em";
-        else if(sizeToken === "20px") sizeEm = "1.25em";
-        else if(sizeToken === "28px") sizeEm = "1.6em";
+        if (sizeToken === "14px") sizeEm = "0.9em";
+        else if (sizeToken === "20px") sizeEm = "1.25em";
+        else if (sizeToken === "28px") sizeEm = "1.6em";
         else sizeEm = "1em";
 
         const color = val(id + "-color") || "#333333";
-        const bg    = val(id + "-bg")    || "#ffffff";
+        const bg = val(id + "-bg") || "#ffffff";
         const align = val(id + "-align") || "center";
-        const w     = clampPct(val(id + "-w"));
-        
+        const w = clampPct(val(id + "-w"));
+
         // Espacio: 1 unidad = 5px
-        let mbUnit  = parseInt(val(id + "-mb") || "0", 10);
-        if(isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
+        let mbUnit = parseInt(val(id + "-mb") || "0", 10);
+        if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
 
-        const bold  = byId(id + "-b")?.checked;
-        const italic= byId(id + "-i")?.checked;
+        const bold = byId(id + "-b")?.checked;
+        const italic = byId(id + "-i")?.checked;
         const under = byId(id + "-u")?.checked;
         const upper = byId(id + "-upper")?.checked;
 
@@ -706,9 +988,9 @@
         const txtCls = "inpgs-txt-" + modIndex;
 
         htmlBody += `<div class="${grpCls}">\n`;
-        textos.forEach(raw=>{
-          const tRaw  = upper ? raw.toUpperCase() : raw;
-          const htmlT = escHTML(tRaw).replace(/\r?\n/g,"<br>");
+        textos.forEach(raw => {
+          const tRaw = upper ? raw.toUpperCase() : raw;
+          const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
           htmlBody += `  <h2 class="${txtCls}">${htmlT}</h2>\n`;
         });
         htmlBody += `</div>\n`;
@@ -718,9 +1000,9 @@
         const td = under ? "underline" : "none";
 
         const justify =
-          align === "left"  ? "flex-start" :
-          align === "right" ? "flex-end"   :
-          align === "center"? "center"     : "space-between";
+          align === "left" ? "flex-start" :
+            align === "right" ? "flex-end" :
+              align === "center" ? "center" : "space-between";
 
         css += `
 .inpgs-wrapper .${grpCls}{
@@ -751,42 +1033,55 @@
       }
 
       /* === IMÁGENES EN FILA === */
-      if(tipo === "imagen"){
+      if (tipo === "imagen") {
         const rawCount = (val(id + "-count") || "").trim();
         let count = parseInt(rawCount || "1", 10);
-        if(isNaN(count) || count < 1) count = 1;
-        if(count > 10) count = 10;
+        if (isNaN(count) || count < 1) count = 1;
+        if (count > 10) count = 10;
 
         const items = [];
-        for(let i=1;i<=count;i++){
-          const src = val(id + "-img" + i);
-          if(!src) continue;
+        for (let i = 1; i <= count; i++) {
+          const sourceSelect = byId(`${id}-img${i}-source`);
+          const source = sourceSelect ? sourceSelect.value : 'manual';
+
+          let src = '';
+
+          if (source && source !== 'manual') {
+            const excelVal = getExcelValue(source);
+            src = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+          } else {
+            src = val(`${id}-img${i}`);
+          }
+
+          if (!src) continue;
+
           items.push({
             src,
             alt: val(id + "-alt" + i) || "",
             link: val(id + "-link" + i) || ""
           });
         }
-        if(items.length === 0) return;
+
+        if (items.length === 0) return;
 
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
-        const align  = val(id + "-ialign") || "center";
-        
+        const align = val(id + "-ialign") || "center";
+
         // Espacio: 1 unidad = 5px
-        let mbUnit  = parseInt(val(id + "-mb") || "0", 10);
-        if(isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
+        let mbUnit = parseInt(val(id + "-mb") || "0", 10);
+        if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
 
         const newTab = byId(id + "-newtab")?.checked;
 
-        const rowCls  = "inpgs-row-" + modIndex;
+        const rowCls = "inpgs-row-" + modIndex;
         const cellCls = rowCls + "__cell";
-        const imgCls  = rowCls + "__img";
+        const imgCls = rowCls + "__img";
 
         htmlBody += `<div class="${rowCls}">\n`;
-        items.forEach(it=>{
+        items.forEach(it => {
           let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
-          if(it.link){
+          if (it.link) {
             const targetAttr = newTab ? ' target="_blank" rel="noopener noreferrer"' : "";
             innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
           }
@@ -795,9 +1090,9 @@
         htmlBody += `</div>\n`;
 
         const justify =
-          align === "left"  ? "flex-start" :
-          align === "right" ? "flex-end"   :
-          align === "center"? "center"     : "space-between";
+          align === "left" ? "flex-start" :
+            align === "right" ? "flex-end" :
+              align === "center" ? "center" : "space-between";
 
         css += `
 .inpgs-wrapper .${rowCls}{
@@ -824,7 +1119,7 @@
       }
 
       /* === HORIZONTAL: Texto+Imagen === */
-      if(tipo === "texto-imagen-h"){
+      if (tipo === "texto-imagen-h") {
         const leftType = val(id + "-hleft") || "texto";
         const rightType = val(id + "-hright") || "imagen";
         const wLeft = parseInt(val(id + "-wleft") || "50", 10);
@@ -834,20 +1129,20 @@
         // Text configuration
         const rawTextCount = (val(id + "-htcount") || "").trim();
         let textCount = parseInt(rawTextCount || "1", 10);
-        if(isNaN(textCount) || textCount < 1) textCount = 1;
-        if(textCount > 10) textCount = 10;
+        if (isNaN(textCount) || textCount < 1) textCount = 1;
+        if (textCount > 10) textCount = 10;
 
         const texts = [];
-        for(let i=1;i<=textCount;i++){
+        for (let i = 1; i <= textCount; i++) {
           const t = val(id + "-htxt" + i);
-          if(t?.trim()) texts.push(t);
+          if (t?.trim()) texts.push(t);
         }
 
         const textSize = val(id + "-hsize") || "16px";
         let sizeEm;
-        if(textSize === "14px") sizeEm = "0.9em";
-        else if(textSize === "20px") sizeEm = "1.25em";
-        else if(textSize === "28px") sizeEm = "1.6em";
+        if (textSize === "14px") sizeEm = "0.9em";
+        else if (textSize === "20px") sizeEm = "1.25em";
+        else if (textSize === "28px") sizeEm = "1.6em";
         else sizeEm = "1em";
 
         const textColor = val(id + "-hcolor") || "#333333";
@@ -860,13 +1155,13 @@
         // Image configuration
         const rawImgCount = (val(id + "-hicount") || "").trim();
         let imgCount = parseInt(rawImgCount || "1", 10);
-        if(isNaN(imgCount) || imgCount < 1) imgCount = 1;
-        if(imgCount > 10) imgCount = 10;
+        if (isNaN(imgCount) || imgCount < 1) imgCount = 1;
+        if (imgCount > 10) imgCount = 10;
 
         const images = [];
-        for(let i=1;i<=imgCount;i++){
+        for (let i = 1; i <= imgCount; i++) {
           const src = val(id + "-himg" + i);
-          if(!src) continue;
+          if (!src) continue;
           images.push({
             src,
             alt: val(id + "-halt" + i) || "",
@@ -877,13 +1172,13 @@
         const imgAlign = val(id + "-hialign") || "center";
         const imgRadius = parseInt(val(id + "-hiradius") || "0", 10) || 0;
         const imgNewTab = byId(id + "-hinewtab")?.checked;
-        
+
         let imgMbUnit = parseInt(val(id + "-himb") || "0", 10);
-        if(isNaN(imgMbUnit) || imgMbUnit < 0) imgMbUnit = 0;
+        if (isNaN(imgMbUnit) || imgMbUnit < 0) imgMbUnit = 0;
         const imgMb = imgMbUnit * 5;
 
         // Skip if both text and images are empty
-        if(texts.length === 0 && images.length === 0) return;
+        if (texts.length === 0 && images.length === 0) return;
 
         // Create container class
         const containerCls = "inpgs-hcontainer-" + modIndex;
@@ -899,17 +1194,17 @@
 
         // Left side
         htmlBody += `  <div class="${leftCls}">\n`;
-        if(leftType === "texto" && texts.length > 0){
-          texts.forEach(raw=>{
+        if (leftType === "texto" && texts.length > 0) {
+          texts.forEach(raw => {
             const tRaw = textUpper ? raw.toUpperCase() : raw;
-            const htmlT = escHTML(tRaw).replace(/\r?\n/g,"<br>");
+            const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
             htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
           });
-        } else if(leftType === "imagen" && images.length > 0){
+        } else if (leftType === "imagen" && images.length > 0) {
           htmlBody += `    <div class="${imgRowCls}">\n`;
-          images.forEach(it=>{
+          images.forEach(it => {
             let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
-            if(it.link){
+            if (it.link) {
               const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
               innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
             }
@@ -921,17 +1216,17 @@
 
         // Right side
         htmlBody += `  <div class="${rightCls}">\n`;
-        if(rightType === "texto" && texts.length > 0){
-          texts.forEach(raw=>{
+        if (rightType === "texto" && texts.length > 0) {
+          texts.forEach(raw => {
             const tRaw = textUpper ? raw.toUpperCase() : raw;
-            const htmlT = escHTML(tRaw).replace(/\r?\n/g,"<br>");
+            const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
             htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
           });
-        } else if(rightType === "imagen" && images.length > 0){
+        } else if (rightType === "imagen" && images.length > 0) {
           htmlBody += `    <div class="${imgRowCls}">\n`;
-          images.forEach(it=>{
+          images.forEach(it => {
             let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
-            if(it.link){
+            if (it.link) {
               const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
               innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
             }
@@ -948,14 +1243,14 @@
         const td = textUnder ? "underline" : "none";
 
         const textJustify =
-          textAlign === "left"  ? "flex-start" :
-          textAlign === "right" ? "flex-end"   :
-          textAlign === "center"? "center"     : "space-between";
+          textAlign === "left" ? "flex-start" :
+            textAlign === "right" ? "flex-end" :
+              textAlign === "center" ? "center" : "space-between";
 
         const imgJustify =
-          imgAlign === "left"  ? "flex-start" :
-          imgAlign === "right" ? "flex-end"   :
-          imgAlign === "center"? "center"     : "space-between";
+          imgAlign === "left" ? "flex-start" :
+            imgAlign === "right" ? "flex-end" :
+              imgAlign === "center" ? "center" : "space-between";
 
         css += `
 .inpgs-wrapper .${containerCls}{
@@ -1015,29 +1310,29 @@
       }
 
       /* === CUSTOM HTML === */
-      if(tipo === "html"){
+      if (tipo === "html") {
         const customHtml = val(id + "-htmlcode") || "";
-        if(customHtml.trim()){
+        if (customHtml.trim()) {
           htmlBody += customHtml.trim() + "\n";
         }
       }
 
       /* === EXCEL MERGE PLACEHOLDER === */
-      if(tipo === "excel-merge"){
+      if (tipo === "excel-merge") {
         // Check if we have loaded data for this module
         const data = loadedExcelData[id];
-        if(data && data.length > 0){
+        if (data && data.length > 0) {
           // Find selected ID
           const selectId = byId(id + "-excelid");
           const selectedVal = selectId ? selectId.value : null;
-          
+
           // Find corresponding HTML
           const item = data.find(x => x.id == selectedVal);
-          if(item){
-             htmlBody += item.html || ""; // Inject the old HTML
+          if (item) {
+            htmlBody += item.html || ""; // Inject the old HTML
           } else {
-             // Fallback if nothing selected (e.g. first load)
-             htmlBody += data[0].html || "";
+            // Fallback if nothing selected (e.g. first load)
+            htmlBody += data[0].html || "";
           }
         } else {
           // No data loaded yet, or we are generating the template for export
@@ -1047,7 +1342,7 @@
     });
 
     /* ====== WRAPPER GLOBAL Y SCOPE (Lato + FONT_ENFORCER_CSS + GLOBAL_CSS) ====== */
-    if(htmlBody.trim() === ""){
+    if (htmlBody.trim() === "") {
       byId("preview").innerHTML = "<div class='muted'>No hay módulos válidos.</div>";
       byId("htmlOut").value = "";
       byId("cssOut").value = "";
@@ -1057,8 +1352,8 @@
     }
 
     const wrapperStart = `<div class="inpgs-wrapper">`;
-    const wrapperEnd   = `</div>`;
-    const htmlWrapper  = wrapperStart + "\n" + htmlBody.trim() + "\n" + wrapperEnd;
+    const wrapperEnd = `</div>`;
+    const htmlWrapper = wrapperStart + "\n" + htmlBody.trim() + "\n" + wrapperEnd;
 
     const cssWrapper = `
 .inpgs-wrapper{
@@ -1115,7 +1410,7 @@
     // link de fuente Lato para el preview
     const fontLinkId = "inpgs-font-link-preview";
     let fontLink = document.getElementById(fontLinkId);
-    if(!fontLink){
+    if (!fontLink) {
       fontLink = document.createElement("link");
       fontLink.id = fontLinkId;
       fontLink.rel = "stylesheet";
@@ -1125,7 +1420,7 @@
 
     const styleId = "inpgs-style-preview";
     let styleEl = document.getElementById(styleId);
-    if(styleEl) styleEl.remove();
+    if (styleEl) styleEl.remove();
     styleEl = document.createElement("style");
     styleEl.id = styleId;
     styleEl.textContent = finalCSS;
@@ -1154,63 +1449,63 @@
 
   /* ========= helpers ========= */
 
-  function toggleExportPanel(){
+  function toggleExportPanel() {
     const p = byId("export-panel");
-    if(!p) return;
+    if (!p) return;
     p.style.display = p.style.display === "none" ? "" : "none";
   }
 
-  function copyHtmlFinal(){
+  function copyHtmlFinal() {
     const ta = byId("htmlFullOut");
-    if(!ta) return;
+    if (!ta) return;
     const text = ta.value || "";
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).catch(()=>{});
-    }else{
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => { });
+    } else {
       ta.select();
       ta.setSelectionRange(0, text.length);
-      try{ document.execCommand("copy"); }catch(e){}
+      try { document.execCommand("copy"); } catch (e) { }
     }
   }
 
-  function byId(id){ return document.getElementById(id); }
-  function val(id){ const el = byId(id); return el ? el.value : ""; }
-  function clampPct(v){
+  function byId(id) { return document.getElementById(id); }
+  function val(id) { const el = byId(id); return el ? el.value : ""; }
+  function clampPct(v) {
     const n = parseInt(v || "100", 10);
-    if(isNaN(n)) return 100;
+    if (isNaN(n)) return 100;
     return Math.min(100, Math.max(10, n));
   }
-  function escHTML(s){
-    return (s || "").replace(/[&<>]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[m]));
+  function escHTML(s) {
+    return (s || "").replace(/[&<>]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]));
   }
-  function escAttr(s){
+  function escAttr(s) {
     return (s || "").replace(/"/g, "&quot;");
   }
 
   /* ========= color sync ========= */
-  function syncHex(colorInput, textId){
+  function syncHex(colorInput, textId) {
     const txt = document.getElementById(textId);
-    if(txt) txt.value = colorInput.value;
+    if (txt) txt.value = colorInput.value;
   }
-  function syncColor(textInput, colorId){
+  function syncColor(textInput, colorId) {
     const col = document.getElementById(colorId);
     let val = textInput.value;
-    if(!val.startsWith("#")) val = "#" + val;
-    if(/^#[0-9A-F]{6}$/i.test(val)){
-      if(col) col.value = val;
+    if (!val.startsWith("#")) val = "#" + val;
+    if (/^#[0-9A-F]{6}$/i.test(val)) {
+      if (col) col.value = val;
     }
   }
   /* ========= Drag and Drop ========= */
   let draggedItem = null;
   let placeholder = null;
 
-  function collapseAll(){
+  function collapseAll() {
     document.querySelectorAll(".mod-body").forEach(b => b.style.display = "none");
   }
 
-  function dragStart(e, id){
+  function dragStart(e, id) {
     draggedItem = document.getElementById(id);
-    if(!draggedItem) return;
+    if (!draggedItem) return;
 
     // Collapse all bodies for cleaner dragging
     collapseAll();
@@ -1232,89 +1527,89 @@
     }, 0);
   }
 
-  function dragOver(e){
+  function dragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
-    
+
     const target = e.target.closest(".mod-box");
     const container = document.getElementById("mods");
-    if(!container || !placeholder) return;
+    if (!container || !placeholder) return;
 
-    if(target && target !== draggedItem){
+    if (target && target !== draggedItem) {
       const rect = target.getBoundingClientRect();
       const midY = rect.top + rect.height / 2;
-      
-      if(e.clientY < midY){
+
+      if (e.clientY < midY) {
         container.insertBefore(placeholder, target);
       } else {
         container.insertBefore(placeholder, target.nextSibling);
       }
     } else if (!target && e.target === container) {
-        // If hovering over empty space in container, append to end
-        container.appendChild(placeholder);
+      // If hovering over empty space in container, append to end
+      container.appendChild(placeholder);
     }
   }
 
-  function dragEnter(e){
+  function dragEnter(e) {
     e.preventDefault();
   }
 
-  function dragLeave(e){
+  function dragLeave(e) {
     // Optional: handle leaving the container
   }
 
-  function drop(e, targetId){
+  function drop(e, targetId) {
     e.preventDefault();
-    if(!draggedItem || !placeholder) return;
-    
+    if (!draggedItem || !placeholder) return;
+
     // Move dragged item to placeholder position
-    if(placeholder.parentNode){
-        placeholder.parentNode.insertBefore(draggedItem, placeholder);
+    if (placeholder.parentNode) {
+      placeholder.parentNode.insertBefore(draggedItem, placeholder);
     }
-    
+
     updatePositions();
   }
 
-  function dragEnd(e){
-    if(draggedItem){
+  function dragEnd(e) {
+    if (draggedItem) {
       draggedItem.style.display = ""; // Show it again
       draggedItem = null;
     }
-    if(placeholder && placeholder.parentNode){
+    if (placeholder && placeholder.parentNode) {
       placeholder.remove();
     }
     placeholder = null;
   }
 
   /* ========= EXCEL PROCESSING ========= */
-  
+
   let loadedExcelData = {}; // Store data by module ID: { modId: [ {id, html}, ... ] }
 
-  function loadExcelData(id){
+  function loadExcelData(id) {
     const fileInput = byId(id + "-excelfile");
     const statusDiv = byId(id + "-excelstatus");
     const controlsDiv = byId(id + "-preview-controls");
     const selectId = byId(id + "-excelid");
 
-    if(!fileInput || !fileInput.files || fileInput.files.length === 0){
+    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
       return;
     }
 
     const file = fileInput.files[0];
-    if(statusDiv) statusDiv.innerHTML = "Leyendo archivo...";
+    if (statusDiv) statusDiv.innerHTML = "Leyendo archivo...";
 
     const reader = new FileReader();
-    reader.onload = function(e){
+    reader.onload = function (e) {
       try {
         const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {type: 'array'});
+        const workbook = XLSX.read(data, { type: 'array' });
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
-        
+
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        
-        if(!jsonData || jsonData.length === 0){
-          if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>El archivo parece estar vacío.</span>";
+
+        if (!jsonData || jsonData.length === 0) {
+          if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>El archivo parece estar vacío.</span>";
           return;
         }
 
@@ -1324,8 +1619,8 @@
           let idVal = "";
           let htmlVal = "";
           keys.forEach(k => {
-            if(k.toLowerCase() === "id") idVal = row[k];
-            if(k.toLowerCase() === "html") htmlVal = row[k];
+            if (k.toLowerCase() === "id") idVal = row[k];
+            if (k.toLowerCase() === "html") htmlVal = row[k];
           });
           return { id: idVal, html: htmlVal };
         });
@@ -1341,51 +1636,51 @@
           selectId.appendChild(opt);
         });
 
-        if(controlsDiv) controlsDiv.style.display = "block";
-        if(statusDiv) statusDiv.innerHTML = "<span style='color:green'>Archivo cargado. Selecciona un ID para previsualizar.</span>";
-        
+        if (controlsDiv) controlsDiv.style.display = "block";
+        if (statusDiv) statusDiv.innerHTML = "<span style='color:green'>Archivo cargado. Selecciona un ID para previsualizar.</span>";
+
         // Trigger render to show first item
         renderAll();
 
-      } catch(err){
+      } catch (err) {
         console.error(err);
-        if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al leer: " + err.message + "</span>";
+        if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al leer: " + err.message + "</span>";
       }
     };
     reader.readAsArrayBuffer(file);
   }
 
-  function processExcel(id){
+  function processExcel(id) {
     const statusDiv = byId(id + "-excelstatus");
     const data = loadedExcelData[id];
-    
-    if(!data || data.length === 0){
-      if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Primero debes cargar un archivo Excel válido.</span>";
+
+    if (!data || data.length === 0) {
+      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Primero debes cargar un archivo Excel válido.</span>";
       return;
     }
 
     // Generate template by temporarily hiding the specific ID selection
     // This forces renderAll to output the placeholder
     const savedData = loadedExcelData[id];
-    loadedExcelData[id] = null; 
-    
+    loadedExcelData[id] = null;
+
     // We also need to ensure renderAll doesn't crash or produce empty output if it relies on loadedExcelData
     // The modified renderAll below handles 'excel-merge' by checking if data exists.
     // If loadedExcelData[id] is null, it should output the placeholder.
-    
+
     renderAll();
     const template = byId("htmlFullOut").value;
-    
-    // Restore data and view
-    loadedExcelData[id] = savedData; 
-    renderAll(); 
 
-    if(!template.includes("<!-- [[EXCEL_MERGE_POINT]] -->")){
-       if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error: No se encontró el punto de inserción. Asegúrate de tener un módulo 'Carga Excel' activo.</span>";
-       return;
+    // Restore data and view
+    loadedExcelData[id] = savedData;
+    renderAll();
+
+    if (!template.includes("<!-- [[EXCEL_MERGE_POINT]] -->")) {
+      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error: No se encontró el punto de inserción. Asegúrate de tener un módulo 'Carga Excel' activo.</span>";
+      return;
     }
 
-    if(statusDiv) statusDiv.innerHTML = "Procesando " + data.length + " filas...";
+    if (statusDiv) statusDiv.innerHTML = "Procesando " + data.length + " filas...";
 
     try {
       const outputData = [];
@@ -1404,13 +1699,11 @@
       XLSX.utils.book_append_sheet(newWb, newWs, "Resultados");
 
       XLSX.writeFile(newWb, "inpages_generados.xlsx");
-      
-      if(statusDiv) statusDiv.innerHTML = "<span style='color:green'>¡Listo! Archivo descargado.</span>";
-    } catch(err){
-       console.error(err);
-       if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al procesar: " + err.message + "</span>";
+
+      if (statusDiv) statusDiv.innerHTML = "<span style='color:green'>¡Listo! Archivo descargado.</span>";
+    } catch (err) {
+      console.error(err);
+      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al procesar: " + err.message + "</span>";
     }
   }
 </script>
-
-
