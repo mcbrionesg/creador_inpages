@@ -462,6 +462,7 @@
           <option value="texto-imagen-h">Texto+Imagen (horizontal)</option>
           <option value="html">HTML personalizado</option>
           <option value="excel-merge">Carga Excel (Merge)</option>
+          <option value="video-autoplay">Video Autoplay (Mute)</option>
         </select>
 
         <div id="${id}-inputs" class="muted"></div>
@@ -777,6 +778,24 @@
           </div>
           <div id="${id}-excelstatus" style="margin-top:8px; font-size:12px; color:#444;"></div>
         </div>
+      `;
+    } else if (tipo === "video-autoplay") {
+      cont.innerHTML = `
+        <div class="params-grid">
+           <div class="param-item" style="width:100%; max-width:100%;">
+             <label>Fuente de datos</label>
+             <select id="${id}-video-url-source" onchange="handleSourceChange('${id}-video-url')">
+               ${getColumnOptions()}
+             </select>
+           </div>
+           <div class="param-item" style="width:100%; max-width:100%;">
+             <label>URL Video (mp4, webm, etc)</label>
+             <input id="${id}-video-url" type="text" placeholder="https://example.com/video.mp4" style="width:100%; max-width:100%;">
+           </div>
+        </div>
+        <p class="muted" style="margin-top:8px;">
+          Se generará un bloque 16:9 responsive con autoplay, muted, loop y playsinline.
+        </p>
       `;
     } else {
       cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
@@ -1314,6 +1333,48 @@
         const customHtml = val(id + "-htmlcode") || "";
         if (customHtml.trim()) {
           htmlBody += customHtml.trim() + "\n";
+        }
+      }
+
+      /* === VIDEO AUTOPLAY === */
+      if (tipo === "video-autoplay") {
+        const sourceSelect = byId(`${id}-video-url-source`);
+        const source = sourceSelect ? sourceSelect.value : 'manual';
+        let videoUrl = '';
+
+        if (source && source !== 'manual') {
+          const excelVal = getExcelValue(source);
+          videoUrl = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+        } else {
+          videoUrl = val(id + "-video-url");
+        }
+
+        if (videoUrl) {
+          const escUrl = escAttr(videoUrl);
+
+          htmlBody += `
+<div class="inpgs-video-${modIndex}">
+  <video class="inpgs-video-${modIndex}__iframe" src="${escUrl}" autoplay muted playsinline loop controls>
+  </video>
+</div>
+`;
+
+          css += `
+.inpgs-video-${modIndex} {
+  position: relative !important;
+  width: 100% !important;
+  padding-bottom: 56.25% !important;
+  height: 0 !important;
+  margin-bottom: 1rem !important;
+}
+.inpgs-video-${modIndex}__iframe {
+  position: absolute !important;
+  top: 0 !important; left: 0 !important;
+  width: 100% !important; height: 100% !important;
+  border: none !important;
+  object-fit: cover !important;
+}
+`.trim() + "\n\n";
         }
       }
 
