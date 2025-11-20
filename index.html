@@ -1,24 +1,43 @@
 <!DOCTYPE html> 
-<h2 style="text-align:center;margin:12px 0;">Constructor básico de módulos (Texto + Imágenes)</h2>
+<div style="display:flex; align-items:center; justify-content:space-between; padding:12px;">
+  <img src="https://images.falabella.com/v3/assets/blt7c5c2f2f888a7cc3/blt9a6cb2faab703fa5/65a68ebb130790558acbf0cb/falabella.com_green_icon.svg" 
+       alt="Falabella" 
+       style="width:150px; height:auto;">
+  <h2 style="flex:1; text-align:center; margin:0;">Constructor de Inpages</h2>
+  <div style="width:150px;"></div> <!-- Spacer for centering -->
+</div>
 
 <div style="display:flex;gap:12px;padding:12px;align-items:flex-start;">
   <!--  Columna izquierda: módulos  -->
   <div style="flex:2;max-width:60%;">
+    <div style="margin-bottom:10px; display:flex; justify-content:flex-start;">
+      <button onclick="collapseAll()" style="padding:5px 10px;background:#64748b;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;">
+        Contraer todo
+      </button>
+    </div>
     <div id="mods"></div>
 
     <div style="display:flex;gap:8px;margin-top:8px;">
-      <button onclick="addMod()" style="padding:8px 12px;background:#3498db;color:#fff;border:0;border-radius:6px;cursor:pointer;">
-        Agregar módulo (al final)
-      </button>
-      <button onclick="renderAll()" style="padding:8px 12px;background:#10b981;color:#fff;border:0;border-radius:6px;cursor:pointer;">
-        Generar vista + export
-      </button>
+      <div style="display:flex; gap:8px; margin-bottom:12px;">
+        <button onclick="addMod()" style="padding:8px 12px;background:#3498db;color:#fff;border:0;border-radius:6px;cursor:pointer;">
+          Agregar Bloque
+        </button>
+        <button onclick="renderAll()" style="padding:8px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer;">
+          Generar vista
+        </button>
+      </div>
+
     </div>
   </div>
 
   <!-- Columna derecha: vista + export -->
   <div style="flex:1;background:#fff;padding:12px;border-radius:8px;box-shadow:0 0 8px rgba(0,0,0,.06);max-height:90vh;overflow:auto;position:sticky;top:12px;">
-    <h3 style="margin-top:0;">Vista previa (wrapper inpgs)</h3>
+    <div style="margin-bottom:12px;">
+      <button onclick="renderAll()" style="padding:6px 12px; background:#10b981; color:#fff; border:0; border-radius:6px; cursor:pointer; font-size:13px;">
+        Generar vista
+      </button>
+    </div>
+    <h3 style="margin-top:0;">Vista previa</h3>
     <div id="preview" style="border:1px dashed #ddd;border-radius:6px;padding:10px;min-height:80px;"></div>
 
     <button type="button"
@@ -36,16 +55,16 @@
           Copiar HTML
         </button>
       </div>
-      <textarea id="htmlFullOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;margin-top:4px;"></textarea>
+      <textarea id="htmlFullOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;margin-top:4px;"></textarea>
 
       <h3 style="margin-top:12px;">HTML (solo wrapper)</h3>
-      <textarea id="htmlOut" rows="5" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+      <textarea id="htmlOut" rows="5" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
 
       <h3 style="margin-top:12px;">CSS (módulos inpgs)</h3>
-      <textarea id="cssOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+      <textarea id="cssOut" rows="6" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
 
       <h3 style="margin-top:12px;">JS (si lo hubiera)</h3>
-      <textarea id="jsOut" rows="3" readonly style="width:100%;padding:8px;border:1px solid:#ccc;border-radius:6px;"></textarea>
+      <textarea id="jsOut" rows="3" readonly style="width:100%;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
     </div>
   </div>
 </div>
@@ -57,12 +76,49 @@
   .mod-header-left{display:flex;align-items:center;gap:8px;}
   .mod-header h4{margin:0;font-size:14px;}
   .muted{font-size:12px;color:#666;}
-  select,input,textarea{width:100%;padding:8px;margin:4px 0 8px;border:1px solid.#ccc;border-radius:6px;box-sizing:border-box;}
+  
+  /* General Inputs */
+  select, input[type="text"], input[type="number"], textarea {
+    width:100%; padding:6px; margin:4px 0 8px; 
+    border:1px solid #ccc; border-radius:4px; box-sizing:border-box; font-size:13px;
+  }
+  label { font-size:12px; color:#444; font-weight:600; display:block; margin-bottom:2px; }
+
+  /* Layout Utils */
   .row-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-  .checks{display:flex;flex-wrap:wrap;gap:8px;font-size:12px;margin-top:4px;}
-  .checks label{display:flex;align-items:center;gap:4px;}
+  .checks{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:8px;}
+  .checks label{display:flex;align-items:center;gap:4px;font-weight:normal;cursor:pointer;}
   .mod-body{margin-top:6px;}
+
+  /* Minimalist Controls - Grid Layout */
+  .params-grid {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+    margin-bottom: 8px;
+  }
+  .param-item {
+    display: flex; flex-direction: column;
+  }
+  .param-item label { margin-bottom: 2px; font-size: 11px; color: #555; }
+  
+  /* Compact inputs in param-item */
+  .param-item select, 
+  .param-item input[type="text"], 
+  .param-item input[type="number"] {
+    margin: 0; width: auto; max-width: 100px; padding: 4px; font-size: 12px;
+  }
+  
+  /* Color Picker Minimalist */
+  input[type="color"].mini-color {
+    width: 24px; height: 24px; padding: 0; border: 1px solid #ccc; 
+    background: none; cursor: pointer; border-radius: 4px; overflow: hidden;
+    vertical-align: bottom;
+  }
+  input[type="color"].mini-color::-webkit-color-swatch-wrapper { padding: 0; }
+  input[type="color"].mini-color::-webkit-color-swatch { border: none; border-radius: 3px; }
 </style>
+
+<!-- SheetJS for Excel processing -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
 <script>
   let modCount = 0;
@@ -97,38 +153,60 @@
     } else {
       container.appendChild(box);
     }
+    updatePositions();
+  }
+
+  function updatePositions(){
+    const container = document.getElementById("mods");
+    if(!container) return;
+    // Only select direct children to avoid nested .mod-box elements
+    const boxes = Array.from(container.children).filter(el => el.classList.contains("mod-box"));
+    boxes.forEach((box, i) => {
+      const posLabel = box.querySelector(".mod-pos");
+      if(posLabel) posLabel.textContent = "Posición " + (i + 1);
+    });
   }
 
   function createModuleBox(id, index){
     const box = document.createElement("div");
     box.className = "mod-box";
     box.id = id;
+    // Keep ondragover and ondrop on the box for drop target functionality
+    box.ondragover = (e) => dragOver(e);
+    box.ondrop = (e) => drop(e, id);
+
     box.innerHTML = `
-      <div class="mod-header">
+      <div class="mod-header" draggable="true" 
+           ondragstart="dragStart(event, '${id}')" 
+           ondragend="dragEnd(event)"
+           style="cursor:grab;">
         <div class="mod-header-left">
+          <span style="font-size:16px;color:#999;margin-right:4px;" title="Arrastrar para mover">☰</span>
           <button type="button" onclick="toggleBody('${id}');event.stopPropagation();" style="padding:3px 6px;background:#e5e7eb;border:0;border-radius:4px;cursor:pointer;font-size:11px;">Mostrar / ocultar</button>
-          <h4>Módulo ${index}</h4>
+          <h4>Bloque ${index} <span class="mod-pos" style="font-size:11px;font-weight:normal;color:#666;margin-left:6px;">Posición ${index}</span></h4>
         </div>
         <div style="display:flex;gap:4px;align-items:center;">
           <button type="button" onclick="moveMod('${id}','up');event.stopPropagation();" style="padding:3px 6px;background:#facc15;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↑</button>
           <button type="button" onclick="moveMod('${id}','down');event.stopPropagation();" style="padding:3px 6px;background:#a5b4fc;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↓</button>
-          <button type="button" onclick="addModAt('before','${id}');event.stopPropagation();" style="padding:3px 6px;background:#d1fae5;border:0;border-radius:4px;cursor:pointer;font-size:11px;">+ arriba</button>
-          <button type="button" onclick="addModAt('after','${id}');event.stopPropagation();" style="padding:3px 6px;background:#dbeafe;border:0;border-radius:4px;cursor:pointer;font-size:11px;">+ abajo</button>
           <button type="button" onclick="removeMod('${id}')" style="padding:4px 8px;background:#ef4444;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:12px;">Eliminar</button>
         </div>
       </div>
 
       <div class="mod-body" id="${id}-body">
-        <label>¿Qué quieres crear?</label>
+        <label>Seleccionar Módulo</label>
         <select id="${id}-tipo" onchange="renderInputs('${id}')">
-          <option value="">Elige una opción</option>
-          <option value="texto">Texto</option>
+          <option value="texto" selected>Texto</option>
           <option value="imagen">Imágenes en fila</option>
+          <option value="texto-imagen-h">Texto+Imagen (horizontal)</option>
+          <option value="html">HTML personalizado</option>
+          <option value="excel-merge">Carga Excel (Merge)</option>
         </select>
 
-        <div id="${id}-inputs" class="muted">Selecciona un tipo de módulo para ver sus opciones.</div>
+        <div id="${id}-inputs" class="muted"></div>
       </div>
     `;
+    // Render inputs immediately for the default "texto"
+    setTimeout(() => renderInputs(id), 0);
     return box;
   }
 
@@ -145,6 +223,7 @@
       const next = el.nextElementSibling;
       if(next) parent.insertBefore(next, el);
     }
+    updatePositions();
   }
 
   function toggleBody(id){
@@ -156,6 +235,7 @@
   function removeMod(id){
     const el = document.getElementById(id);
     if(el) el.remove();
+    updatePositions();
     renderAll();
   }
 
@@ -167,22 +247,14 @@
 
     if(tipo === "texto"){
       cont.innerHTML = `
-        <label>Cantidad de textos en este módulo</label>
-        <input id="${id}-tcount"
-               type="text"
-               value="1"
-               list="${id}-tcountlist"
-               placeholder="1"
-               oninput="updateTextCount('${id}')">
-        <datalist id="${id}-tcountlist">
-          ${Array.from({length:10},(_,i)=>i+1).map(n=>`<option value="${n}"></option>`).join('')}
-        </datalist>
-
-        <div id="${id}-titems" style="margin-top:4px;"></div>
-
-        <div class="row-2" style="margin-top:8px;">
-          <div>
-            <label>Tamaño de letra</label>
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Cantidad</label>
+            <input id="${id}-tcount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateTextCount('${id}')">
+          </div>
+          
+          <div class="param-item">
+            <label>Tamaño</label>
             <select id="${id}-size">
               <option value="14px">Pequeño</option>
               <option value="16px" selected>Normal</option>
@@ -190,18 +262,8 @@
               <option value="28px">Muy grande</option>
             </select>
           </div>
-          <div>
-            <label>Color de texto</label>
-            <input id="${id}-color" type="color" value="#111111">
-          </div>
-        </div>
 
-        <div class="row-2">
-          <div>
-            <label>Color de fondo</label>
-            <input id="${id}-bg" type="color" value="#ffffff">
-          </div>
-          <div>
+          <div class="param-item">
             <label>Alineación</label>
             <select id="${id}-align">
               <option value="left">Izquierda</option>
@@ -210,49 +272,53 @@
               <option value="justify">Justificado</option>
             </select>
           </div>
+
+          <div class="param-item">
+            <label>Color texto</label>
+            <input id="${id}-color" type="color" class="mini-color" value="#333333" title="Color de texto">
+          </div>
+
+          <div class="param-item">
+            <label>Color fondo</label>
+            <input id="${id}-bg" type="color" class="mini-color" value="#ffffff" title="Color de fondo">
+          </div>
+
+          <div class="param-item">
+            <label>Ancho (%)</label>
+            <input id="${id}-w" type="number" min="10" max="100" value="100" style="width:60px">
+          </div>
+
+          <div class="param-item">
+            <label>Margen inferior</label>
+            <select id="${id}-mb">
+              <option value="0" selected>Ninguno</option>
+              <option value="2">Bajo</option>
+              <option value="4">Medio</option>
+              <option value="8">Alto</option>
+            </select>
+          </div>
         </div>
 
-        <div class="row-2">
-          <div>
-            <label>Ancho del bloque (%)</label>
-            <input id="${id}-w" type="number" min="10" max="100" value="100">
-          </div>
-          <div>
-            <label>Espacio hacia abajo (px)</label>
-            <input id="${id}-mb" type="number" min="0" max="200" value="2">
-          </div>
-        </div>
+        <div id="${id}-titems" style="margin-top:4px; margin-bottom:12px;"></div>
 
         <div class="checks">
-          <label><input type="checkbox" id="${id}-b"> Negrita</label>
-          <label><input type="checkbox" id="${id}-i"> Cursiva</label>
-          <label><input type="checkbox" id="${id}-u"> Subrayado</label>
-          <label><input type="checkbox" id="${id}-upper"> Todo en mayúsculas</label>
+          <label><input type="checkbox" id="${id}-b"> <b>Negrita</b></label>
+          <label><input type="checkbox" id="${id}-i"> <i>Cursiva</i></label>
+          <label><input type="checkbox" id="${id}-u"> <u>Subrayado</u></label>
+          <label><input type="checkbox" id="${id}-upper"> MAYÚSCULAS</label>
         </div>
       `;
       updateTextCount(id);
     } else if(tipo === "imagen"){
       cont.innerHTML = `
-        <label>Cantidad de imágenes en este módulo</label>
-        <input id="${id}-count"
-               type="text"
-               value="1"
-               list="${id}-countlist"
-               placeholder="1"
-               oninput="updateImgCount('${id}')">
-        <datalist id="${id}-countlist">
-          ${Array.from({length:10},(_,i)=>i+1).map(n=>`<option value="${n}"></option>`).join('')}
-        </datalist>
-
-        <div id="${id}-items" style="margin-top:4px;"></div>
-
-        <div class="row-2" style="margin-top:8px;">
-          <div>
-            <label>Esquinas redondeadas (px)</label>
-            <input id="${id}-radius" type="number" min="0" max="100" value="8">
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Cantidad</label>
+            <input id="${id}-count" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateImgCount('${id}')">
           </div>
-          <div>
-            <label>Posición del grupo</label>
+
+          <div class="param-item">
+            <label>Posición</label>
             <select id="${id}-ialign">
               <option value="left">Izquierda</option>
               <option value="center" selected>Centro</option>
@@ -260,21 +326,196 @@
               <option value="justify">Justificado</option>
             </select>
           </div>
-        </div>
 
-        <div class="row-2">
-          <div>
-            <label>Espacio hacia abajo (px)</label>
-            <input id="${id}-mb" type="number" min="0" max="200" value="2">
+          <div class="param-item">
+            <label>Curva</label>
+            <select id="${id}-radius">
+              <option value="0" selected>Ninguna</option>
+              <option value="8">Baja</option>
+              <option value="16">Media</option>
+              <option value="24">Alta</option>
+            </select>
           </div>
-          <div></div>
+
+          <div class="param-item">
+            <label>Margen inferior</label>
+            <select id="${id}-mb">
+              <option value="0" selected>Ninguno</option>
+              <option value="2">Bajo</option>
+              <option value="4">Medio</option>
+              <option value="8">Alto</option>
+            </select>
+          </div>
         </div>
 
-        <div class="checks" style="margin-top:4px;">
+        <div id="${id}-items" style="margin-top:4px; margin-bottom:12px;"></div>
+
+        <div class="checks">
           <label><input type="checkbox" id="${id}-newtab" checked> Abrir enlaces en pestaña nueva</label>
         </div>
       `;
       updateImgCount(id);
+    } else if(tipo === "texto-imagen-h"){
+      const defaultLeft = "texto";
+      const defaultRight = "imagen";
+      
+      cont.innerHTML = `
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Izquierda</label>
+            <select id="${id}-hleft">
+              <option value="texto" ${defaultLeft === "texto" ? "selected" : ""}>Texto</option>
+              <option value="imagen" ${defaultLeft === "imagen" ? "selected" : ""}>Imagen</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>Derecha</label>
+            <select id="${id}-hright">
+              <option value="texto" ${defaultRight === "texto" ? "selected" : ""}>Texto</option>
+              <option value="imagen" ${defaultRight === "imagen" ? "selected" : ""}>Imagen</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>% Izq</label>
+            <input id="${id}-wleft" type="number" min="10" max="90" value="50" style="width:60px">
+          </div>
+          
+          <div class="param-item">
+            <label>% Der</label>
+            <input id="${id}-wright" type="number" min="10" max="90" value="50" style="width:60px">
+          </div>
+        </div>
+        
+        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
+        
+        <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Texto</h5>
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Cantidad</label>
+            <input id="${id}-htcount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHTextCount('${id}')">
+          </div>
+          
+          <div class="param-item">
+            <label>Tamaño</label>
+            <select id="${id}-hsize">
+              <option value="14px">Pequeño</option>
+              <option value="16px" selected>Normal</option>
+              <option value="20px">Grande</option>
+              <option value="28px">Muy grande</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>Alineación</label>
+            <select id="${id}-halign">
+              <option value="left">Izquierda</option>
+              <option value="center" selected>Centro</option>
+              <option value="right">Derecha</option>
+              <option value="justify">Justificado</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>Color texto</label>
+            <input id="${id}-hcolor" type="color" class="mini-color" value="#333333" title="Color de texto">
+          </div>
+        </div>
+        
+        <div id="${id}-htitems" style="margin-top:4px; margin-bottom:12px;"></div>
+        
+        <div class="checks">
+          <label><input type="checkbox" id="${id}-hb"> <b>Negrita</b></label>
+          <label><input type="checkbox" id="${id}-hi"> <i>Cursiva</i></label>
+          <label><input type="checkbox" id="${id}-hu"> <u>Subrayado</u></label>
+          <label><input type="checkbox" id="${id}-hupper"> MAYÚSCULAS</label>
+        </div>
+        
+        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
+        
+        <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Imagen</h5>
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Cantidad</label>
+            <input id="${id}-hicount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHImgCount('${id}')">
+          </div>
+          
+          <div class="param-item">
+            <label>Posición</label>
+            <select id="${id}-hialign">
+              <option value="left">Izquierda</option>
+              <option value="center" selected>Centro</option>
+              <option value="right">Derecha</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>Curva</label>
+            <select id="${id}-hiradius">
+              <option value="0" selected>Ninguna</option>
+              <option value="8">Baja</option>
+              <option value="16">Media</option>
+              <option value="24">Alta</option>
+            </select>
+          </div>
+          
+          <div class="param-item">
+            <label>Margen inferior</label>
+            <select id="${id}-himb">
+              <option value="0" selected>Ninguno</option>
+              <option value="2">Bajo</option>
+              <option value="4">Medio</option>
+              <option value="8">Alto</option>
+            </select>
+          </div>
+        </div>
+        
+        <div id="${id}-hitems" style="margin-top:4px; margin-bottom:12px;"></div>
+        
+        <div class="checks">
+          <label><input type="checkbox" id="${id}-hinewtab" checked> Abrir enlaces en pestaña nueva</label>
+        </div>
+        
+        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
+        
+        <div class="params-grid">
+          <div class="param-item">
+            <label>Color fondo</label>
+            <input id="${id}-hbg" type="color" class="mini-color" value="#ffffff" title="Color de fondo">
+          </div>
+        </div>
+      `;
+      updateHTextCount(id);
+      updateHImgCount(id);
+    } else if(tipo === "html"){
+      cont.innerHTML = `
+        <div style="margin-bottom:12px;">
+          <label>Código HTML personalizado</label>
+          <p style="font-size:11px; color:#666; margin:4px 0;">Pega aquí tu código HTML. Se agregará tal cual al resultado final.</p>
+          <textarea id="${id}-htmlcode" rows="8" placeholder="<div>Tu HTML aquí...</div>" style="font-family:monospace; font-size:12px;"></textarea>
+        </div>
+      `;
+    } else if(tipo === "excel-merge"){
+      cont.innerHTML = `
+        <div style="margin-bottom:12px;">
+          <label>Archivo Excel (.xlsx, .xls)</label>
+          <p style="font-size:11px; color:#666; margin:4px 0;">Sube un Excel con columnas: <strong>ID</strong> (col A) y <strong>HTML</strong> (col B).</p>
+          <input type="file" id="${id}-excelfile" accept=".xlsx, .xls" onchange="loadExcelData('${id}')" />
+          
+          <div id="${id}-preview-controls" style="margin-top:12px; display:none;">
+            <label>Previsualizar ID:</label>
+            <select id="${id}-excelid" onchange="renderAll()"></select>
+          </div>
+
+          <div style="margin-top:12px;">
+            <button type="button" onclick="processExcel('${id}')" style="padding:6px 12px; background:#2563eb; color:#fff; border:0; border-radius:4px; cursor:pointer;">
+              Descargar Excel Generado
+            </button>
+          </div>
+          <div id="${id}-excelstatus" style="margin-top:8px; font-size:12px; color:#444;"></div>
+        </div>
+      `;
     } else {
       cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
     }
@@ -346,6 +587,69 @@
     }
   }
 
+  /* ========= horizontal layout helpers ========= */
+  
+  function updateHTextCount(id){
+    const raw = (val(id + "-htcount") || "").trim();
+    if(raw === ""){
+      return;
+    }
+    let n = parseInt(raw, 10);
+    if(isNaN(n) || n < 1) n = 1;
+    if(n > 10) n = 10;
+    byId(id + "-htcount").value = String(n);
+
+    const cont = byId(id + "-htitems");
+    if(!cont) return;
+    cont.innerHTML = "";
+
+    for(let i=1;i<=n;i++){
+      const ph = i === 1 ? "Línea 1&#10;Línea 2" : "";
+      const box = document.createElement("div");
+      box.className = "mod-box";
+      box.style.margin = "6px 0";
+      box.style.padding = "8px";
+      box.innerHTML = `
+        <strong>Texto ${i}</strong>
+        <textarea id="${id}-htxt${i}" rows="2" placeholder="${ph}"></textarea>
+      `;
+      cont.appendChild(box);
+    }
+  }
+
+  function updateHImgCount(id){
+    const raw = (val(id + "-hicount") || "").trim();
+    if(raw === ""){
+      return;
+    }
+    let n = parseInt(raw, 10);
+    if(isNaN(n) || n < 1) n = 1;
+    if(n > 10) n = 10;
+    byId(id + "-hicount").value = String(n);
+
+    const cont = byId(id + "-hitems");
+    if(!cont) return;
+    cont.innerHTML = "";
+    for(let i=1;i<=n;i++){
+      const box = document.createElement("div");
+      box.className = "mod-box";
+      box.style.margin = "6px 0";
+      box.style.padding = "8px";
+      box.innerHTML = `
+        <strong>Imagen ${i}</strong>
+        <label>URL de la imagen</label>
+        <input id="${id}-himg${i}" type="text" placeholder="https://mi-sitio.com/imagen${i}.jpg">
+
+        <label>Texto alternativo (descripción corta)</label>
+        <input id="${id}-halt${i}" type="text" placeholder="Ejemplo: Foto ${i}">
+
+        <label>Enlace al hacer clic (opcional)</label>
+        <input id="${id}-hlink${i}" type="text" placeholder="https://mi-sitio.com/destino${i}">
+      `;
+      cont.appendChild(box);
+    }
+  }
+
   /* ========= RENDER: genera HTML, CSS, JS para inpgs-wrapper ========= */
 
   function renderAll(){
@@ -383,12 +687,15 @@
         else if(sizeToken === "28px") sizeEm = "1.6em";
         else sizeEm = "1em";
 
-        const color = val(id + "-color") || "#111111";
+        const color = val(id + "-color") || "#333333";
         const bg    = val(id + "-bg")    || "#ffffff";
         const align = val(id + "-align") || "center";
         const w     = clampPct(val(id + "-w"));
-        let mb      = parseInt(val(id + "-mb") || "2", 10);
-        if(isNaN(mb) || mb < 0) mb = 0;
+        
+        // Espacio: 1 unidad = 5px
+        let mbUnit  = parseInt(val(id + "-mb") || "0", 10);
+        if(isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
+        const mb = mbUnit * 5;
 
         const bold  = byId(id + "-b")?.checked;
         const italic= byId(id + "-i")?.checked;
@@ -464,8 +771,12 @@
 
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
         const align  = val(id + "-ialign") || "center";
-        let mb       = parseInt(val(id + "-mb") || "2", 10);
-        if(isNaN(mb) || mb < 0) mb = 0;
+        
+        // Espacio: 1 unidad = 5px
+        let mbUnit  = parseInt(val(id + "-mb") || "0", 10);
+        if(isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
+        const mb = mbUnit * 5;
+
         const newTab = byId(id + "-newtab")?.checked;
 
         const rowCls  = "inpgs-row-" + modIndex;
@@ -510,6 +821,228 @@
   display:block !important;
 }
 `.trim() + "\n\n";
+      }
+
+      /* === HORIZONTAL: Texto+Imagen === */
+      if(tipo === "texto-imagen-h"){
+        const leftType = val(id + "-hleft") || "texto";
+        const rightType = val(id + "-hright") || "imagen";
+        const wLeft = parseInt(val(id + "-wleft") || "50", 10);
+        const wRight = parseInt(val(id + "-wright") || "50", 10);
+        const bg = val(id + "-hbg") || "#ffffff";
+
+        // Text configuration
+        const rawTextCount = (val(id + "-htcount") || "").trim();
+        let textCount = parseInt(rawTextCount || "1", 10);
+        if(isNaN(textCount) || textCount < 1) textCount = 1;
+        if(textCount > 10) textCount = 10;
+
+        const texts = [];
+        for(let i=1;i<=textCount;i++){
+          const t = val(id + "-htxt" + i);
+          if(t?.trim()) texts.push(t);
+        }
+
+        const textSize = val(id + "-hsize") || "16px";
+        let sizeEm;
+        if(textSize === "14px") sizeEm = "0.9em";
+        else if(textSize === "20px") sizeEm = "1.25em";
+        else if(textSize === "28px") sizeEm = "1.6em";
+        else sizeEm = "1em";
+
+        const textColor = val(id + "-hcolor") || "#333333";
+        const textAlign = val(id + "-halign") || "center";
+        const textBold = byId(id + "-hb")?.checked;
+        const textItalic = byId(id + "-hi")?.checked;
+        const textUnder = byId(id + "-hu")?.checked;
+        const textUpper = byId(id + "-hupper")?.checked;
+
+        // Image configuration
+        const rawImgCount = (val(id + "-hicount") || "").trim();
+        let imgCount = parseInt(rawImgCount || "1", 10);
+        if(isNaN(imgCount) || imgCount < 1) imgCount = 1;
+        if(imgCount > 10) imgCount = 10;
+
+        const images = [];
+        for(let i=1;i<=imgCount;i++){
+          const src = val(id + "-himg" + i);
+          if(!src) continue;
+          images.push({
+            src,
+            alt: val(id + "-halt" + i) || "",
+            link: val(id + "-hlink" + i) || ""
+          });
+        }
+
+        const imgAlign = val(id + "-hialign") || "center";
+        const imgRadius = parseInt(val(id + "-hiradius") || "0", 10) || 0;
+        const imgNewTab = byId(id + "-hinewtab")?.checked;
+        
+        let imgMbUnit = parseInt(val(id + "-himb") || "0", 10);
+        if(isNaN(imgMbUnit) || imgMbUnit < 0) imgMbUnit = 0;
+        const imgMb = imgMbUnit * 5;
+
+        // Skip if both text and images are empty
+        if(texts.length === 0 && images.length === 0) return;
+
+        // Create container class
+        const containerCls = "inpgs-hcontainer-" + modIndex;
+        const leftCls = containerCls + "__left";
+        const rightCls = containerCls + "__right";
+        const textCls = containerCls + "__text";
+        const imgRowCls = containerCls + "__imgrow";
+        const imgCellCls = imgRowCls + "__cell";
+        const imgCls = imgRowCls + "__img";
+
+        // Build HTML
+        htmlBody += `<div class="${containerCls}">\n`;
+
+        // Left side
+        htmlBody += `  <div class="${leftCls}">\n`;
+        if(leftType === "texto" && texts.length > 0){
+          texts.forEach(raw=>{
+            const tRaw = textUpper ? raw.toUpperCase() : raw;
+            const htmlT = escHTML(tRaw).replace(/\r?\n/g,"<br>");
+            htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
+          });
+        } else if(leftType === "imagen" && images.length > 0){
+          htmlBody += `    <div class="${imgRowCls}">\n`;
+          images.forEach(it=>{
+            let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
+            if(it.link){
+              const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
+              innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+            }
+            htmlBody += `      <div class="${imgCellCls}">${innerImg}</div>\n`;
+          });
+          htmlBody += `    </div>\n`;
+        }
+        htmlBody += `  </div>\n`;
+
+        // Right side
+        htmlBody += `  <div class="${rightCls}">\n`;
+        if(rightType === "texto" && texts.length > 0){
+          texts.forEach(raw=>{
+            const tRaw = textUpper ? raw.toUpperCase() : raw;
+            const htmlT = escHTML(tRaw).replace(/\r?\n/g,"<br>");
+            htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
+          });
+        } else if(rightType === "imagen" && images.length > 0){
+          htmlBody += `    <div class="${imgRowCls}">\n`;
+          images.forEach(it=>{
+            let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
+            if(it.link){
+              const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
+              innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+            }
+            htmlBody += `      <div class="${imgCellCls}">${innerImg}</div>\n`;
+          });
+          htmlBody += `    </div>\n`;
+        }
+        htmlBody += `  </div>\n`;
+        htmlBody += `</div>\n`;
+
+        // Build CSS
+        const fw = textBold ? "700" : "400";
+        const fs = textItalic ? "italic" : "normal";
+        const td = textUnder ? "underline" : "none";
+
+        const textJustify =
+          textAlign === "left"  ? "flex-start" :
+          textAlign === "right" ? "flex-end"   :
+          textAlign === "center"? "center"     : "space-between";
+
+        const imgJustify =
+          imgAlign === "left"  ? "flex-start" :
+          imgAlign === "right" ? "flex-end"   :
+          imgAlign === "center"? "center"     : "space-between";
+
+        css += `
+.inpgs-wrapper .${containerCls}{
+  display:flex !important;
+  flex-direction:row !important;
+  gap:0 !important;
+  background:${bg} !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+.inpgs-wrapper .${leftCls}{
+  width:${wLeft}% !important;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+.inpgs-wrapper .${rightCls}{
+  width:${wRight}% !important;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+}
+.inpgs-wrapper .${textCls}{
+  margin:0 !important;
+  padding:0 !important;
+  font-family:inherit !important;
+  font-size:${sizeEm} !important;
+  font-weight:${fw} !important;
+  font-style:${fs} !important;
+  text-decoration:${td} !important;
+  color:${textColor} !important;
+  text-align:${textAlign} !important;
+}
+.inpgs-wrapper .${imgRowCls}{
+  display:flex !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
+  margin:0 0 ${imgMb}px 0 !important;
+  padding:0 !important;
+  align-items:center !important;
+  justify-content:${imgJustify} !important;
+}
+.inpgs-wrapper .${imgCellCls}{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+  text-align:center !important;
+}
+.inpgs-wrapper .${imgCls}{
+  width:100% !important;
+  height:auto !important;
+  border-radius:${imgRadius}px !important;
+  display:block !important;
+}
+`.trim() + "\n\n";
+      }
+
+      /* === CUSTOM HTML === */
+      if(tipo === "html"){
+        const customHtml = val(id + "-htmlcode") || "";
+        if(customHtml.trim()){
+          htmlBody += customHtml.trim() + "\n";
+        }
+      }
+
+      /* === EXCEL MERGE PLACEHOLDER === */
+      if(tipo === "excel-merge"){
+        // Check if we have loaded data for this module
+        const data = loadedExcelData[id];
+        if(data && data.length > 0){
+          // Find selected ID
+          const selectId = byId(id + "-excelid");
+          const selectedVal = selectId ? selectId.value : null;
+          
+          // Find corresponding HTML
+          const item = data.find(x => x.id == selectedVal);
+          if(item){
+             htmlBody += item.html || ""; // Inject the old HTML
+          } else {
+             // Fallback if nothing selected (e.g. first load)
+             htmlBody += data[0].html || "";
+          }
+        } else {
+          // No data loaded yet, or we are generating the template for export
+          htmlBody += "<!-- [[EXCEL_MERGE_POINT]] -->\n";
+        }
       }
     });
 
@@ -652,6 +1185,231 @@
   }
   function escAttr(s){
     return (s || "").replace(/"/g, "&quot;");
+  }
+
+  /* ========= color sync ========= */
+  function syncHex(colorInput, textId){
+    const txt = document.getElementById(textId);
+    if(txt) txt.value = colorInput.value;
+  }
+  function syncColor(textInput, colorId){
+    const col = document.getElementById(colorId);
+    let val = textInput.value;
+    if(!val.startsWith("#")) val = "#" + val;
+    if(/^#[0-9A-F]{6}$/i.test(val)){
+      if(col) col.value = val;
+    }
+  }
+  /* ========= Drag and Drop ========= */
+  let draggedItem = null;
+  let placeholder = null;
+
+  function collapseAll(){
+    document.querySelectorAll(".mod-body").forEach(b => b.style.display = "none");
+  }
+
+  function dragStart(e, id){
+    draggedItem = document.getElementById(id);
+    if(!draggedItem) return;
+
+    // Collapse all bodies for cleaner dragging
+    collapseAll();
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", id);
+    // Set drag image (optional, browser default is usually fine)
+
+    // Create placeholder
+    placeholder = document.createElement("div");
+    placeholder.className = "mod-placeholder";
+    placeholder.style.height = draggedItem.offsetHeight + "px";
+
+    // Defer hiding the dragged element so the drag ghost is created from the visible element
+    setTimeout(() => {
+      draggedItem.style.display = "none";
+      // Insert placeholder where the dragged item was
+      draggedItem.parentNode.insertBefore(placeholder, draggedItem.nextSibling);
+    }, 0);
+  }
+
+  function dragOver(e){
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    
+    const target = e.target.closest(".mod-box");
+    const container = document.getElementById("mods");
+    if(!container || !placeholder) return;
+
+    if(target && target !== draggedItem){
+      const rect = target.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      
+      if(e.clientY < midY){
+        container.insertBefore(placeholder, target);
+      } else {
+        container.insertBefore(placeholder, target.nextSibling);
+      }
+    } else if (!target && e.target === container) {
+        // If hovering over empty space in container, append to end
+        container.appendChild(placeholder);
+    }
+  }
+
+  function dragEnter(e){
+    e.preventDefault();
+  }
+
+  function dragLeave(e){
+    // Optional: handle leaving the container
+  }
+
+  function drop(e, targetId){
+    e.preventDefault();
+    if(!draggedItem || !placeholder) return;
+    
+    // Move dragged item to placeholder position
+    if(placeholder.parentNode){
+        placeholder.parentNode.insertBefore(draggedItem, placeholder);
+    }
+    
+    updatePositions();
+  }
+
+  function dragEnd(e){
+    if(draggedItem){
+      draggedItem.style.display = ""; // Show it again
+      draggedItem = null;
+    }
+    if(placeholder && placeholder.parentNode){
+      placeholder.remove();
+    }
+    placeholder = null;
+  }
+
+  /* ========= EXCEL PROCESSING ========= */
+  
+  let loadedExcelData = {}; // Store data by module ID: { modId: [ {id, html}, ... ] }
+
+  function loadExcelData(id){
+    const fileInput = byId(id + "-excelfile");
+    const statusDiv = byId(id + "-excelstatus");
+    const controlsDiv = byId(id + "-preview-controls");
+    const selectId = byId(id + "-excelid");
+
+    if(!fileInput || !fileInput.files || fileInput.files.length === 0){
+      return;
+    }
+
+    const file = fileInput.files[0];
+    if(statusDiv) statusDiv.innerHTML = "Leyendo archivo...";
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, {type: 'array'});
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        
+        if(!jsonData || jsonData.length === 0){
+          if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>El archivo parece estar vacío.</span>";
+          return;
+        }
+
+        // Normalize data
+        const normalizedData = jsonData.map(row => {
+          const keys = Object.keys(row);
+          let idVal = "";
+          let htmlVal = "";
+          keys.forEach(k => {
+            if(k.toLowerCase() === "id") idVal = row[k];
+            if(k.toLowerCase() === "html") htmlVal = row[k];
+          });
+          return { id: idVal, html: htmlVal };
+        });
+
+        loadedExcelData[id] = normalizedData;
+
+        // Populate dropdown
+        selectId.innerHTML = "";
+        normalizedData.forEach(item => {
+          const opt = document.createElement("option");
+          opt.value = item.id;
+          opt.textContent = item.id;
+          selectId.appendChild(opt);
+        });
+
+        if(controlsDiv) controlsDiv.style.display = "block";
+        if(statusDiv) statusDiv.innerHTML = "<span style='color:green'>Archivo cargado. Selecciona un ID para previsualizar.</span>";
+        
+        // Trigger render to show first item
+        renderAll();
+
+      } catch(err){
+        console.error(err);
+        if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al leer: " + err.message + "</span>";
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function processExcel(id){
+    const statusDiv = byId(id + "-excelstatus");
+    const data = loadedExcelData[id];
+    
+    if(!data || data.length === 0){
+      if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Primero debes cargar un archivo Excel válido.</span>";
+      return;
+    }
+
+    // Generate template by temporarily hiding the specific ID selection
+    // This forces renderAll to output the placeholder
+    const savedData = loadedExcelData[id];
+    loadedExcelData[id] = null; 
+    
+    // We also need to ensure renderAll doesn't crash or produce empty output if it relies on loadedExcelData
+    // The modified renderAll below handles 'excel-merge' by checking if data exists.
+    // If loadedExcelData[id] is null, it should output the placeholder.
+    
+    renderAll();
+    const template = byId("htmlFullOut").value;
+    
+    // Restore data and view
+    loadedExcelData[id] = savedData; 
+    renderAll(); 
+
+    if(!template.includes("<!-- [[EXCEL_MERGE_POINT]] -->")){
+       if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error: No se encontró el punto de inserción. Asegúrate de tener un módulo 'Carga Excel' activo.</span>";
+       return;
+    }
+
+    if(statusDiv) statusDiv.innerHTML = "Procesando " + data.length + " filas...";
+
+    try {
+      const outputData = [];
+
+      data.forEach(row => {
+        const newHtml = template.replace("<!-- [[EXCEL_MERGE_POINT]] -->", row.html || "");
+        outputData.push({
+          id: row.id,
+          html_original: row.html,
+          html_nuevo: newHtml
+        });
+      });
+
+      const newWs = XLSX.utils.json_to_sheet(outputData);
+      const newWb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(newWb, newWs, "Resultados");
+
+      XLSX.writeFile(newWb, "inpages_generados.xlsx");
+      
+      if(statusDiv) statusDiv.innerHTML = "<span style='color:green'>¡Listo! Archivo descargado.</span>";
+    } catch(err){
+       console.error(err);
+       if(statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al procesar: " + err.message + "</span>";
+    }
   }
 </script>
 
