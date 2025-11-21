@@ -237,6 +237,44 @@
     border: none;
     border-radius: 3px;
   }
+
+  .text-toolbar-inline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 4px 0;
+    font-size: 12px;
+  }
+
+  .text-toolbar-button {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 2px 6px;
+    background: #f9fafb;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .text-toolbar-button:hover {
+    background: #e5e7eb;
+  }
+
+  .rich-textarea {
+    min-height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px;
+    font-size: 13px;
+    background: #fff;
+    overflow-y: auto;
+  }
+
+  /* pseudo-placeholder */
+  .rich-textarea.empty::before {
+    content: "Ingresa el texto...";
+    color: #9ca3af;
+  }
 </style>
 
 <!-- SheetJS for Excel processing -->
@@ -253,6 +291,49 @@
     fileName: ""
   };
   let currentRenderRowIndex = null;
+
+  function isExcelLoaded() {
+    return Array.isArray(globalExcelData.columns) && globalExcelData.columns.length > 0;
+  }
+
+  function getColumnOptions() {
+    // Siempre dejamos la opción manual
+    let options = '<option value="manual">Valor manual</option>';
+
+    // Si no hay Excel cargado, solo mostramos "manual"
+    if (!isExcelLoaded()) {
+      return options;
+    }
+
+    // Con Excel cargado, agregamos las columnas
+    globalExcelData.columns.forEach(col => {
+      options += `<option value="${col}">${col}</option>`;
+    });
+    return options;
+  }
+
+  function refreshSourceSelects() {
+    const hasExcel = isExcelLoaded();
+    const selects = document.querySelectorAll('select[data-source-select="1"]');
+
+    selects.forEach(sel => {
+      const previousValue = sel.value || 'manual';
+
+      // Reconstruimos opciones según el Excel actual
+      sel.innerHTML = getColumnOptions();
+
+      if (hasExcel && Array.from(sel.options).some(o => o.value === previousValue)) {
+        sel.value = previousValue;
+      } else {
+        sel.value = 'manual';
+      }
+
+      sel.disabled = !hasExcel;
+      sel.title = hasExcel
+        ? 'Selecciona columna del Excel'
+        : 'Carga un Excel para activar esta opción';
+    });
+  }
 
   /* ========= GLOBAL EXCEL UPLOAD ========= */
   function handleGlobalExcelUpload(event) {
@@ -286,6 +367,9 @@
         const generateBtn = byId('generate-all-btn');
         if (selectorContainer) selectorContainer.style.display = 'flex';
         if (generateBtn) generateBtn.style.display = 'inline-block';
+        // 🔓 Habilitar selects de fuente de datos ahora que hay Excel
+        refreshSourceSelects();
+
         // Trigger initial render
         renderAll();
       } catch (err) {
@@ -513,7 +597,8 @@
         <div class="params-grid">
           <div class="param-item">
             <label>Cantidad</label>
-            <input id="${id}-tcount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateTextCount('${id}')">
+            <input id="${id}-tcount" type="number" min="1" max="10" value="1"
+                   style="width:50px" oninput="updateTextCount('${id}')">
           </div>
           
           <div class="param-item">
@@ -563,13 +648,6 @@
         </div>
 
         <div id="${id}-titems" style="margin-top:4px; margin-bottom:12px;"></div>
-
-        <div class="checks">
-          <label><input type="checkbox" id="${id}-b"> <b>Negrita</b></label>
-          <label><input type="checkbox" id="${id}-i"> <i>Cursiva</i></label>
-          <label><input type="checkbox" id="${id}-u"> <u>Subrayado</u></label>
-          <label><input type="checkbox" id="${id}-upper"> MAYÚSCULAS</label>
-        </div>
       `;
       updateTextCount(id);
     } else if (tipo === "imagen") {
@@ -784,7 +862,11 @@
         <div class="params-grid">
            <div class="param-item" style="width:100%; max-width:100%;">
              <label>Fuente de datos</label>
-             <select id="${id}-video-url-source" onchange="handleSourceChange('${id}-video-url')">
+             <select
+               id="${id}-video-url-source"
+               data-source-select="1"
+               ${isExcelLoaded() ? '' : 'disabled'}
+               onchange="handleSourceChange('${id}-video-url')">
                ${getColumnOptions()}
              </select>
            </div>
@@ -814,10 +896,37 @@
       div.style.marginBottom = "8px";
       div.innerHTML = `
         <label>Texto ${i} - Fuente de datos</label>
-        <select id="${id}-txt${i}-source" onchange="handleSourceChange('${id}-txt${i}')">
+        <select
+          id="${id}-txt${i}-source"
+          data-source-select="1"
+          ${isExcelLoaded() ? '' : 'disabled'}
+          onchange="handleSourceChange('${id}-txt${i}')">
           ${getColumnOptions()}
         </select>
-        <textarea id="${id}-txt${i}" rows="2" placeholder="Ingresa el texto..."></textarea>
+
+        <div class="text-toolbar-inline">
+          <button type="button"
+                  class="text-toolbar-button"
+                  onmousedown="applyInlineFormat('bold', event)">
+            <b>B</b>
+          </button>
+          <button type="button"
+                  class="text-toolbar-button"
+                  onmousedown="applyInlineFormat('italic', event)">
+            <i>I</i>
+          </button>
+          <button type="button"
+                  class="text-toolbar-button"
+                  onmousedown="applyInlineFormat('underline', event)">
+            <u>U</u>
+          </button>
+        </div>
+
+        <div id="${id}-txt${i}"
+             class="rich-textarea empty"
+             contenteditable="true"
+             data-type="rich-text">
+        </div>
       `;
       container.appendChild(div);
     }
@@ -826,23 +935,35 @@
   function handleSourceChange(fieldId) {
     const sourceSelect = byId(fieldId + '-source');
     const field = byId(fieldId);
-
     if (!sourceSelect || !field) return;
 
     const source = sourceSelect.value;
+    const isRich = field.getAttribute('contenteditable') === 'true';
 
     if (source === 'manual') {
-      field.disabled = false;
-      field.placeholder = 'Ingresa el texto...';
+      if (isRich) {
+        field.innerHTML = '';
+        field.classList.add('empty');
+      } else {
+        if ('disabled' in field) field.disabled = false;
+        if ('value' in field) field.value = '';
+        if ('placeholder' in field) field.placeholder = 'Ingresa el texto...';
+      }
     } else {
       const excelValue = getExcelValue(source);
       if (excelValue !== null) {
-        field.value = excelValue;
-        field.disabled = true;
-        field.placeholder = 'Valor desde Excel';
+        if (isRich) {
+          field.textContent = String(excelValue);
+          field.classList.remove('empty');
+        } else {
+          if ('value' in field) field.value = String(excelValue);
+          if ('disabled' in field) field.disabled = true;
+          if ('placeholder' in field) field.placeholder = 'Valor desde Excel';
+        }
       }
     }
   }
+
   /* ========= imágenes con input+lista ========= */
 
   function updateImgCount(id) {
@@ -859,9 +980,14 @@
       div.innerHTML = `
         <label style="font-weight:600;">Imagen ${i}</label>
         <label style="margin-top:4px;">Fuente de datos</label>
-        <select id="${id}-img${i}-source" onchange="handleSourceChange('${id}-img${i}')">
+        <select
+          id="${id}-img${i}-source"
+          data-source-select="1"
+          ${isExcelLoaded() ? '' : 'disabled'}
+          onchange="handleSourceChange('${id}-img${i}')">
           ${getColumnOptions()}
         </select>
+
         <label style="margin-top:4px;">URL</label>
         <input type="text" id="${id}-img${i}" placeholder="https://example.com/imagen.jpg">
         <label style="margin-top:4px;">Alt text</label>
@@ -952,6 +1078,7 @@
       modIndex++;
 
       /* === TEXTO: varios h2 en una sola fila === */
+      /* === TEXTO: varios h2 en una sola fila === */
       if (tipo === "texto") {
         const rawCount = (val(id + "-tcount") || "").trim();
         let count = parseInt(rawCount || "1", 10);
@@ -962,20 +1089,29 @@
         for (let i = 1; i <= count; i++) {
           const sourceSelect = byId(`${id}-txt${i}-source`);
           const source = sourceSelect ? sourceSelect.value : 'manual';
+          const fieldEl = byId(`${id}-txt${i}`);
 
           let t = '';
+          let rich = false;
 
           if (source && source !== 'manual') {
-            // Tomar el valor directamente desde la fila de Excel correspondiente
             const excelVal = getExcelValue(source);
             t = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+            rich = false; // viene plano de Excel
           } else {
-            // Modo manual: lo que haya escrito el usuario
-            t = val(`${id}-txt${i}`);
+            if (fieldEl && fieldEl.getAttribute('contenteditable') === 'true') {
+              t = fieldEl.innerHTML || '';
+              rich = true; // aquí vienen los <b>, <i>, <u>, etc.
+            } else {
+              t = val(`${id}-txt${i}`);
+              rich = false;
+            }
           }
 
-          if (t && t.trim()) {
-            textos.push(t);
+          // eliminar casos de sólo <br>
+          const plainCheck = t.replace(/<br\s*\/?>/gi, '').trim();
+          if (plainCheck) {
+            textos.push({ content: t, rich });
           }
         }
 
@@ -998,25 +1134,27 @@
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
 
-        const bold = byId(id + "-b")?.checked;
-        const italic = byId(id + "-i")?.checked;
-        const under = byId(id + "-u")?.checked;
-        const upper = byId(id + "-upper")?.checked;
-
         const grpCls = "inpgs-txtgrp-" + modIndex;
         const txtCls = "inpgs-txt-" + modIndex;
 
         htmlBody += `<div class="${grpCls}">\n`;
-        textos.forEach(raw => {
-          const tRaw = upper ? raw.toUpperCase() : raw;
-          const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
-          htmlBody += `  <h2 class="${txtCls}">${htmlT}</h2>\n`;
+        textos.forEach(item => {
+          let out = item.content || '';
+
+          if (!item.rich) {
+            // texto plano (Excel o input normal): escapamos y convertimos saltos de línea
+            out = escHTML(out).replace(/\r?\n/g, "<br>");
+          }
+          // si es rich, ya viene con <b>, <i>, <u>, etc. y no lo escapamos
+
+          htmlBody += `  <h2 class="${txtCls}">${out}</h2>\n`;
         });
         htmlBody += `</div>\n`;
 
-        const fw = bold ? "700" : "400";
-        const fs = italic ? "italic" : "normal";
-        const td = under ? "underline" : "none";
+        // estilos base del bloque (B/I/U vienen desde el HTML interno, no desde aquí)
+        const fw = "400";
+        const fs = "normal";
+        const td = "none";
 
         const justify =
           align === "left" ? "flex-start" :
@@ -1043,9 +1181,9 @@
   padding:0 !important;
   font-family:inherit !important;
   font-size:${sizeEm} !important;
-  font-weight:${fw} !important;
-  font-style:${fs} !important;
-  text-decoration:${td} !important;
+  font-weight:${fw};
+  font-style:${fs};
+  text-decoration:${td};
   color:${color} !important;
 }
 `.trim() + "\n\n";
@@ -1531,6 +1669,12 @@
 
   function byId(id) { return document.getElementById(id); }
   function val(id) { const el = byId(id); return el ? el.value : ""; }
+  function applyInlineFormat(cmd, ev) {
+    // evitamos que el botón robe el foco y destruya la selección
+    if (ev) ev.preventDefault();
+    document.execCommand(cmd, false, null);
+  }
+
   function clampPct(v) {
     const n = parseInt(v || "100", 10);
     if (isNaN(n)) return 100;
@@ -1767,4 +1911,15 @@
       if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al procesar: " + err.message + "</span>";
     }
   }
+  document.addEventListener('input', function (e) {
+    const el = e.target;
+    if (el.matches('.rich-textarea')) {
+      if (el.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '') {
+        el.classList.add('empty');
+      } else {
+        el.classList.remove('empty');
+      }
+    }
+  });
+
 </script>
