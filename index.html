@@ -238,27 +238,148 @@
     border-radius: 3px;
   }
 
-  .text-toolbar-inline {
+
+  .text-toolbar-lineheight {
+    max-width: 64px;
+  }
+
+  .text-toolbar-select:focus,
+  .text-toolbar-button:focus {
+    outline: 1px solid #2563eb;
+    outline-offset: 1px;
+  }
+
+
+  .text-toolbar-color {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .text-color-picker {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 4px;
-    margin: 4px 0;
-    font-size: 12px;
+    gap: 2px;
   }
 
-  .text-toolbar-button {
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    padding: 2px 6px;
-    background: #f9fafb;
-    cursor: pointer;
-    font-size: 12px;
-    line-height: 1;
+  .text-color-btn {
+    padding: 2px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
   }
 
-  .text-toolbar-button:hover {
-    background: #e5e7eb;
+  .text-color-picker-icon {
+    width: 14px;
+    height: 14px;
+    display: block;
   }
+
+  .text-color-picker-bar {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+    background: #111827;
+    /* color inicial de la barra */
+  }
+
+
+  .icon-align {
+    width: 16px;
+    height: 12px;
+    position: relative;
+    display: inline-block;
+  }
+
+
+  /* IZQUIERDA: todas pegadas a la izquierda, distintas longitudes */
+  .icon-align-left::before {
+    top: 0;
+    left: 0;
+    width: 16px;
+  }
+
+  .icon-align-left::after {
+    top: 5px;
+    left: 0;
+    width: 12px;
+  }
+
+  .icon-align-left span {
+    top: 10px;
+    left: 0;
+    width: 8px;
+  }
+
+  /* CENTRO: centradas horizontalmente, distintas longitudes */
+  .icon-align-center::before {
+    top: 0;
+    left: 50%;
+    width: 16px;
+    transform: translateX(-50%);
+  }
+
+  .icon-align-center::after {
+    top: 5px;
+    left: 50%;
+    width: 12px;
+    transform: translateX(-50%);
+  }
+
+  .icon-align-center span {
+    top: 10px;
+    left: 50%;
+    width: 16px;
+    transform: translateX(-50%);
+  }
+
+  /* DERECHA: pegadas al borde derecho, distintas longitudes */
+  .icon-align-right::before {
+    top: 0;
+    right: 0;
+    width: 16px;
+  }
+
+  .icon-align-right::after {
+    top: 5px;
+    right: 0;
+    width: 12px;
+  }
+
+  .icon-align-right span {
+    top: 10px;
+    right: 0;
+    width: 8px;
+  }
+
+  /* JUSTIFICADO: las tres líneas de ancho completo */
+  .icon-align-justify::before {
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .icon-align-justify::after {
+    top: 5px;
+    left: 0;
+    right: 0;
+  }
+
+  .icon-align-justify span {
+    top: 10px;
+    left: 0;
+    right: 0;
+  }
+
+
+
 
   .rich-textarea {
     min-height: 40px;
@@ -275,6 +396,249 @@
     content: "Ingresa el texto...";
     color: #9ca3af;
   }
+
+  .icon-paint-bucket {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+  }
+
+
+  /* ===================== */
+  /* OVERRIDES TOOLBAR FONDO CLARO */
+  /* ===================== */
+
+  /* Contenedor de la barra */
+  .text-toolbar-inline {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 4px 0;
+    font-size: 12px;
+    background: #f9fafb;
+    /* fondo claro */
+    border-radius: 4px;
+    padding: 4px 6px;
+    border: 1px solid #e5e7eb;
+  }
+
+  /* Botones de la barra */
+  .text-toolbar-button {
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 2px 4px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    color: #374151;
+    /* texto / iconos gris oscuro */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .text-toolbar-button:hover {
+    background: #e5e7eb;
+    /* hover gris claro */
+  }
+
+  .text-toolbar-button.active {
+    background: #d1d5db;
+    /* estado seleccionado */
+    border-color: #9ca3af;
+    color: #111827;
+  }
+
+  /* Selects (tamaño fuente / interlineado) */
+  .text-toolbar-select,
+  .text-toolbar-lineheight {
+    border-radius: 4px;
+    padding: 0 4px;
+    height: 22px;
+    font-size: 11px;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #d1d5db;
+  }
+
+  .text-toolbar-select {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 0 4px;
+    height: 22px;
+    font-size: 11px;
+    background: #f9fafb;
+    max-width: 80px;
+    /* mucho más chico que un select normal */
+  }
+
+  /* Separador visual */
+  .text-toolbar-separator {
+    color: #9ca3af;
+    padding: 0 2px;
+  }
+
+  /* ===================== */
+  /* ÍCONOS DE ALINEACIÓN */
+  /* ===================== */
+
+  .icon-align::before,
+  .icon-align::after,
+  .icon-align span {
+    content: "";
+    position: absolute;
+    height: 2px;
+    border-radius: 1px;
+    background: #4b5563;
+  }
+
+  /* dejamos el layout igual, solo cambia color,
+   así que no tocamos icon-align-left/center/right/justify,
+   solo se heredan estos colores */
+
+  /* ===================== */
+  /* BULLETS Y NUMERACIÓN */
+  /* ===================== */
+
+  /* Bullets: puntos + líneas */
+  /* BASE: contenedor del icono */
+  .icon-list {
+    width: 18px;
+    height: 16px;
+    position: relative;
+    display: inline-block;
+  }
+
+  /* BULLETS: 3 puntos + 3 líneas, estilo similar al SVG */
+  .icon-list-bullets::before,
+  .icon-list-bullets::after {
+    content: "";
+    position: absolute;
+    border-radius: 9999px;
+  }
+
+  /* puntos circulares a la izquierda */
+  .icon-list-bullets::before {
+    left: 2px;
+    top: 2px;
+    width: 4px;
+    height: 4px;
+    background: #343E49;
+    box-shadow:
+      0 5px 0 #343E49,
+      0 10px 0 #343E49;
+    /* 3 puntos verticales */
+  }
+
+  /* líneas a la derecha */
+  .icon-list-bullets::after {
+    left: 9px;
+    right: 1px;
+    top: 3px;
+    height: 2px;
+    border-radius: 1px;
+    background: #343E49;
+    box-shadow:
+      0 5px 0 #343E49,
+      0 10px 0 #343E49;
+    /* 3 rayas alineadas con los puntos */
+  }
+
+  /* Icono lista numerada compacto, alineado al tamaño del resto */
+  .icon-ordered-list {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 14px;
+    /* más angosto que antes */
+    height: 10px;
+    /* más bajo que antes */
+    font-size: 0;
+    /* evita altura extra por línea de texto */
+  }
+
+  /* Cada fila 1 / 2 / 3 */
+  .icon-ordered-list-item {
+    display: flex;
+    align-items: center;
+    flex: 1 0 0;
+  }
+
+  /* Número a la izquierda, bien chico */
+  .icon-ordered-list-num {
+    font-size: 6px;
+    /* más pequeño que antes */
+    font-weight: 700;
+    color: #343E49;
+    margin-right: 1px;
+    line-height: 1;
+    width: 4px;
+    text-align: right;
+  }
+
+  /* Línea de “texto” muy fina y corta */
+  .icon-ordered-list-line {
+    flex-grow: 1;
+    height: 1px;
+    /* más delgada */
+    background-color: #343E49;
+    border-radius: 1px;
+  }
+
+
+
+
+  /* ===================== */
+  /* TARRO DE PINTURA */
+  /* ===================== */
+
+  .icon-paint-bucket::before {
+    border: 2px solid #000000;
+    /* contorno del tarro más oscuro */
+  }
+
+  .icon-paint-bucket::after {
+    background: #2563eb;
+    /* gota azul tipo Word */
+  }
+
+  .icon-paint-bucket::before,
+  .icon-paint-bucket::after {
+    content: "";
+    position: absolute;
+  }
+
+  /* por ejemplo, un tarro simple */
+  .icon-paint-bucket::before {
+    width: 10px;
+    height: 8px;
+    left: 3px;
+    top: 3px;
+    border: 2px solid #000;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+
+  /* y la gotita */
+  .icon-paint-bucket::after {
+    width: 4px;
+    height: 6px;
+    left: 10px;
+    top: 10px;
+    border-radius: 9999px;
+    background: #2563eb;
+  }
+
+  .toolbar-icon-img {
+    width: 16px;
+    height: 16px;
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    /* para que el click pase al botón */
+  }
 </style>
 
 <!-- SheetJS for Excel processing -->
@@ -282,15 +646,15 @@
 
 <script>
   let modCount = 0;
-  /* ========= GLOBAL EXCEL DATA ========= */
 
   let globalExcelData = {
-
     columns: [],
     rows: [],
     fileName: ""
   };
   let currentRenderRowIndex = null;
+
+  let currentEditor = null;
 
   function isExcelLoaded() {
     return Array.isArray(globalExcelData.columns) && globalExcelData.columns.length > 0;
@@ -600,31 +964,6 @@
             <input id="${id}-tcount" type="number" min="1" max="10" value="1"
                    style="width:50px" oninput="updateTextCount('${id}')">
           </div>
-          
-          <div class="param-item">
-            <label>Tamaño</label>
-            <select id="${id}-size">
-              <option value="14px">Pequeño</option>
-              <option value="16px" selected>Normal</option>
-              <option value="20px">Grande</option>
-              <option value="28px">Muy grande</option>
-            </select>
-          </div>
-
-          <div class="param-item">
-            <label>Alineación</label>
-            <select id="${id}-align">
-              <option value="left">Izquierda</option>
-              <option value="center" selected>Centro</option>
-              <option value="right">Derecha</option>
-              <option value="justify">Justificado</option>
-            </select>
-          </div>
-
-          <div class="param-item">
-            <label>Color texto</label>
-            <input id="${id}-color" type="color" class="mini-color" value="#333333" title="Color de texto">
-          </div>
 
           <div class="param-item">
             <label>Color fondo</label>
@@ -650,6 +989,7 @@
         <div id="${id}-titems" style="margin-top:4px; margin-bottom:12px;"></div>
       `;
       updateTextCount(id);
+
     } else if (tipo === "imagen") {
       cont.innerHTML = `
         <div class="params-grid">
@@ -905,20 +1245,120 @@
         </select>
 
         <div class="text-toolbar-inline">
+          <select class="text-toolbar-select"
+                  onchange="applyFontSize(this, event)">
+            <option value="">Normal</option>
+            <option value="12">12</option>
+            <option value="14">14</option>
+            <option value="16">16</option>
+            <option value="20">20</option>
+            <option value="24">24</option>
+          </select>
+
+          <span class="text-toolbar-separator">|</span>
+
           <button type="button"
                   class="text-toolbar-button"
-                  onmousedown="applyInlineFormat('bold', event)">
+                  data-cmd="bold"
+                  onmousedown="toolbarCommand(this, event)">
             <b>B</b>
           </button>
           <button type="button"
                   class="text-toolbar-button"
-                  onmousedown="applyInlineFormat('italic', event)">
-            <i>I</i>
+                  data-cmd="italic"
+                  onmousedown="toolbarCommand(this, event)">
+            <i>K</i>
           </button>
           <button type="button"
                   class="text-toolbar-button"
-                  onmousedown="applyInlineFormat('underline', event)">
+                  data-cmd="underline"
+                  onmousedown="toolbarCommand(this, event)">
             <u>U</u>
+          </button>
+
+          <button type="button"
+                  class="text-toolbar-button"
+                  data-cmd="createLink"
+                  onmousedown="toolbarCommand(this, event)">
+            🔗
+          </button>
+
+          <!-- Bullets -->
+          <button type="button"
+                  class="text-toolbar-button"
+                  onmousedown="applyInlineFormat('insertUnorderedList', event)"
+                  title="Viñetas">
+            <img src="./assets/icons/list-ul.svg"
+                alt="Lista con viñetas"
+                class="toolbar-icon-img">
+          </button>
+
+          <button type="button"
+                  class="text-toolbar-button"
+                  onmousedown="applyInlineFormat('insertOrderedList', event)"
+                  title="Numeración">
+            <img src="assets/icons/list-ol.svg"
+                alt="Lista numerada"
+                class="toolbar-icon-img">
+          </button>
+
+          <div class="text-color-picker">
+            <button type="button"
+                    class="text-toolbar-button text-color-btn"
+                    title="Color de texto"
+                    onmousedown="event.preventDefault(); this.nextElementSibling.click();">
+              <img src="assets/icons/paint-bucket.svg"
+                   alt="Color de texto"
+                   class="text-color-picker-icon">
+              <span class="text-color-picker-bar"></span>
+            </button>
+
+            <input type="color"
+                   class="text-toolbar-color"
+                   onchange="applyTextColor(this, event)"
+                   oninput="updateTextColorBar(this)"
+                   onmousedown="event.stopPropagation();">
+          </div>
+
+
+          <select class="text-toolbar-select text-toolbar-lineheight"
+                  onchange="applyLineHeight(this, event)"
+                  title="Interlineado">
+            <option value="">↕</option>
+            <option value="1">1.0</option>
+            <option value="1.15">1.15</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2.0</option>
+          </select>
+
+          <button type="button"
+                  class="text-toolbar-button text-align-btn"
+                  data-cmd="justifyLeft"
+                  onmousedown="toolbarCommand(this, event)"
+                  title="Alinear a la izquierda">
+            <span class="icon-align icon-align-left"><span></span></span>
+          </button>
+
+          <button type="button"
+                  class="text-toolbar-button text-align-btn"
+                  data-cmd="justifyCenter"
+                  onmousedown="toolbarCommand(this, event)"
+                  title="Centrar">
+            <span class="icon-align icon-align-center"><span></span></span>
+          </button>
+          <button type="button"
+                  class="text-toolbar-button text-align-btn"
+                  data-cmd="justifyRight"
+                  onmousedown="toolbarCommand(this, event)"
+                  title="Alinear a la derecha">
+            <span class="icon-align icon-align-right"><span></span></span>
+          </button>
+          <button type="button"
+                  class="text-toolbar-button text-align-btn"
+                  data-cmd="justifyFull"
+                  onmousedown="toolbarCommand(this, event)"
+                  title="Justificado">
+            <span class="icon-align icon-align-justify"><span></span></span>
           </button>
         </div>
 
@@ -931,7 +1371,6 @@
       container.appendChild(div);
     }
   }
-
   function handleSourceChange(fieldId) {
     const sourceSelect = byId(fieldId + '-source');
     const field = byId(fieldId);
@@ -1097,18 +1536,17 @@
           if (source && source !== 'manual') {
             const excelVal = getExcelValue(source);
             t = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
-            rich = false; // viene plano de Excel
+            rich = false;
           } else {
             if (fieldEl && fieldEl.getAttribute('contenteditable') === 'true') {
               t = fieldEl.innerHTML || '';
-              rich = true; // aquí vienen los <b>, <i>, <u>, etc.
+              rich = true;
             } else {
               t = val(`${id}-txt${i}`);
               rich = false;
             }
           }
 
-          // eliminar casos de sólo <br>
           const plainCheck = t.replace(/<br\s*\/?>/gi, '').trim();
           if (plainCheck) {
             textos.push({ content: t, rich });
@@ -1117,19 +1555,8 @@
 
         if (textos.length === 0) return;
 
-        const sizeToken = val(id + "-size") || "16px";
-        let sizeEm;
-        if (sizeToken === "14px") sizeEm = "0.9em";
-        else if (sizeToken === "20px") sizeEm = "1.25em";
-        else if (sizeToken === "28px") sizeEm = "1.6em";
-        else sizeEm = "1em";
-
-        const color = val(id + "-color") || "#333333";
-        const bg = val(id + "-bg") || "#ffffff";
-        const align = val(id + "-align") || "center";
         const w = clampPct(val(id + "-w"));
-
-        // Espacio: 1 unidad = 5px
+        const bg = val(id + "-bg") || "#ffffff";
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
@@ -1142,24 +1569,15 @@
           let out = item.content || '';
 
           if (!item.rich) {
-            // texto plano (Excel o input normal): escapamos y convertimos saltos de línea
             out = escHTML(out).replace(/\r?\n/g, "<br>");
           }
-          // si es rich, ya viene con <b>, <i>, <u>, etc. y no lo escapamos
 
           htmlBody += `  <h2 class="${txtCls}">${out}</h2>\n`;
         });
         htmlBody += `</div>\n`;
 
-        // estilos base del bloque (B/I/U vienen desde el HTML interno, no desde aquí)
-        const fw = "400";
-        const fs = "normal";
-        const td = "none";
-
-        const justify =
-          align === "left" ? "flex-start" :
-            align === "right" ? "flex-end" :
-              align === "center" ? "center" : "space-between";
+        const sizeEm = "1em";
+        const color = "#333333";
 
         css += `
 .inpgs-wrapper .${grpCls}{
@@ -1170,9 +1588,8 @@
   background:${bg} !important;
   margin:0 0 ${mb}px 0 !important;
   padding:0 !important;
-  justify-content:${justify} !important;
+  justify-content:flex-start !important;
   align-items:flex-start !important;
-  text-align:${align} !important;
 }
 .inpgs-wrapper .${txtCls}{
   flex:1 1 0 !important;
@@ -1181,10 +1598,10 @@
   padding:0 !important;
   font-family:inherit !important;
   font-size:${sizeEm} !important;
-  font-weight:${fw};
-  font-style:${fs};
-  text-decoration:${td};
-  color:${color} !important;
+  font-weight:400;
+  font-style:normal;
+  text-decoration:none;
+  color:${color};
 }
 `.trim() + "\n\n";
       }
@@ -1669,11 +2086,163 @@
 
   function byId(id) { return document.getElementById(id); }
   function val(id) { const el = byId(id); return el ? el.value : ""; }
-  function applyInlineFormat(cmd, ev) {
-    // evitamos que el botón robe el foco y destruya la selección
-    if (ev) ev.preventDefault();
-    document.execCommand(cmd, false, null);
+  let savedSelection = null;
+
+  function saveSelection() {
+    const active = document.activeElement;
+    if (active && active.matches('.rich-textarea')) {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        savedSelection = sel.getRangeAt(0);
+      }
+    }
   }
+
+  function restoreSelection() {
+    if (!savedSelection) return;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedSelection);
+  }
+
+  function saveSelection() {
+    const active = document.activeElement;
+    if (active && active.matches('.rich-textarea')) {
+      currentEditor = active;
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        savedSelection = sel.getRangeAt(0);
+      }
+    }
+  }
+
+  function restoreSelection() {
+    if (!savedSelection || !currentEditor) return;
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(savedSelection);
+  }
+
+  function refreshToolbarState(editor) {
+    if (!editor) return;
+    const toolbar = editor.previousElementSibling;
+    if (!toolbar) return;
+    const buttons = toolbar.querySelectorAll('.text-toolbar-button[data-cmd]');
+    buttons.forEach(btn => {
+      const cmd = btn.dataset.cmd;
+      let state = false;
+      try {
+        state = document.queryCommandState(cmd);
+      } catch (e) { state = false; }
+      btn.classList.toggle('active', !!state);
+    });
+  }
+
+  function toolbarCommand(btn, ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    if (!currentEditor) return;
+
+    const cmd = btn.dataset.cmd;
+    if (!cmd) return;
+
+    if (cmd === 'createLink') {
+      const url = prompt('URL del enlace:');
+      if (!url) return;
+      document.execCommand('createLink', false, url);
+    } else {
+      document.execCommand(cmd, false, null);
+    }
+
+    refreshToolbarState(currentEditor);
+  }
+
+  function applyTextColor(input, ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    if (!currentEditor || !input.value) return;
+    document.execCommand('foreColor', false, input.value);
+    refreshToolbarState(currentEditor);
+  }
+
+  function applyFontSize(select, ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    if (!currentEditor) return;
+    const val = select.value;
+    if (!val) return;
+    const map = { '12': 2, '14': 3, '16': 4, '20': 5, '24': 6 };
+    const size = map[val] || 3;
+    document.execCommand('fontSize', false, size);
+    refreshToolbarState(currentEditor);
+  }
+
+  function applyLineHeight(select, ev) {
+    if (ev) ev.preventDefault();
+    if (!currentEditor) return;
+    const lh = select.value;
+    currentEditor.style.lineHeight = lh || '';
+  }
+  function applyInlineFormat(cmd, ev) {
+    if (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+
+    document.execCommand(cmd, false, null);
+
+    const btn = ev && ev.currentTarget;
+    if (btn && btn.classList) {
+      btn.classList.toggle('active');
+    }
+  }
+
+  // Guardar selección cuando se interactúa con el editor
+  document.addEventListener('mouseup', saveSelection);
+  document.addEventListener('keyup', saveSelection);
+  document.addEventListener('selectionchange', function () {
+    const active = document.activeElement;
+    if (active && active.matches('.rich-textarea')) {
+      saveSelection();
+      refreshToolbarState(active);
+    }
+  });
+
+  function applyTextColor(input, ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    if (!input.value) return;
+    document.execCommand('foreColor', false, input.value);
+  }
+
+  function applyFontSize(select, ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    const val = select.value;
+    if (!val) return;
+    const map = { '12': 2, '14': 3, '16': 4, '20': 5, '24': 6 };
+    const size = map[val] || 3;
+    document.execCommand('fontSize', false, size);
+  }
+
+  function applyCreateLink(ev) {
+    if (ev) ev.preventDefault();
+    restoreSelection();
+    const url = prompt('URL del enlace:');
+    if (!url) return;
+    document.execCommand('createLink', false, url);
+  }
+
+  // guardar selección cuando el usuario edita en el área rich
+  document.addEventListener('mouseup', saveSelection);
+  document.addEventListener('keyup', saveSelection);
+  document.addEventListener('selectionchange', function () {
+    const active = document.activeElement;
+    if (active && active.matches('.rich-textarea')) {
+      saveSelection();
+    }
+  });
+
 
   function clampPct(v) {
     const n = parseInt(v || "100", 10);
@@ -1921,5 +2490,12 @@
       }
     }
   });
+  function updateTextColorBar(input) {
+    const picker = input.closest('.text-color-picker');
+    if (!picker) return;
+    const bar = picker.querySelector('.text-color-picker-bar');
+    if (!bar) return;
+    bar.style.background = input.value || '#111827';
+  }
 
 </script>
