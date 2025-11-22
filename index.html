@@ -37,7 +37,7 @@
         ✨ Generar todos los HTMLs
       </button>
     </div>
-    <div id="mods"></div>
+    <div id="mods" ondragover="dragOver(event)" ondrop="drop(event)"></div>
 
     <div style="display:flex;gap:8px;margin-top:8px;">
       <div style="display:flex; gap:8px; margin-bottom:12px;">
@@ -638,6 +638,10 @@
     object-fit: contain;
     pointer-events: none;
     /* para que el click pase al botón */
+  }
+
+  .mod-box.dragging {
+    opacity: 0.5;
   }
 </style>
 
@@ -2271,7 +2275,6 @@
   }
   /* ========= Drag and Drop ========= */
   let draggedItem = null;
-  let placeholder = null;
 
   function collapseAll() {
     document.querySelectorAll(".mod-body").forEach(b => b.style.display = "none");
@@ -2281,79 +2284,80 @@
     draggedItem = document.getElementById(id);
     if (!draggedItem) return;
 
-    // Collapse all bodies for cleaner dragging
+    // opcional: seguir colapsando todo al arrastrar
     collapseAll();
 
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/plain", id);
-    // Set drag image (optional, browser default is usually fine)
+    draggedItem.classList.add("dragging");
 
-    // Create placeholder
-    placeholder = document.createElement("div");
-    placeholder.className = "mod-placeholder";
-    placeholder.style.height = draggedItem.offsetHeight + "px";
-
-    // Defer hiding the dragged element so the drag ghost is created from the visible element
-    setTimeout(() => {
-      draggedItem.style.display = "none";
-      // Insert placeholder where the dragged item was
-      draggedItem.parentNode.insertBefore(placeholder, draggedItem.nextSibling);
-    }, 0);
+    // necesario para que el drag funcione en todos los navegadores
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/plain", id);
+    }
   }
 
   function dragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.preventDefault(); // sin esto no se permite soltar
+    if (!draggedItem) return;
 
-    const target = e.target.closest(".mod-box");
     const container = document.getElementById("mods");
-    if (!container || !placeholder) return;
+    if (!container) return;
 
-    if (target && target !== draggedItem) {
-      const rect = target.getBoundingClientRect();
-      const midY = rect.top + rect.height / 2;
+    const afterElement = getDragAfterElement(container, e.clientY);
 
-      if (e.clientY < midY) {
-        container.insertBefore(placeholder, target);
-      } else {
-        container.insertBefore(placeholder, target.nextSibling);
-      }
-    } else if (!target && e.target === container) {
-      // If hovering over empty space in container, append to end
-      container.appendChild(placeholder);
+    if (!afterElement) {
+      // si estoy debajo de todo, lo mando al final
+      container.appendChild(draggedItem);
+    } else {
+      // si estoy sobre algún bloque, lo inserto antes de ese bloque
+      container.insertBefore(draggedItem, afterElement);
     }
   }
 
-  function dragEnter(e) {
+  function drop(e) {
     e.preventDefault();
-  }
+    if (!draggedItem) return;
 
-  function dragLeave(e) {
-    // Optional: handle leaving the container
-  }
-
-  function drop(e, targetId) {
-    e.preventDefault();
-    if (!draggedItem || !placeholder) return;
-
-    // Move dragged item to placeholder position
-    if (placeholder.parentNode) {
-      placeholder.parentNode.insertBefore(draggedItem, placeholder);
-    }
+    draggedItem.classList.remove("dragging");
+    draggedItem = null;
 
     updatePositions();
+    // si quieres que la vista previa se actualice al reordenar:
+    renderAll();
   }
 
   function dragEnd(e) {
+    // por si el drop se hace fuera del contenedor
     if (draggedItem) {
-      draggedItem.style.display = ""; // Show it again
+      draggedItem.classList.remove("dragging");
       draggedItem = null;
+      updatePositions();
+      // renderAll();
     }
-    if (placeholder && placeholder.parentNode) {
-      placeholder.remove();
-    }
-    placeholder = null;
   }
+
+  // calcula delante de qué bloque soltar según la posición Y del mouse
+  function getDragAfterElement(container, y) {
+    const draggableElements = [
+      ...container.querySelectorAll(".mod-box:not(.dragging)")
+    ];
+
+    let closest = { offset: Number.NEGATIVE_INFINITY, element: null };
+
+    draggableElements.forEach(child => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+
+      // offset < 0  → el mouse está por encima del centro del bloque
+      // elegimos el más cercano a 0 (pero negativo)
+      if (offset < 0 && offset > closest.offset) {
+        closest = { offset, element: child };
+      }
+    });
+
+    return closest.element;
+  }
+
 
   /* ========= EXCEL PROCESSING ========= */
 
