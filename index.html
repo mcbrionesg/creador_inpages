@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <div style="display:flex; align-items:center; justify-content:space-between; padding:12px;">
-  <img
-    src="https://images.falabella.com/v3/assets/blt7c5c2f2f888a7cc3/blt9a6cb2faab703fa5/65a68ebb130790558acbf0cb/falabella.com_green_icon.svg"
-    alt="Falabella" style="width:150px; height:auto;">
   <h2 style="flex:1; text-align:center; margin:0;">Constructor de Inpages</h2>
   <div style="width:150px;"></div> <!-- Spacer for centering -->
 </div>
@@ -17,8 +14,9 @@
         Contraer todo
       </button>
       <label
-        style="padding:5px 10px;background:#2563eb;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;display:inline-block;">
-        📁 Cargar Excel
+        style="padding:5px 10px;background:#10b981;color:#fff;border:0;border-radius:4px;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:6px;">
+        <img src="assets/icons/upload.svg" alt="Subir Excel" style="width:14px;height:14px;">
+        Cargar Excel
         <input type="file" id="global-excel-upload" accept=".xlsx,.xls" style="display:none;"
           onchange="handleGlobalExcelUpload(event)">
       </label>
@@ -26,16 +24,19 @@
       <!-- Row selector (hidden initially) -->
       <div id="excel-row-selector-container" style="display:none; align-items:center; gap:6px;">
         <label style="font-size:12px; color:#444;">Fila a visualizar:</label>
-        <select id="excel-row-selector" onchange="renderAll()"
+        <select id="excel-row-selector" onchange="handleRowChange()"
           style="padding:4px 8px; border:1px solid #ccc; border-radius:4px; font-size:12px;">
         </select>
+
       </div>
 
       <!-- Generate all button (hidden initially) -->
       <button id="generate-all-btn" onclick="generateAllHTML()"
-        style="display:none; padding:5px 10px; background:#10b981; color:#fff; border:0; border-radius:4px; cursor:pointer; font-size:12px;">
-        ✨ Generar todos los HTMLs
+        style="display:none; padding:5px 10px; background:#10b981; color:#fff; border:0; border-radius:4px; cursor:pointer; font-size:12px; align-items:center; gap:6px;">
+        <img src="assets/icons/download.svg" alt="Descargar Excel" style="width:14px;height:14px;">
+        Descargar Excel
       </button>
+
     </div>
     <div id="mods" ondragover="dragOver(event)" ondrop="drop(event)"></div>
 
@@ -286,7 +287,7 @@
     width: 14px;
     height: 3px;
     border-radius: 2px;
-    background: #111827;
+    background: #333333;
     /* color inicial de la barra */
   }
 
@@ -378,17 +379,29 @@
     right: 0;
   }
 
-
-
-
   .rich-textarea {
     min-height: 40px;
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 6px;
-    font-size: 13px;
+    font-size: 22px;
+    /* ✅ MATCH con 1.4rem del wrapper y con el select */
     background: #fff;
     overflow-y: auto;
+    color: #333333;
+    font-weight: 400;
+  }
+
+
+
+  .rich-textarea.excel-bound {
+    background: #f3f4f6;
+    cursor: default;
+  }
+
+  .text-toolbar-inline.excel-bound-toolbar {
+    opacity: 0.4;
+    pointer-events: none;
   }
 
   /* pseudo-placeholder */
@@ -642,6 +655,94 @@
     /* para que el click pase al botón */
   }
 
+  /* ==== UI compacta para imágenes en fila ==== */
+
+
+
+
+  .img-field-row label {
+    width: 70px;
+    font-size: 11px;
+    color: #444;
+    display: block;
+    margin-bottom: 0;
+  }
+
+  .img-field-row input[type="text"] {
+    flex: 1;
+    padding: 4px 6px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0;
+  }
+
+
+
+  .source-compact-img select {
+    padding: 2px 4px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 0;
+    max-width: 120px;
+  }
+
+  /* ==== UI compacta para campos con fuente de datos ==== */
+  .data-field-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .data-field-row>label {
+    width: 70px;
+    font-size: 11px;
+    color: #444;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .data-field-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .data-field-main input[type="text"],
+  .data-field-main textarea {
+    width: 100%;
+    padding: 4px 6px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .source-compact {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .source-compact select {
+    padding: 2px 4px;
+    font-size: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 0;
+    max-width: 120px;
+  }
+
+  .img-item-block {
+    margin-bottom: 10px;
+    padding: 8px;
+    background: #f9fafb;
+    border-radius: 6px;
+  }
+
   .mod-box.dragging {
     opacity: 0.5;
   }
@@ -666,26 +767,18 @@
     return Array.isArray(globalExcelData.columns) && globalExcelData.columns.length > 0;
   }
 
-  function getColumnOptions() {
-    // Siempre dejamos la opción manual
-    let options = '<option value="manual">Valor manual</option>';
-
-    // Si no hay Excel cargado, solo mostramos "manual"
-    if (!isExcelLoaded()) {
-      return options;
-    }
-
-    // Con Excel cargado, agregamos las columnas
-    globalExcelData.columns.forEach(col => {
-      options += `<option value="${col}">${col}</option>`;
-    });
-    return options;
-  }
 
   function refreshSourceSelects() {
     const hasExcel = isExcelLoaded();
     const selects = document.querySelectorAll('select[data-source-select="1"]');
+    const wrappers = document.querySelectorAll('[data-source-wrapper="1"]');
 
+    // Mostrar / ocultar el bloque completo "Fuente de datos"
+    wrappers.forEach(w => {
+      w.style.display = hasExcel ? '' : 'none';
+    });
+
+    // Refrescar selects
     selects.forEach(sel => {
       const previousValue = sel.value || 'manual';
 
@@ -728,19 +821,27 @@
         globalExcelData.columns = Object.keys(jsonData[0]);
         globalExcelData.rows = jsonData;
         globalExcelData.fileName = file.name;
-        // Show success message
-        alert(`Excel cargado exitosamente!\\n\\nColumnas detectadas:\\n${globalExcelData.columns.join(', ')}\\n\\nFilas: ${globalExcelData.rows.length}`);
-        // Populate row selector
+
+        alert(
+          `Excel cargado exitosamente!\n\nColumnas detectadas:\n${globalExcelData.columns.join(', ')}\n\nFilas: ${globalExcelData.rows.length}`
+        );
+
+        // Row selector
         populateRowSelector();
-        // Show row selector and generate button
+
+        // Mostrar selector y botón generar
         const selectorContainer = byId('excel-row-selector-container');
         const generateBtn = byId('generate-all-btn');
         if (selectorContainer) selectorContainer.style.display = 'flex';
-        if (generateBtn) generateBtn.style.display = 'inline-block';
-        // 🔓 Habilitar selects de fuente de datos ahora que hay Excel
+        if (generateBtn) generateBtn.style.display = 'inline-flex';
+
+        // Habilitar selects de fuente de datos
         refreshSourceSelects();
 
-        // Trigger initial render
+        // 🔄 Muy importante: refrescar campos ya vinculados (si es que hay)
+        refreshBoundFieldsForCurrentRow();
+
+        // Render inicial con la fila seleccionada
         renderAll();
       } catch (err) {
         console.error(err);
@@ -749,6 +850,7 @@
     };
     reader.readAsArrayBuffer(file);
   }
+
   function populateRowSelector() {
     const selector = byId('excel-row-selector');
     if (!selector) return;
@@ -774,27 +876,98 @@
     return options;
   }
 
+  function getCurrentRowIndex() {
+    if (!globalExcelData.rows || !globalExcelData.rows.length) return 0;
+
+    // generación masiva (generateAllHTML)
+    if (currentRenderRowIndex !== null) {
+      return currentRenderRowIndex;
+    }
+
+    // modo vista previa normal
+    const rowSelector = byId('excel-row-selector');
+    const idx = rowSelector ? parseInt(rowSelector.value || '0', 10) : 0;
+    return isNaN(idx) ? 0 : idx;
+  }
+
+  function refreshBoundFieldsForCurrentRow() {
+    if (!globalExcelData.rows || !globalExcelData.rows.length) return;
+
+    const rowIndex = getCurrentRowIndex();
+    const row = globalExcelData.rows[rowIndex] || {};
+
+    document.querySelectorAll('[data-excel-bound="1"]').forEach(field => {
+      const col = field.dataset.excelColumn;
+      if (!col) return;
+
+      const raw = row[col];
+      const value = (raw !== undefined && raw !== null) ? String(raw) : '';
+
+      const isRich = field.classList && field.classList.contains('rich-textarea');
+
+      if (isRich) {
+        field.setAttribute('contenteditable', 'true');
+
+        const base = field.dataset.excelBaseValue || '';
+        const tpl = field.dataset.excelTemplate || '';
+
+        let newHtml;
+
+        if (tpl && tpl.indexOf('__EXCEL_VALUE__') !== -1) {
+          // ya tenemos plantilla con placeholder
+          newHtml = tpl.split('__EXCEL_VALUE__').join(value);
+        } else if (base && field.innerHTML && field.innerHTML.indexOf(base) !== -1) {
+          // generamos plantilla reemplazando el viejo valor por placeholder
+          const currentHtml = field.innerHTML;
+          const template = currentHtml.split(base).join('__EXCEL_VALUE__');
+          field.dataset.excelTemplate = template;
+          newHtml = template.split('__EXCEL_VALUE__').join(value);
+        } else {
+          // sin estilos definidos todavía: usamos el valor plano
+          newHtml = value;
+          field.dataset.excelTemplate = value;
+        }
+
+        field.innerHTML = newHtml;
+        field.dataset.excelBaseValue = value;
+
+        field.classList.toggle(
+          'empty',
+          value.replace(/<br\s*\/?>/gi, '').trim() === ''
+        );
+      } else if ('value' in field) {
+        const wasReadOnly = !!field.readOnly;
+        field.readOnly = false;
+        field.value = value;
+        field.readOnly = wasReadOnly;
+      } else {
+        field.textContent = value;
+      }
+    });
+  }
+
+  function handleRowChange() {
+    // 1) actualiza los campos del bloque con los datos de la fila seleccionada
+    refreshBoundFieldsForCurrentRow();
+    // 2) vuelve a generar la vista con esos datos
+    renderAll();
+  }
+
+
+
   function getExcelValue(columnName) {
     if (!columnName || columnName === 'manual' || !globalExcelData.rows.length) {
       return null;
     }
 
-    let rowIndex;
-
-    // Si estamos en generación masiva, usamos el índice forzado
-    if (currentRenderRowIndex !== null) {
-      rowIndex = currentRenderRowIndex;
-    } else {
-      // Modo normal: vista previa con el selector de filas
-      const rowSelector = byId('excel-row-selector');
-      rowIndex = rowSelector ? parseInt(rowSelector.value || '0', 10) : 0;
-    }
-
+    const rowIndex = getCurrentRowIndex();
     const row = globalExcelData.rows[rowIndex] || {};
     const value = row[columnName];
 
     return (value !== undefined && value !== null) ? value : '';
   }
+
+
 
   function generateAllHTML() {
     if (!globalExcelData.rows.length) {
@@ -813,6 +986,9 @@
       // Forzamos que todas las lecturas desde Excel apunten a ESTA fila
       currentRenderRowIndex = index;
 
+      // Actualiza todos los campos ligados a Excel (texto, urls, alt, links, etc.)
+      refreshBoundFieldsForCurrentRow();
+
       // Render con los datos de esta fila
       renderAll();
 
@@ -823,6 +999,7 @@
         HTML: html
       });
     });
+
 
     // Volvemos a modo normal (vista atada al selector visual)
     currentRenderRowIndex = null;
@@ -902,9 +1079,18 @@
           <h4>Bloque ${index} <span class="mod-pos" style="font-size:11px;font-weight:normal;color:#666;margin-left:6px;">Posición ${index}</span></h4>
         </div>
         <div style="display:flex;gap:4px;align-items:center;">
-          <button type="button" onclick="moveMod('${id}','up');event.stopPropagation();" style="padding:3px 6px;background:#facc15;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↑</button>
-          <button type="button" onclick="moveMod('${id}','down');event.stopPropagation();" style="padding:3px 6px;background:#a5b4fc;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↓</button>
-          <button type="button" onclick="removeMod('${id}')" style="padding:4px 8px;background:#ef4444;color:#fff;border:0;border-radius:6px;cursor:pointer;font-size:12px;">Eliminar</button>
+          <button type="button" onclick="moveMod('${id}','up');event.stopPropagation();" style="padding:3px 6px;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↑</button>
+          <button type="button" onclick="moveMod('${id}','down');event.stopPropagation();" style="padding:3px 6px;border:0;border-radius:4px;cursor:pointer;font-size:11px;">↓</button>
+          <button
+            type="button"
+            onclick="removeMod('${id}')"
+            style="padding:4px 6px;border:0;border-radius:6px;cursor:pointer;font-size:0;background:transparent;"
+            title="Eliminar bloque">
+            <img
+              src="assets/icons/trash.svg"
+              alt="Eliminar bloque"
+              class="toolbar-icon-img">
+          </button>        
         </div>
       </div>
 
@@ -912,12 +1098,12 @@
         <label>Seleccionar Módulo</label>
         <select id="${id}-tipo" onchange="renderInputs('${id}')">
           <option value="texto" selected>Texto</option>
-          <option value="imagen">Imágenes en fila</option>
-          <option value="texto-imagen-h">Texto+Imagen (horizontal)</option>
+          <option value="imagen">Imagen</option>
+          <option value="texto-imagen-h">Texto + Imagen</option>
           <option value="html">HTML personalizado</option>
-          <option value="excel-merge">Carga Excel (Merge)</option>
-          <option value="video-autoplay">Video Autoplay (Mute)</option>
+          <option value="video-autoplay">Video</option>
         </select>
+
 
         <div id="${id}-inputs" class="muted"></div>
       </div>
@@ -964,485 +1150,611 @@
 
     if (tipo === "texto") {
       cont.innerHTML = `
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Cantidad</label>
-            <input id="${id}-tcount" type="number" min="1" max="10" value="1"
-                   style="width:50px" oninput="updateTextCount('${id}')">
-          </div>
-
-          <div class="param-item">
-            <label>Color fondo</label>
-            <input id="${id}-bg" type="color" class="mini-color" value="#ffffff" title="Color de fondo">
-          </div>
-
-          <div class="param-item">
-            <label>Ancho (%)</label>
-            <input id="${id}-w" type="number" min="10" max="100" value="100" style="width:60px">
-          </div>
-
-          <div class="param-item">
-            <label>Margen inferior</label>
-            <select id="${id}-mb">
-              <option value="0" selected>Ninguno</option>
-              <option value="2">Bajo</option>
-              <option value="4">Medio</option>
-              <option value="8">Alto</option>
-            </select>
-          </div>
+      <div class="params-grid">
+        <div class="param-item">
+          <label>Cantidad</label>
+          <input id="${id}-tcount"
+                 type="number"
+                 min="1"
+                 max="10"
+                 value="1"
+                 style="width:50px"
+                 oninput="updateTextCount('${id}')">
         </div>
 
-        <div id="${id}-titems" style="margin-top:4px; margin-bottom:12px;"></div>
-      `;
+        <div class="param-item">
+          <label>Color fondo</label>
+          <input id="${id}-bg"
+                 type="color"
+                 class="mini-color"
+                 value="#ffffff"
+                 title="Color de fondo">
+        </div>
+
+        <div class="param-item">
+          <label>Ancho (%)</label>
+          <input id="${id}-w"
+                 type="number"
+                 min="10"
+                 max="100"
+                 value="100"
+                 style="width:60px">
+        </div>
+
+        <div class="param-item">
+          <label>Margen inferior</label>
+          <select id="${id}-mb">
+            <option value="0" selected>Ninguno</option>
+            <option value="2">Bajo</option>
+            <option value="4">Medio</option>
+            <option value="8">Alto</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="${id}-titems"
+           style="margin-top:4px; margin-bottom:12px;"></div>
+    `;
       updateTextCount(id);
+      return;
+    }
 
-    } else if (tipo === "imagen") {
+    if (tipo === "imagen") {
       cont.innerHTML = `
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Cantidad</label>
-            <input id="${id}-count" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateImgCount('${id}')">
-          </div>
-
-          <div class="param-item">
-            <label>Posición</label>
-            <select id="${id}-ialign">
-              <option value="left">Izquierda</option>
-              <option value="center" selected>Centro</option>
-              <option value="right">Derecha</option>
-              <option value="justify">Justificado</option>
-            </select>
-          </div>
-
-          <div class="param-item">
-            <label>Curva</label>
-            <select id="${id}-radius">
-              <option value="0" selected>Ninguna</option>
-              <option value="8">Baja</option>
-              <option value="16">Media</option>
-              <option value="24">Alta</option>
-            </select>
-          </div>
-
-          <div class="param-item">
-            <label>Margen inferior</label>
-            <select id="${id}-mb">
-              <option value="0" selected>Ninguno</option>
-              <option value="2">Bajo</option>
-              <option value="4">Medio</option>
-              <option value="8">Alto</option>
-            </select>
-          </div>
+      <div class="params-grid">
+        <div class="param-item">
+          <label>Cantidad</label>
+          <input id="${id}-count" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateImgCount('${id}')">
         </div>
 
-        <div id="${id}-items" style="margin-top:4px; margin-bottom:12px;"></div>
-
-        <div class="checks">
-          <label><input type="checkbox" id="${id}-newtab" checked> Abrir enlaces en pestaña nueva</label>
+        <div class="param-item">
+          <label>Posición</label>
+          <select id="${id}-ialign">
+            <option value="left">Izquierda</option>
+            <option value="center" selected>Centro</option>
+            <option value="right">Derecha</option>
+            <option value="justify">Justificado</option>
+          </select>
         </div>
-      `;
+
+        <div class="param-item">
+          <label>Curva</label>
+          <select id="${id}-radius">
+            <option value="0" selected>Ninguna</option>
+            <option value="8">Baja</option>
+            <option value="16">Media</option>
+            <option value="24">Alta</option>
+          </select>
+        </div>
+
+        <div class="param-item">
+          <label>Margen inferior</label>
+          <select id="${id}-mb">
+            <option value="0" selected>Ninguno</option>
+            <option value="2">Bajo</option>
+            <option value="4">Medio</option>
+            <option value="8">Alto</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="${id}-items" style="margin-top:4px; margin-bottom:12px;"></div>
+
+      <div class="checks">
+        <label><input type="checkbox" id="${id}-newtab" checked> Abrir enlaces en pestaña nueva</label>
+      </div>
+    `;
       updateImgCount(id);
-    } else if (tipo === "texto-imagen-h") {
+      return;
+    }
+
+    if (tipo === "texto-imagen-h") {
       const defaultLeft = "texto";
       const defaultRight = "imagen";
 
       cont.innerHTML = `
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Izquierda</label>
-            <select id="${id}-hleft">
-              <option value="texto" ${defaultLeft === "texto" ? "selected" : ""}>Texto</option>
-              <option value="imagen" ${defaultLeft === "imagen" ? "selected" : ""}>Imagen</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>Derecha</label>
-            <select id="${id}-hright">
-              <option value="texto" ${defaultRight === "texto" ? "selected" : ""}>Texto</option>
-              <option value="imagen" ${defaultRight === "imagen" ? "selected" : ""}>Imagen</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>% Izq</label>
-            <input id="${id}-wleft" type="number" min="10" max="90" value="50" style="width:60px">
-          </div>
-          
-          <div class="param-item">
-            <label>% Der</label>
-            <input id="${id}-wright" type="number" min="10" max="90" value="50" style="width:60px">
-          </div>
+      <div class="params-grid">
+        <div class="param-item">
+          <label>Izquierda</label>
+          <select id="${id}-hleft">
+            <option value="texto" ${defaultLeft === "texto" ? "selected" : ""}>Texto</option>
+            <option value="imagen" ${defaultLeft === "imagen" ? "selected" : ""}>Imagen</option>
+          </select>
         </div>
         
-        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
-        
-        <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Texto</h5>
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Cantidad</label>
-            <input id="${id}-htcount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHTextCount('${id}')">
-          </div>
-          
-          <div class="param-item">
-            <label>Tamaño</label>
-            <select id="${id}-hsize">
-              <option value="14px">Pequeño</option>
-              <option value="16px" selected>Normal</option>
-              <option value="20px">Grande</option>
-              <option value="28px">Muy grande</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>Alineación</label>
-            <select id="${id}-halign">
-              <option value="left">Izquierda</option>
-              <option value="center" selected>Centro</option>
-              <option value="right">Derecha</option>
-              <option value="justify">Justificado</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>Color texto</label>
-            <input id="${id}-hcolor" type="color" class="mini-color" value="#333333" title="Color de texto">
-          </div>
+        <div class="param-item">
+          <label>Derecha</label>
+          <select id="${id}-hright">
+            <option value="texto" ${defaultRight === "texto" ? "selected" : ""}>Texto</option>
+            <option value="imagen" ${defaultRight === "imagen" ? "selected" : ""}>Imagen</option>
+          </select>
         </div>
         
-        <div id="${id}-htitems" style="margin-top:4px; margin-bottom:12px;"></div>
-        
-        <div class="checks">
-          <label><input type="checkbox" id="${id}-hb"> <b>Negrita</b></label>
-          <label><input type="checkbox" id="${id}-hi"> <i>Cursiva</i></label>
-          <label><input type="checkbox" id="${id}-hu"> <u>Subrayado</u></label>
-          <label><input type="checkbox" id="${id}-hupper"> MAYÚSCULAS</label>
+        <div class="param-item">
+          <label>% Izq</label>
+          <input id="${id}-wleft" type="number" min="10" max="90" value="50" style="width:60px">
         </div>
         
-        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
-        
-        <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Imagen</h5>
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Cantidad</label>
-            <input id="${id}-hicount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHImgCount('${id}')">
-          </div>
-          
-          <div class="param-item">
-            <label>Posición</label>
-            <select id="${id}-hialign">
-              <option value="left">Izquierda</option>
-              <option value="center" selected>Centro</option>
-              <option value="right">Derecha</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>Curva</label>
-            <select id="${id}-hiradius">
-              <option value="0" selected>Ninguna</option>
-              <option value="8">Baja</option>
-              <option value="16">Media</option>
-              <option value="24">Alta</option>
-            </select>
-          </div>
-          
-          <div class="param-item">
-            <label>Margen inferior</label>
-            <select id="${id}-himb">
-              <option value="0" selected>Ninguno</option>
-              <option value="2">Bajo</option>
-              <option value="4">Medio</option>
-              <option value="8">Alto</option>
-            </select>
-          </div>
+        <div class="param-item">
+          <label>% Der</label>
+          <input id="${id}-wright" type="number" min="10" max="90" value="50" style="width:60px">
+        </div>
+
+        <div class="param-item">
+          <label>Color fondo</label>
+          <input id="${id}-hbg" type="color" class="mini-color" value="#ffffff" title="Color de fondo">
+        </div>
+
+        <!-- ✅ Margen inferior común del bloque -->
+        <div class="param-item">
+          <label>Margen inferior</label>
+          <select id="${id}-hmb">
+            <option value="0" selected>Ninguno</option>
+            <option value="2">Bajo</option>
+            <option value="4">Medio</option>
+            <option value="8">Alto</option>
+          </select>
+        </div>
+      </div>
+      
+      <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
+      
+      <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Texto</h5>
+      <div class="params-grid">
+        <div class="param-item">
+          <label>Cantidad</label>
+          <input id="${id}-htcount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHTextCount('${id}')">
+        </div>
+      </div>
+
+      
+      <div id="${id}-htitems" style="margin-top:4px; margin-bottom:12px;"></div>
+      
+      <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
+      
+      <h5 style="margin:8px 0 6px; font-size:13px; color:#4b5563;">Configuración Imagen</h5>
+      <div class="params-grid">
+        <div class="param-item">
+          <label>Cantidad</label>
+          <input id="${id}-hicount" type="number" min="1" max="10" value="1" style="width:50px" oninput="updateHImgCount('${id}')">
         </div>
         
-        <div id="${id}-hitems" style="margin-top:4px; margin-bottom:12px;"></div>
-        
-        <div class="checks">
-          <label><input type="checkbox" id="${id}-hinewtab" checked> Abrir enlaces en pestaña nueva</label>
+        <div class="param-item">
+          <label>Posición</label>
+          <select id="${id}-hialign">
+            <option value="left">Izquierda</option>
+            <option value="center" selected>Centro</option>
+            <option value="right">Derecha</option>
+          </select>
         </div>
         
-        <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb;">
-        
-        <div class="params-grid">
-          <div class="param-item">
-            <label>Color fondo</label>
-            <input id="${id}-hbg" type="color" class="mini-color" value="#ffffff" title="Color de fondo">
-          </div>
+        <div class="param-item">
+          <label>Curva</label>
+          <select id="${id}-hiradius">
+            <option value="0" selected>Ninguna</option>
+            <option value="8">Baja</option>
+            <option value="16">Media</option>
+            <option value="24">Alta</option>
+          </select>
         </div>
-      `;
+
+      </div>
+      
+      <div id="${id}-hitems" style="margin-top:4px; margin-bottom:12px;"></div>
+      
+      <div class="checks">
+        <label><input type="checkbox" id="${id}-hinewtab" checked> Abrir enlaces en pestaña nueva</label>
+      </div>
+    `;
       updateHTextCount(id);
       updateHImgCount(id);
-    } else if (tipo === "html") {
+      return;
+    }
+    if (tipo === "html") {
       cont.innerHTML = `
-        <div style="margin-bottom:12px;">
-          <label>Código HTML personalizado</label>
-          <p style="font-size:11px; color:#666; margin:4px 0;">Pega aquí tu código HTML. Se agregará tal cual al resultado final.</p>
-          <textarea id="${id}-htmlcode" rows="8" placeholder="<div>Tu HTML aquí...</div>" style="font-family:monospace; font-size:12px;"></textarea>
-        </div>
-      `;
-    } else if (tipo === "excel-merge") {
-      cont.innerHTML = `
-        <div style="margin-bottom:12px;">
-          <label>Archivo Excel (.xlsx, .xls)</label>
-          <p style="font-size:11px; color:#666; margin:4px 0;">Sube un Excel con columnas: <strong>ID</strong> (col A) y <strong>HTML</strong> (col B).</p>
-          <input type="file" id="${id}-excelfile" accept=".xlsx, .xls" onchange="loadExcelData('${id}')" />
-          
-          <div id="${id}-preview-controls" style="margin-top:12px; display:none;">
-            <label>Previsualizar ID:</label>
-            <select id="${id}-excelid" onchange="renderAll()"></select>
+      <div class="img-item-block">
+        <div class="data-field-row">
+          <label>HTML</label>
+
+          <div class="data-field-main">
+            <textarea
+              id="${id}-htmlcode"
+              rows="8"
+              placeholder="<div>Tu HTML aquí...</div>"
+              style="font-family:monospace; font-size:12px;"></textarea>
           </div>
 
-          <div style="margin-top:12px;">
-            <button type="button" onclick="processExcel('${id}')" style="padding:6px 12px; background:#2563eb; color:#fff; border:0; border-radius:4px; cursor:pointer;">
-              Descargar Excel Generado
-            </button>
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-htmlcode-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-htmlcode')">
+              ${getColumnOptions()}
+            </select>
           </div>
-          <div id="${id}-excelstatus" style="margin-top:8px; font-size:12px; color:#444;"></div>
         </div>
-      `;
-    } else if (tipo === "video-autoplay") {
+
+        <p style="font-size:11px; color:#666; margin:4px 0 0;">
+          Puedes escribir HTML manual o traerlo desde una columna del Excel. Lo que edites se guarda por fila (ID).
+        </p>
+      </div>
+    `;
+      refreshSourceSelects();
+      return;
+    }
+
+
+
+    if (tipo === "video-autoplay") {
       cont.innerHTML = `
-        <div class="params-grid">
-           <div class="param-item" style="width:100%; max-width:100%;">
-             <label>Fuente de datos</label>
-             <select
-               id="${id}-video-url-source"
-               data-source-select="1"
-               ${isExcelLoaded() ? '' : 'disabled'}
-               onchange="handleSourceChange('${id}-video-url')">
-               ${getColumnOptions()}
-             </select>
-           </div>
-           <div class="param-item" style="width:100%; max-width:100%;">
-             <label>URL Video (mp4, webm, etc)</label>
-             <input id="${id}-video-url" type="text" placeholder="https://example.com/video.mp4" style="width:100%; max-width:100%;">
-           </div>
+      <div class="img-item-block">
+        <div class="data-field-row">
+          <label>Video</label>
+          <div class="data-field-main">
+            <input
+              id="${id}-video-url"
+              type="text"
+              placeholder="https://example.com/video.mp4">
+          </div>
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-video-url-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-video-url')">
+              ${getColumnOptions()}
+            </select>
+          </div>
         </div>
-        <p class="muted" style="margin-top:8px;">
+        <p class="muted" style="margin-top:4px;">
           Se generará un bloque 16:9 responsive con autoplay, muted, loop y playsinline.
         </p>
-      `;
-    } else {
-      cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
+      </div>
+    `;
+      refreshSourceSelects();
+      return;
     }
-  }
 
+
+    cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
+  }
   /* ========= textos con múltiples items ========= */
 
   function updateTextCount(id) {
-    const count = parseInt(val(id + "-tcount"), 10) || 1;
     const container = byId(id + "-titems");
     if (!container) return;
+
+    // 1) Guardar lo que ya hay
+    const snapshot = snapshotModuleFields(container);
+
+    // 2) Normalizar cantidad
+    let count = parseInt(val(id + "-tcount"), 10) || 1;
+    if (count < 1) count = 1;
+    if (count > 10) count = 10;
+    byId(id + "-tcount").value = String(count);
+
+    // 3) Recrear markup
     container.innerHTML = "";
+
     for (let i = 1; i <= count; i++) {
-      const div = document.createElement("div");
-      div.style.marginBottom = "8px";
-      div.innerHTML = `
-        <label>Texto ${i} - Fuente de datos</label>
-        <select
-          id="${id}-txt${i}-source"
-          data-source-select="1"
-          ${isExcelLoaded() ? '' : 'disabled'}
-          onchange="handleSourceChange('${id}-txt${i}')">
-          ${getColumnOptions()}
-        </select>
+      const wrapper = document.createElement("div");
+      wrapper.style.marginBottom = "8px";
 
-        <div class="text-toolbar-inline">
-          <select class="text-toolbar-select"
-                  onchange="applyFontSize(this, event)">
-            <option value="">Normal</option>
-            <option value="12">12</option>
-            <option value="14">14</option>
-            <option value="16">16</option>
-            <option value="20">20</option>
-            <option value="24">24</option>
-          </select>
+      wrapper.innerHTML = `
+      <div class="data-field-row">
+        <label>Texto ${i}</label>
 
-          <span class="text-toolbar-separator">|</span>
+        <div class="data-field-main">
+          <div class="text-toolbar-inline">
+            <select class="text-toolbar-select"
+                    onchange="applyFontSize(this, event)">
+              <option value="">Normal</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="22" selected>22</option>
+              <option value="24">24</option>
+              <option value="28">28</option>
+              <option value="32">32</option>
+            </select>
 
-          <button type="button"
-                  class="text-toolbar-button"
-                  data-cmd="bold"
-                  onmousedown="toolbarCommand(this, event)">
-            <b>B</b>
-          </button>
-          <button type="button"
-                  class="text-toolbar-button"
-                  data-cmd="italic"
-                  onmousedown="toolbarCommand(this, event)">
-            <i>K</i>
-          </button>
-          <button type="button"
-                  class="text-toolbar-button"
-                  data-cmd="underline"
-                  onmousedown="toolbarCommand(this, event)">
-            <u>U</u>
-          </button>
+            <span class="text-toolbar-separator">|</span>
 
-          <button type="button"
-                  class="text-toolbar-button"
-                  data-cmd="createLink"
-                  onmousedown="toolbarCommand(this, event)">
-            🔗
-          </button>
-
-          <!-- Bullets -->
-          <button type="button"
-                  class="text-toolbar-button"
-                  onmousedown="applyInlineFormat('insertUnorderedList', event)"
-                  title="Viñetas">
-            <img src="./assets/icons/list-ul.svg"
-                alt="Lista con viñetas"
-                class="toolbar-icon-img">
-          </button>
-
-          <button type="button"
-                  class="text-toolbar-button"
-                  onmousedown="applyInlineFormat('insertOrderedList', event)"
-                  title="Numeración">
-            <img src="assets/icons/list-ol.svg"
-                alt="Lista numerada"
-                class="toolbar-icon-img">
-          </button>
-
-          <div class="text-color-picker">
             <button type="button"
-                    class="text-toolbar-button text-color-btn"
-                    title="Color de texto"
-                    onmousedown="event.preventDefault(); this.nextElementSibling.click();">
-              <img src="assets/icons/paint-bucket.svg"
-                   alt="Color de texto"
-                   class="text-color-picker-icon">
-              <span class="text-color-picker-bar"></span>
+                    class="text-toolbar-button"
+                    data-cmd="bold"
+                    onmousedown="toolbarCommand(this, event)">
+              <b>B</b>
+            </button>
+            <button type="button"
+                    class="text-toolbar-button"
+                    data-cmd="italic"
+                    onmousedown="toolbarCommand(this, event)">
+              <i>K</i>
+            </button>
+            <button type="button"
+                    class="text-toolbar-button"
+                    data-cmd="underline"
+                    onmousedown="toolbarCommand(this, event)">
+              <u>U</u>
             </button>
 
-            <input type="color"
-                   class="text-toolbar-color"
-                   onchange="applyTextColor(this, event)"
-                   oninput="updateTextColorBar(this)"
-                   onmousedown="event.stopPropagation();">
+            <button type="button"
+                    class="text-toolbar-button"
+                    data-cmd="createLink"
+                    onmousedown="toolbarCommand(this, event)">
+              🔗
+            </button>
+
+            <!-- Bullets -->
+            <button type="button"
+                    class="text-toolbar-button"
+                    onmousedown="applyInlineFormat('insertUnorderedList', event)"
+                    title="Viñetas">
+              <img src="./assets/icons/list-ul.svg"
+                   alt="Lista con viñetas"
+                   class="toolbar-icon-img">
+            </button>
+
+            <button type="button"
+                    class="text-toolbar-button"
+                    onmousedown="applyInlineFormat('insertOrderedList', event)"
+                    title="Numeración">
+              <img src="assets/icons/list-ol.svg"
+                   alt="Lista numerada"
+                   class="toolbar-icon-img">
+            </button>
+
+            <div class="text-color-picker">
+              <button type="button"
+                      class="text-toolbar-button text-color-btn"
+                      title="Color de texto"
+                      onmousedown="event.preventDefault(); this.nextElementSibling.click();">
+                <img src="assets/icons/paint-bucket.svg"
+                     alt="Color de texto"
+                     class="text-color-picker-icon">
+                <span class="text-color-picker-bar"></span>
+              </button>
+
+              <input type="color"
+                     class="text-toolbar-color"
+                     value="#333333"
+                     onchange="applyTextColor(this, event)"
+                     oninput="updateTextColorBar(this)"
+                     onmousedown="event.stopPropagation();">
+            </div>
+
+            <select class="text-toolbar-select text-toolbar-lineheight"
+                    onchange="applyLineHeight(this, event)"
+                    title="Interlineado">
+              <option value="">↕</option>
+              <option value="1">1.0</option>
+              <option value="1.15">1.15</option>
+              <option value="1.5">1.5</option>
+              <option value="2">2.0</option>
+            </select>
+
+            <button type="button"
+                    class="text-toolbar-button text-align-btn"
+                    data-cmd="justifyLeft"
+                    onmousedown="toolbarCommand(this, event)"
+                    title="Alinear a la izquierda">
+              <span class="icon-align icon-align-left"><span></span></span>
+            </button>
+
+            <button type="button"
+                    class="text-toolbar-button text-align-btn"
+                    data-cmd="justifyCenter"
+                    onmousedown="toolbarCommand(this, event)"
+                    title="Centrar">
+              <span class="icon-align icon-align-center"><span></span></span>
+            </button>
+            <button type="button"
+                    class="text-toolbar-button text-align-btn"
+                    data-cmd="justifyRight"
+                    onmousedown="toolbarCommand(this, event)"
+                    title="Alinear a la derecha">
+              <span class="icon-align icon-align-right"><span></span></span>
+            </button>
+            <button type="button"
+                    class="text-toolbar-button text-align-btn"
+                    data-cmd="justifyFull"
+                    onmousedown="toolbarCommand(this, event)"
+                    title="Justificado">
+              <span class="icon-align icon-align-justify"><span></span></span>
+            </button>
           </div>
 
+          <div id="${id}-txt${i}"
+               class="rich-textarea empty"
+               contenteditable="true"
+               data-type="rich-text">
+          </div>
+        </div>
 
-          <select class="text-toolbar-select text-toolbar-lineheight"
-                  onchange="applyLineHeight(this, event)"
-                  title="Interlineado">
-            <option value="">↕</option>
-            <option value="1">1.0</option>
-            <option value="1.15">1.15</option>
-            <option value="1.5">1.5</option>
-            <option value="2">2.0</option>
+        <div class="source-compact" data-source-wrapper="1">
+          <select
+            id="${id}-txt${i}-source"
+            data-source-select="1"
+            ${isExcelLoaded() ? '' : 'disabled'}
+            onchange="handleSourceChange('${id}-txt${i}')">
+            ${getColumnOptions()}
           </select>
-
-          <button type="button"
-                  class="text-toolbar-button text-align-btn"
-                  data-cmd="justifyLeft"
-                  onmousedown="toolbarCommand(this, event)"
-                  title="Alinear a la izquierda">
-            <span class="icon-align icon-align-left"><span></span></span>
-          </button>
-
-          <button type="button"
-                  class="text-toolbar-button text-align-btn"
-                  data-cmd="justifyCenter"
-                  onmousedown="toolbarCommand(this, event)"
-                  title="Centrar">
-            <span class="icon-align icon-align-center"><span></span></span>
-          </button>
-          <button type="button"
-                  class="text-toolbar-button text-align-btn"
-                  data-cmd="justifyRight"
-                  onmousedown="toolbarCommand(this, event)"
-                  title="Alinear a la derecha">
-            <span class="icon-align icon-align-right"><span></span></span>
-          </button>
-          <button type="button"
-                  class="text-toolbar-button text-align-btn"
-                  data-cmd="justifyFull"
-                  onmousedown="toolbarCommand(this, event)"
-                  title="Justificado">
-            <span class="icon-align icon-align-justify"><span></span></span>
-          </button>
         </div>
+      </div>
+    `;
 
-        <div id="${id}-txt${i}"
-             class="rich-textarea empty"
-             contenteditable="true"
-             data-type="rich-text">
-        </div>
-      `;
-      container.appendChild(div);
+      container.appendChild(wrapper);
     }
+
+    // 4) Volver a conectar selects Excel
+    refreshSourceSelects();
+
+    // 5) Restaurar valores y estilos anteriores
+    restoreModuleFields(snapshot);
   }
+
   function handleSourceChange(fieldId) {
     const sourceSelect = byId(fieldId + '-source');
     const field = byId(fieldId);
     if (!sourceSelect || !field) return;
 
     const source = sourceSelect.value;
-    const isRich = field.getAttribute('contenteditable') === 'true';
+    const isRich = field.classList && field.classList.contains('rich-textarea');
 
+    // limpiar metadata previa de binding
+    if (field.dataset) {
+      delete field.dataset.excelBound;
+      delete field.dataset.excelColumn;
+    }
+
+    // MODO MANUAL → editable normal
     if (source === 'manual') {
       if (isRich) {
-        field.innerHTML = '';
-        field.classList.add('empty');
+        if (field.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '') {
+          field.classList.add('empty');
+        } else {
+          field.classList.remove('empty');
+        }
+        // activamos editor y barra sobre este campo
+        activateRichEditor(field);
       } else {
+        if ('readOnly' in field) field.readOnly = false;
         if ('disabled' in field) field.disabled = false;
-        if ('value' in field) field.value = '';
         if ('placeholder' in field) field.placeholder = 'Ingresa el texto...';
       }
-    } else {
-      const excelValue = getExcelValue(source);
-      if (excelValue !== null) {
-        if (isRich) {
-          field.textContent = String(excelValue);
-          field.classList.remove('empty');
-        } else {
-          if ('value' in field) field.value = String(excelValue);
-          if ('disabled' in field) field.disabled = true;
-          if ('placeholder' in field) field.placeholder = 'Valor desde Excel';
-        }
-      }
+      return;
     }
+
+    // MODO EXCEL → trae el valor de la columna
+    const excelValue = getExcelValue(source);
+    const v = (excelValue !== null && excelValue !== undefined) ? String(excelValue) : '';
+
+    if (isRich) {
+      // seguimos usando rich-text, pero con data del Excel
+      field.innerHTML = v;
+      if (v.replace(/<br\s*\/?>/gi, '').trim() === '') {
+        field.classList.add('empty');
+      } else {
+        field.classList.remove('empty');
+      }
+      // activamos editor (cursor + barra apuntando acá)
+      activateRichEditor(field);
+    } else {
+      // inputs normales: solo lectura si vienen de Excel
+      if ('value' in field) field.value = v;
+      if ('placeholder' in field) field.placeholder = 'Dato desde Excel (solo lectura)';
+      if ('readOnly' in field) field.readOnly = true;
+      if ('disabled' in field) field.disabled = false;
+    }
+
+    // marcamos que este campo depende de Excel (para cambios de fila y bloqueo de edición de texto)
+    if (field.dataset) {
+      field.dataset.excelBound = '1';
+      field.dataset.excelColumn = source;
+    }
+  }
+  function handleHtmlEdited(modId) {
+
   }
 
   /* ========= imágenes con input+lista ========= */
 
   function updateImgCount(id) {
-    const count = parseInt(val(id + "-count"), 10) || 1;
     const container = byId(id + "-items");
     if (!container) return;
+
+    // 1) Guardar lo ya ingresado
+    const snapshot = snapshotModuleFields(container);
+
+    // 2) Normalizar cantidad
+    let count = parseInt(val(id + "-count"), 10) || 1;
+    if (count < 1) count = 1;
+    if (count > 10) count = 10;
+    byId(id + "-count").value = String(count);
+
+    // 3) Recrear UI
     container.innerHTML = "";
+
     for (let i = 1; i <= count; i++) {
       const div = document.createElement("div");
-      div.style.marginBottom = "10px";
-      div.style.padding = "8px";
-      div.style.background = "#f9fafb";
-      div.style.borderRadius = "6px";
-      div.innerHTML = `
-        <label style="font-weight:600;">Imagen ${i}</label>
-        <label style="margin-top:4px;">Fuente de datos</label>
-        <select
-          id="${id}-img${i}-source"
-          data-source-select="1"
-          ${isExcelLoaded() ? '' : 'disabled'}
-          onchange="handleSourceChange('${id}-img${i}')">
-          ${getColumnOptions()}
-        </select>
+      div.className = "img-item-block";
 
-        <label style="margin-top:4px;">URL</label>
-        <input type="text" id="${id}-img${i}" placeholder="https://example.com/imagen.jpg">
-        <label style="margin-top:4px;">Alt text</label>
-        <input type="text" id="${id}-alt${i}" placeholder="Descripción de la imagen">
-        <label style="margin-top:4px;">Enlace (opcional)</label>
-        <input type="text" id="${id}-link${i}" placeholder="https://...">
-      `;
+      div.innerHTML = `
+      <label style="font-weight:600; display:block; margin-bottom:4px;">Imagen ${i}</label>
+
+      <div class="data-field-row">
+        <label>URL</label>
+        <div class="data-field-main">
+          <input
+            type="text"
+            id="${id}-img${i}"
+            placeholder="https://example.com/imagen.jpg">
+        </div>
+        <div class="source-compact" data-source-wrapper="1">
+          <select
+            id="${id}-img${i}-source"
+            data-source-select="1"
+            ${isExcelLoaded() ? '' : 'disabled'}
+            onchange="handleSourceChange('${id}-img${i}')">
+            ${getColumnOptions()}
+          </select>
+        </div>
+      </div>
+
+      <div class="data-field-row">
+        <label>Alt text</label>
+        <div class="data-field-main">
+          <input
+            type="text"
+            id="${id}-alt${i}"
+            placeholder="Descripción de la imagen">
+        </div>
+        <div class="source-compact" data-source-wrapper="1">
+          <select
+            id="${id}-alt${i}-source"
+            data-source-select="1"
+            ${isExcelLoaded() ? '' : 'disabled'}
+            onchange="handleSourceChange('${id}-alt${i}')">
+            ${getColumnOptions()}
+          </select>
+        </div>
+      </div>
+
+      <div class="data-field-row">
+        <label>Enlace</label>
+        <div class="data-field-main">
+          <input
+            type="text"
+            id="${id}-link${i}"
+            placeholder="https://...">
+        </div>
+        <div class="source-compact" data-source-wrapper="1">
+          <select
+            id="${id}-link${i}-source"
+            data-source-select="1"
+            ${isExcelLoaded() ? '' : 'disabled'}
+            onchange="handleSourceChange('${id}-link${i}')">
+            ${getColumnOptions()}
+          </select>
+        </div>
+      </div>
+    `;
+
       container.appendChild(div);
     }
+
+    // 4) Refrescar selects Excel
+    refreshSourceSelects();
+
+    // 5) Restaurar valores anteriores (URL, alt, links y mapeos de Excel)
+    restoreModuleFields(snapshot);
   }
+
   /* ========= horizontal layout helpers ========= */
 
   function updateHTextCount(id) {
@@ -1460,19 +1772,165 @@
     cont.innerHTML = "";
 
     for (let i = 1; i <= n; i++) {
-      const ph = i === 1 ? "Línea 1&#10;Línea 2" : "";
       const box = document.createElement("div");
-      box.className = "mod-box";
       box.style.margin = "6px 0";
-      box.style.padding = "8px";
+      box.style.padding = "0";
+
       box.innerHTML = `
-        <strong>Texto ${i}</strong>
-        <textarea id="${id}-htxt${i}" rows="2" placeholder="${ph}"></textarea>
+        <div class="data-field-row">
+          <label>Texto ${i}</label>
+
+          <div class="data-field-main">
+            <div class="text-toolbar-inline">
+            <select class="text-toolbar-select"
+                    onchange="applyFontSize(this, event)">
+              <!-- Opción de reset / tamaño base -->
+              <option value="">Normal</option>
+
+              <!-- Tamaños en px, todos con value numérico -->
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="14">14</option>
+              <option value="16">16</option>
+              <option value="18">18</option>
+              <option value="20">20</option>
+              <option value="22" selected>22</option>
+              <option value="24">24</option>
+              <option value="28">28</option>
+              <option value="32">32</option>
+            </select>
+
+              <span class="text-toolbar-separator">|</span>
+
+              <button type="button"
+                      class="text-toolbar-button"
+                      data-cmd="bold"
+                      onmousedown="toolbarCommand(this, event)">
+                <b>B</b>
+              </button>
+              <button type="button"
+                      class="text-toolbar-button"
+                      data-cmd="italic"
+                      onmousedown="toolbarCommand(this, event)">
+                <i>K</i>
+              </button>
+              <button type="button"
+                      class="text-toolbar-button"
+                      data-cmd="underline"
+                      onmousedown="toolbarCommand(this, event)">
+                <u>U</u>
+              </button>
+
+              <button type="button"
+                      class="text-toolbar-button"
+                      data-cmd="createLink"
+                      onmousedown="toolbarCommand(this, event)">
+                🔗
+              </button>
+
+              <button type="button"
+                      class="text-toolbar-button"
+                      onmousedown="applyInlineFormat('insertUnorderedList', event)"
+                      title="Viñetas">
+                <img src="./assets/icons/list-ul.svg"
+                     alt="Lista con viñetas"
+                     class="toolbar-icon-img">
+              </button>
+
+              <button type="button"
+                      class="text-toolbar-button"
+                      onmousedown="applyInlineFormat('insertOrderedList', event)"
+                      title="Numeración">
+                <img src="assets/icons/list-ol.svg"
+                     alt="Lista numerada"
+                     class="toolbar-icon-img">
+              </button>
+
+              <div class="text-color-picker">
+                <button type="button"
+                        class="text-toolbar-button text-color-btn"
+                        title="Color de texto"
+                        onmousedown="event.preventDefault(); this.nextElementSibling.click();">
+                  <img src="assets/icons/paint-bucket.svg"
+                       alt="Color de texto"
+                       class="text-color-picker-icon">
+                  <span class="text-color-picker-bar"></span>
+                </button>
+
+                <input type="color"
+                       class="text-toolbar-color"
+                       value="#333333"
+                       onchange="applyTextColor(this, event)"
+                       oninput="updateTextColorBar(this)"
+                       onmousedown="event.stopPropagation();">
+
+              </div>
+
+              <select class="text-toolbar-select text-toolbar-lineheight"
+                      onchange="applyLineHeight(this, event)"
+                      title="Interlineado">
+                <option value="">↕</option>
+                <option value="1">1.0</option>
+                <option value="1.15">1.15</option>
+                <option value="1.5">1.5</option>
+                <option value="2">2.0</option>
+              </select>
+
+              <button type="button"
+                      class="text-toolbar-button text-align-btn"
+                      data-cmd="justifyLeft"
+                      onmousedown="toolbarCommand(this, event)"
+                      title="Alinear a la izquierda">
+                <span class="icon-align icon-align-left"><span></span></span>
+              </button>
+
+              <button type="button"
+                      class="text-toolbar-button text-align-btn"
+                      data-cmd="justifyCenter"
+                      onmousedown="toolbarCommand(this, event)"
+                      title="Centrar">
+                <span class="icon-align icon-align-center"><span></span></span>
+              </button>
+              <button type="button"
+                      class="text-toolbar-button text-align-btn"
+                      data-cmd="justifyRight"
+                      onmousedown="toolbarCommand(this, event)"
+                      title="Alinear a la derecha">
+                <span class="icon-align icon-align-right"><span></span></span>
+              </button>
+              <button type="button"
+                      class="text-toolbar-button text-align-btn"
+                      data-cmd="justifyFull"
+                      onmousedown="toolbarCommand(this, event)"
+                      title="Justificado">
+                <span class="icon-align icon-align-justify"><span></span></span>
+              </button>
+            </div>
+
+            <div id="${id}-htxt${i}"
+                 class="rich-textarea empty"
+                 contenteditable="true"
+                 data-type="rich-text">
+            </div>
+          </div>
+
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-htxt${i}-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-htxt${i}')">
+              ${getColumnOptions()}
+            </select>
+          </div>
+        </div>
       `;
+
       cont.appendChild(box);
     }
-  }
 
+    refreshSourceSelects();
+  }
   function updateHImgCount(id) {
     const raw = (val(id + "-hicount") || "").trim();
     if (raw === "") {
@@ -1488,24 +1946,64 @@
     cont.innerHTML = "";
     for (let i = 1; i <= n; i++) {
       const box = document.createElement("div");
-      box.className = "mod-box";
-      box.style.margin = "6px 0";
-      box.style.padding = "8px";
+      box.className = "img-item-block";
+
       box.innerHTML = `
-        <strong>Imagen ${i}</strong>
-        <label>URL de la imagen</label>
-        <input id="${id}-himg${i}" type="text" placeholder="https://mi-sitio.com/imagen${i}.jpg">
+        <label style="font-weight:600; display:block; margin-bottom:4px;">Imagen ${i}</label>
 
-        <label>Texto alternativo (descripción corta)</label>
-        <input id="${id}-halt${i}" type="text" placeholder="Ejemplo: Foto ${i}">
+        <div class="data-field-row">
+          <label>URL</label>
+          <div class="data-field-main">
+            <input id="${id}-himg${i}" type="text" placeholder="https://mi-sitio.com/imagen${i}.jpg">
+          </div>
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-himg${i}-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-himg${i}')">
+              ${getColumnOptions()}
+            </select>
+          </div>
+        </div>
 
-        <label>Enlace al hacer clic (opcional)</label>
-        <input id="${id}-hlink${i}" type="text" placeholder="https://mi-sitio.com/destino${i}">
+        <div class="data-field-row">
+          <label>Alt</label>
+          <div class="data-field-main">
+            <input id="${id}-halt${i}" type="text" placeholder="Ejemplo: Foto ${i}">
+          </div>
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-halt${i}-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-halt${i}')">
+              ${getColumnOptions()}
+            </select>
+          </div>
+        </div>
+
+        <div class="data-field-row">
+          <label>Enlace</label>
+          <div class="data-field-main">
+            <input id="${id}-hlink${i}" type="text" placeholder="https://mi-sitio.com/destino${i}">
+          </div>
+          <div class="source-compact" data-source-wrapper="1">
+            <select
+              id="${id}-hlink${i}-source"
+              data-source-select="1"
+              ${isExcelLoaded() ? '' : 'disabled'}
+              onchange="handleSourceChange('${id}-hlink${i}')">
+              ${getColumnOptions()}
+            </select>
+          </div>
+        </div>
       `;
       cont.appendChild(box);
     }
-  }
 
+    refreshSourceSelects();
+  }
   /* ========= RENDER: genera HTML, CSS, JS para inpgs-wrapper ========= */
 
   function renderAll() {
@@ -1523,7 +2021,6 @@
       modIndex++;
 
       /* === TEXTO: varios h2 en una sola fila === */
-      /* === TEXTO: varios h2 en una sola fila === */
       if (tipo === "texto") {
         const rawCount = (val(id + "-tcount") || "").trim();
         let count = parseInt(rawCount || "1", 10);
@@ -1532,37 +2029,22 @@
 
         const textos = [];
         for (let i = 1; i <= count; i++) {
-          const sourceSelect = byId(`${id}-txt${i}-source`);
-          const source = sourceSelect ? sourceSelect.value : 'manual';
-          const fieldEl = byId(`${id}-txt${i}`);
+          const field = byId(`${id}-txt${i}`);
+          if (!field) continue;
 
-          let t = '';
-          let rich = false;
+          const html = field.innerHTML || "";
+          const cleaned = html.replace(/<br\s*\/?>/gi, "").trim();
+          if (!cleaned) continue;
 
-          if (source && source !== 'manual') {
-            const excelVal = getExcelValue(source);
-            t = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
-            rich = false;
-          } else {
-            if (fieldEl && fieldEl.getAttribute('contenteditable') === 'true') {
-              t = fieldEl.innerHTML || '';
-              rich = true;
-            } else {
-              t = val(`${id}-txt${i}`);
-              rich = false;
-            }
-          }
-
-          const plainCheck = t.replace(/<br\s*\/?>/gi, '').trim();
-          if (plainCheck) {
-            textos.push({ content: t, rich });
-          }
+          const size = field.dataset.fontSize || '';
+          textos.push({ html, size });
         }
 
         if (textos.length === 0) return;
 
         const w = clampPct(val(id + "-w"));
         const bg = val(id + "-bg") || "#ffffff";
+
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
@@ -1571,19 +2053,14 @@
         const txtCls = "inpgs-txt-" + modIndex;
 
         htmlBody += `<div class="${grpCls}">\n`;
-        textos.forEach(item => {
-          let out = item.content || '';
+        textos.forEach(({ html, size }) => {
+          const inner = size
+            ? `<span style="font-size:${size}px">${html}</span>`
+            : html;
 
-          if (!item.rich) {
-            out = escHTML(out).replace(/\r?\n/g, "<br>");
-          }
-
-          htmlBody += `  <h2 class="${txtCls}">${out}</h2>\n`;
+          htmlBody += `  <h2 class="${txtCls}">${inner}</h2>\n`;
         });
         htmlBody += `</div>\n`;
-
-        const sizeEm = "1em";
-        const color = "#333333";
 
         css += `
 .inpgs-wrapper .${grpCls}{
@@ -1603,11 +2080,6 @@
   margin:0 !important;
   padding:0 !important;
   font-family:inherit !important;
-  font-size:${sizeEm} !important;
-  font-weight:400;
-  font-style:normal;
-  text-decoration:none;
-  color:${color};
 }
 `.trim() + "\n\n";
       }
@@ -1647,7 +2119,6 @@
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
         const align = val(id + "-ialign") || "center";
 
-        // Espacio: 1 unidad = 5px
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
@@ -1706,7 +2177,7 @@
         const wRight = parseInt(val(id + "-wright") || "50", 10);
         const bg = val(id + "-hbg") || "#ffffff";
 
-        // Text configuration
+        // TEXTOS
         const rawTextCount = (val(id + "-htcount") || "").trim();
         let textCount = parseInt(rawTextCount || "1", 10);
         if (isNaN(textCount) || textCount < 1) textCount = 1;
@@ -1714,25 +2185,18 @@
 
         const texts = [];
         for (let i = 1; i <= textCount; i++) {
-          const t = val(id + "-htxt" + i);
-          if (t?.trim()) texts.push(t);
+          const field = byId(id + "-htxt" + i);
+          if (!field) continue;
+
+          const html = field.innerHTML || "";
+          const cleaned = html.replace(/<br\s*\/?>/gi, "").trim();
+          if (!cleaned) continue;
+
+          const size = field.dataset.fontSize || '';
+          texts.push({ html, size });
         }
 
-        const textSize = val(id + "-hsize") || "16px";
-        let sizeEm;
-        if (textSize === "14px") sizeEm = "0.9em";
-        else if (textSize === "20px") sizeEm = "1.25em";
-        else if (textSize === "28px") sizeEm = "1.6em";
-        else sizeEm = "1em";
-
-        const textColor = val(id + "-hcolor") || "#333333";
-        const textAlign = val(id + "-halign") || "center";
-        const textBold = byId(id + "-hb")?.checked;
-        const textItalic = byId(id + "-hi")?.checked;
-        const textUnder = byId(id + "-hu")?.checked;
-        const textUpper = byId(id + "-hupper")?.checked;
-
-        // Image configuration
+        // IMÁGENES
         const rawImgCount = (val(id + "-hicount") || "").trim();
         let imgCount = parseInt(rawImgCount || "1", 10);
         if (isNaN(imgCount) || imgCount < 1) imgCount = 1;
@@ -1753,14 +2217,15 @@
         const imgRadius = parseInt(val(id + "-hiradius") || "0", 10) || 0;
         const imgNewTab = byId(id + "-hinewtab")?.checked;
 
-        let imgMbUnit = parseInt(val(id + "-himb") || "0", 10);
-        if (isNaN(imgMbUnit) || imgMbUnit < 0) imgMbUnit = 0;
-        const imgMb = imgMbUnit * 5;
+        // ✅ Margen inferior común del bloque Texto + Imagen
+        let mbUnit = parseInt(val(id + "-hmb") || "0", 10);
+        if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
+        const mb = mbUnit * 5;
 
-        // Skip if both text and images are empty
+
+        // si no hay nada, no pintamos bloque
         if (texts.length === 0 && images.length === 0) return;
 
-        // Create container class
         const containerCls = "inpgs-hcontainer-" + modIndex;
         const leftCls = containerCls + "__left";
         const rightCls = containerCls + "__right";
@@ -1769,16 +2234,16 @@
         const imgCellCls = imgRowCls + "__cell";
         const imgCls = imgRowCls + "__img";
 
-        // Build HTML
         htmlBody += `<div class="${containerCls}">\n`;
 
-        // Left side
+        // COLUMNA IZQUIERDA
         htmlBody += `  <div class="${leftCls}">\n`;
         if (leftType === "texto" && texts.length > 0) {
-          texts.forEach(raw => {
-            const tRaw = textUpper ? raw.toUpperCase() : raw;
-            const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
-            htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
+          texts.forEach(({ html, size }) => {
+            const inner = size
+              ? `<span style="font-size:${size}px">${html}</span>`
+              : html;
+            htmlBody += `    <h2 class="${textCls}">${inner}</h2>\n`;
           });
         } else if (leftType === "imagen" && images.length > 0) {
           htmlBody += `    <div class="${imgRowCls}">\n`;
@@ -1794,13 +2259,14 @@
         }
         htmlBody += `  </div>\n`;
 
-        // Right side
+        // COLUMNA DERECHA
         htmlBody += `  <div class="${rightCls}">\n`;
         if (rightType === "texto" && texts.length > 0) {
-          texts.forEach(raw => {
-            const tRaw = textUpper ? raw.toUpperCase() : raw;
-            const htmlT = escHTML(tRaw).replace(/\r?\n/g, "<br>");
-            htmlBody += `    <h2 class="${textCls}">${htmlT}</h2>\n`;
+          texts.forEach(({ html, size }) => {
+            const inner = size
+              ? `<span style="font-size:${size}px">${html}</span>`
+              : html;
+            htmlBody += `    <h2 class="${textCls}">${inner}</h2>\n`;
           });
         } else if (rightType === "imagen" && images.length > 0) {
           htmlBody += `    <div class="${imgRowCls}">\n`;
@@ -1817,16 +2283,6 @@
         htmlBody += `  </div>\n`;
         htmlBody += `</div>\n`;
 
-        // Build CSS
-        const fw = textBold ? "700" : "400";
-        const fs = textItalic ? "italic" : "normal";
-        const td = textUnder ? "underline" : "none";
-
-        const textJustify =
-          textAlign === "left" ? "flex-start" :
-            textAlign === "right" ? "flex-end" :
-              textAlign === "center" ? "center" : "space-between";
-
         const imgJustify =
           imgAlign === "left" ? "flex-start" :
             imgAlign === "right" ? "flex-end" :
@@ -1838,7 +2294,7 @@
   flex-direction:row !important;
   gap:0 !important;
   background:${bg} !important;
-  margin:0 !important;
+  margin:0 0 ${mb}px 0 !important;   /* ✅ antes usaba imgMb */
   padding:0 !important;
 }
 .inpgs-wrapper .${leftCls}{
@@ -1859,18 +2315,12 @@
   margin:0 !important;
   padding:0 !important;
   font-family:inherit !important;
-  font-size:${sizeEm} !important;
-  font-weight:${fw} !important;
-  font-style:${fs} !important;
-  text-decoration:${td} !important;
-  color:${textColor} !important;
-  text-align:${textAlign} !important;
 }
 .inpgs-wrapper .${imgRowCls}{
   display:flex !important;
   flex-wrap:nowrap !important;
   gap:8px !important;
-  margin:0 0 ${imgMb}px 0 !important;
+  margin:0 !important;
   padding:0 !important;
   align-items:center !important;
   justify-content:${imgJustify} !important;
@@ -1891,9 +2341,27 @@
 
       /* === CUSTOM HTML === */
       if (tipo === "html") {
-        const customHtml = val(id + "-htmlcode") || "";
+        const sourceSelect = byId(id + "-htmlcode-source");
+        const source = sourceSelect ? sourceSelect.value : 'manual';
+
+        let customHtml = '';
+
+        if (source && source !== 'manual') {
+          const excelVal = getExcelValue(source);
+          customHtml = excelVal != null ? String(excelVal) : '';
+
+          const ta = byId(id + "-htmlcode");
+          if (ta && ta.value !== customHtml) {
+            ta.value = customHtml;
+          }
+        } else {
+          customHtml = val(id + "-htmlcode") || '';
+        }
+
+        customHtml = decodeHtmlIfNeeded(customHtml);
+
         if (customHtml.trim()) {
-          htmlBody += customHtml.trim() + "\n";
+          htmlBody += customHtml + "\n";
         }
       }
 
@@ -1914,56 +2382,45 @@
           const escUrl = escAttr(videoUrl);
 
           htmlBody += `
-<div class="inpgs-video-${modIndex}">
-  <video class="inpgs-video-${modIndex}__iframe" src="${escUrl}" autoplay muted playsinline loop controls>
-  </video>
-</div>
-`;
+          <div class="inpgs-video-${modIndex}">
+            <video class="inpgs-video-${modIndex}__iframe"
+                  src="${escUrl}"
+                  autoplay
+                  muted
+                  playsinline
+                  loop
+                  controls>
+            </video>
+          </div>
+          `;
+
 
           css += `
-.inpgs-video-${modIndex} {
-  position: relative !important;
-  width: 100% !important;
-  padding-bottom: 56.25% !important;
-  height: 0 !important;
-  margin-bottom: 1rem !important;
-}
-.inpgs-video-${modIndex}__iframe {
-  position: absolute !important;
-  top: 0 !important; left: 0 !important;
-  width: 100% !important; height: 100% !important;
-  border: none !important;
-  object-fit: cover !important;
-}
-`.trim() + "\n\n";
-        }
-      }
-
-      /* === EXCEL MERGE PLACEHOLDER === */
-      if (tipo === "excel-merge") {
-        // Check if we have loaded data for this module
-        const data = loadedExcelData[id];
-        if (data && data.length > 0) {
-          // Find selected ID
-          const selectId = byId(id + "-excelid");
-          const selectedVal = selectId ? selectId.value : null;
-
-          // Find corresponding HTML
-          const item = data.find(x => x.id == selectedVal);
-          if (item) {
-            htmlBody += item.html || ""; // Inject the old HTML
-          } else {
-            // Fallback if nothing selected (e.g. first load)
-            htmlBody += data[0].html || "";
+          .inpgs-wrapper .inpgs-video-${modIndex}{
+            position:relative !important;
+            width:100% !important;
+            padding-bottom:56.25% !important; /* 16:9 */
+            height:0 !important;
+            margin-bottom:16px !important;
           }
-        } else {
-          // No data loaded yet, or we are generating the template for export
-          htmlBody += "<!-- [[EXCEL_MERGE_POINT]] -->\n";
+
+          .inpgs-wrapper .inpgs-video-${modIndex}__iframe{
+            position:absolute !important;
+            top:0 !important;
+            left:0 !important;
+            width:100% !important;
+            height:100% !important;
+            border:none !important;
+            object-fit:cover !important;
+          }
+          `.trim() + "\n\n";
+
         }
       }
+
+
     });
 
-    /* ====== WRAPPER GLOBAL Y SCOPE (Lato + FONT_ENFORCER_CSS + GLOBAL_CSS) ====== */
     if (htmlBody.trim() === "") {
       byId("preview").innerHTML = "<div class='muted'>No hay módulos válidos.</div>";
       byId("htmlOut").value = "";
@@ -1978,58 +2435,68 @@
     const htmlWrapper = wrapperStart + "\n" + htmlBody.trim() + "\n" + wrapperEnd;
 
     const cssWrapper = `
-.inpgs-wrapper{
-  font-family:'Lato',sans-serif !important;
-  --inpgs-fs: clamp(0.875rem, 3vw, 1.5rem);
-  font-size: var(--inpgs-fs) !important;
-  line-height: 1.35 !important;
-  padding:0px !important;
-  color:#000 !important;
-}
-.inpgs-wrapper *, 
-.inpgs-wrapper *::before, 
-.inpgs-wrapper *::after{
-  box-sizing:border-box !important;
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-.inpgs-wrapper h1,
-.inpgs-wrapper h2,
-.inpgs-wrapper h3,
-.inpgs-wrapper h4,
-.inpgs-wrapper h5,
-.inpgs-wrapper h6,
-.inpgs-wrapper p,
-.inpgs-wrapper span,
-.inpgs-wrapper a,
-.inpgs-wrapper li,
-.inpgs-wrapper strong,
-.inpgs-wrapper b,
-.inpgs-wrapper i,
-.inpgs-wrapper u,
-.inpgs-wrapper label,
-.inpgs-wrapper input,
-.inpgs-wrapper textarea,
-.inpgs-wrapper select,
-.inpgs-wrapper button {
-  font-size: inherit !important;
-  line-height: inherit !important;
-}
-.inpgs-wrapper [style*="font-size"]{
-  font-size: inherit !important;
-}
-.amp::before{
-  content:"\\0026";
-}
-`.trim() + "\n\n";
+  .inpgs-wrapper{
+    font-family:'Lato',sans-serif !important;
+    --inpgs-fs:1.4rem;
+    font-size:var(--inpgs-fs) !important;
+    line-height:1.35 !important;
+    padding:0 !important;
+    color:#333333 !important;
+    font-weight:400 !important;
+  }
+
+  .inpgs-wrapper *,
+  .inpgs-wrapper *::before,
+  .inpgs-wrapper *::after{
+    box-sizing:border-box !important;
+    line-height:inherit !important;
+  }
+
+  /* Normalizamos elementos estructurales, pero dejamos
+    span / strong / b / i / u libres para que la toolbar
+    pueda cambiar font-size en esos nodos */
+  .inpgs-wrapper h1,
+  .inpgs-wrapper h2,
+  .inpgs-wrapper h3,
+  .inpgs-wrapper h4,
+  .inpgs-wrapper h5,
+  .inpgs-wrapper h6,
+  .inpgs-wrapper p,
+  .inpgs-wrapper a,
+  .inpgs-wrapper li,
+  .inpgs-wrapper label,
+  .inpgs-wrapper input,
+  .inpgs-wrapper textarea,
+  .inpgs-wrapper select,
+  .inpgs-wrapper button{
+    font-size:inherit !important;
+    line-height:inherit !important;
+  }
+
+  .inpgs-wrapper h1,
+  .inpgs-wrapper h2,
+  .inpgs-wrapper h3,
+  .inpgs-wrapper h4,
+  .inpgs-wrapper h5,
+  .inpgs-wrapper h6{
+    font-weight:400 !important;
+  }
+
+  /* si quieres que el tamaño de la barra funcione, NO descomentes esto:
+  .inpgs-wrapper [style*="font-size"]{
+    font-size: inherit !important;
+  }
+  */
+  .amp::before{
+    content:"\\0026";
+  }
+  `.trim() + "\n\n";
 
     const finalCSS = cssWrapper + css.trim();
 
-    /* ====== PREVIEW: inyectamos HTML+CSS y fuente Lato ====== */
     const preview = byId("preview");
     preview.innerHTML = htmlWrapper;
 
-    // link de fuente Lato para el preview
     const fontLinkId = "inpgs-font-link-preview";
     let fontLink = document.getElementById(fontLinkId);
     if (!fontLink) {
@@ -2048,12 +2515,10 @@
     styleEl.textContent = finalCSS;
     document.head.appendChild(styleEl);
 
-    /* ====== EXPORTS separados ====== */
     byId("htmlOut").value = htmlWrapper;
     byId("cssOut").value = finalCSS;
     byId("jsOut").value = js;
 
-    /* ====== SNIPPET FINAL: LINK Lato + style + wrapper + tag hidden ====== */
     let fullHtml =
       '<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet">\n' +
       "<style>\n" + finalCSS + "\n</style>\n" +
@@ -2063,10 +2528,95 @@
       fullHtml += "\n<script>\n" + js + "\n</scr" + "ipt>\n";
     }
 
-    // Tag de control al final del HTML final
     fullHtml += '\n<span hidden>INPAGE ESPECIALISTA/IA</span>';
 
     byId("htmlFullOut").value = fullHtml;
+  }
+  // === NUEVO: helpers para preservar valores al cambiar "Cantidad" ===
+  function snapshotModuleFields(container) {
+    const data = {};
+    if (!container) return data;
+
+    container.querySelectorAll(
+      'input[type="text"], input[type="number"], textarea, .rich-textarea, select[data-source-select="1"]'
+    ).forEach(function (el) {
+      if (!el.id) return;
+
+      const ds = el.dataset || {};
+
+      if (el.classList.contains('rich-textarea')) {
+        data[el.id] = {
+          type: 'rich',
+          html: el.innerHTML,
+          fontSize: el.style.fontSize || '',
+          dataset: {
+            fontSize: ds.fontSize || '',
+            excelBound: ds.excelBound || '',
+            excelColumn: ds.excelColumn || '',
+            excelBaseValue: ds.excelBaseValue || '',
+            excelTemplate: ds.excelTemplate || ''
+          }
+        };
+      } else {
+        data[el.id] = {
+          type: 'input',
+          value: el.value,
+          readOnly: el.readOnly,
+          disabled: el.disabled,
+          placeholder: el.placeholder || '',
+          dataset: {
+            excelBound: ds.excelBound || '',
+            excelColumn: ds.excelColumn || ''
+          }
+        };
+      }
+    });
+
+    return data;
+  }
+
+  function restoreModuleFields(snapshot) {
+    if (!snapshot) return;
+
+    Object.keys(snapshot).forEach(function (id) {
+      const info = snapshot[id];
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      if (info.type === 'rich') {
+        el.innerHTML = info.html;
+
+        if (info.fontSize) {
+          el.style.fontSize = info.fontSize;
+        }
+
+        if (info.dataset) {
+          if (info.dataset.fontSize) el.dataset.fontSize = info.dataset.fontSize;
+          if (info.dataset.excelBound) el.dataset.excelBound = info.dataset.excelBound;
+          if (info.dataset.excelColumn) el.dataset.excelColumn = info.dataset.excelColumn;
+          if (info.dataset.excelBaseValue) el.dataset.excelBaseValue = info.dataset.excelBaseValue;
+          if (info.dataset.excelTemplate) el.dataset.excelTemplate = info.dataset.excelTemplate;
+        }
+
+        // volver a marcar empty / no empty
+        if (el.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '') {
+          el.classList.add('empty');
+        } else {
+          el.classList.remove('empty');
+        }
+
+      } else { // inputs normales
+        el.value = info.value;
+        el.readOnly = !!info.readOnly;
+        el.disabled = !!info.disabled;
+        el.placeholder = info.placeholder || '';
+
+        if (info.dataset) {
+          if (info.dataset.excelBound) el.dataset.excelBound = info.dataset.excelBound;
+          if (info.dataset.excelColumn) el.dataset.excelColumn = info.dataset.excelColumn;
+        }
+      }
+    });
   }
 
   /* ========= helpers ========= */
@@ -2094,22 +2644,6 @@
   function val(id) { const el = byId(id); return el ? el.value : ""; }
   let savedSelection = null;
 
-  function saveSelection() {
-    const active = document.activeElement;
-    if (active && active.matches('.rich-textarea')) {
-      const sel = window.getSelection();
-      if (sel && sel.rangeCount > 0) {
-        savedSelection = sel.getRangeAt(0);
-      }
-    }
-  }
-
-  function restoreSelection() {
-    if (!savedSelection) return;
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(savedSelection);
-  }
 
   function saveSelection() {
     const active = document.activeElement;
@@ -2119,6 +2653,23 @@
       if (sel && sel.rangeCount > 0) {
         savedSelection = sel.getRangeAt(0);
       }
+    }
+  }
+  function activateRichEditor(field) {
+    if (!field) return;
+    field.setAttribute('contenteditable', 'true');
+    field.focus();
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(field);
+      range.collapse(false); // cursor al final
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      currentEditor = field;
+      savedSelection = range;
+    } catch (e) {
+      // si falla no es grave
     }
   }
 
@@ -2163,25 +2714,9 @@
     refreshToolbarState(currentEditor);
   }
 
-  function applyTextColor(input, ev) {
-    if (ev) ev.preventDefault();
-    restoreSelection();
-    if (!currentEditor || !input.value) return;
-    document.execCommand('foreColor', false, input.value);
-    refreshToolbarState(currentEditor);
-  }
 
-  function applyFontSize(select, ev) {
-    if (ev) ev.preventDefault();
-    restoreSelection();
-    if (!currentEditor) return;
-    const val = select.value;
-    if (!val) return;
-    const map = { '12': 2, '14': 3, '16': 4, '20': 5, '24': 6 };
-    const size = map[val] || 3;
-    document.execCommand('fontSize', false, size);
-    refreshToolbarState(currentEditor);
-  }
+
+
 
   function applyLineHeight(select, ev) {
     if (ev) ev.preventDefault();
@@ -2195,6 +2730,9 @@
       ev.stopPropagation();
     }
 
+    restoreSelection();
+    if (!currentEditor) return;
+
     document.execCommand(cmd, false, null);
 
     const btn = ev && ev.currentTarget;
@@ -2202,6 +2740,7 @@
       btn.classList.toggle('active');
     }
   }
+
 
   // Guardar selección cuando se interactúa con el editor
   document.addEventListener('mouseup', saveSelection);
@@ -2217,18 +2756,35 @@
   function applyTextColor(input, ev) {
     if (ev) ev.preventDefault();
     restoreSelection();
-    if (!input.value) return;
+    if (!currentEditor || !input.value) return;
     document.execCommand('foreColor', false, input.value);
+    refreshToolbarState(currentEditor);
   }
 
   function applyFontSize(select, ev) {
     if (ev) ev.preventDefault();
-    restoreSelection();
-    const val = select.value;
-    if (!val) return;
-    const map = { '12': 2, '14': 3, '16': 4, '20': 5, '24': 6 };
-    const size = map[val] || 3;
-    document.execCommand('fontSize', false, size);
+
+    // buscamos el editor (rich-textarea) que vive junto a este select
+    const dataFieldMain = select.closest('.data-field-main');
+    if (!dataFieldMain) return;
+
+    const editor = dataFieldMain.querySelector('.rich-textarea');
+    if (!editor) return;
+
+    const px = select.value; // "" o "10", "12", "14", etc.
+
+    if (!px) {
+      // "Normal": volvemos al tamaño base (heredado)
+      editor.style.fontSize = '';
+      delete editor.dataset.fontSize;
+    } else {
+      // guardamos el tamaño en el editor y lo aplicamos visualmente
+      editor.style.fontSize = px + 'px';
+      editor.dataset.fontSize = px;
+    }
+
+    // opcional: si quieres devolverle el foco al editor:
+    // editor.focus();
   }
 
   function applyCreateLink(ev) {
@@ -2239,15 +2795,6 @@
     document.execCommand('createLink', false, url);
   }
 
-  // guardar selección cuando el usuario edita en el área rich
-  document.addEventListener('mouseup', saveSelection);
-  document.addEventListener('keyup', saveSelection);
-  document.addEventListener('selectionchange', function () {
-    const active = document.activeElement;
-    if (active && active.matches('.rich-textarea')) {
-      saveSelection();
-    }
-  });
 
 
   function clampPct(v) {
@@ -2260,6 +2807,18 @@
   }
   function escAttr(s) {
     return (s || "").replace(/"/g, "&quot;");
+  }
+  function decodeHtmlIfNeeded(str) {
+    if (!str || typeof str !== 'string') return '';
+
+    // Si no parece HTML escapado, lo dejamos tal cual
+    if (!str.includes('&lt;') && !str.includes('&gt;') && !str.includes('&amp;')) {
+      return str;
+    }
+
+    const txt = document.createElement('textarea');
+    txt.innerHTML = str;
+    return txt.value;
   }
 
   /* ========= color sync ========= */
@@ -2361,141 +2920,33 @@
   }
 
 
-  /* ========= EXCEL PROCESSING ========= */
 
-  let loadedExcelData = {}; // Store data by module ID: { modId: [ {id, html}, ... ] }
-
-  function loadExcelData(id) {
-    const fileInput = byId(id + "-excelfile");
-    const statusDiv = byId(id + "-excelstatus");
-    const controlsDiv = byId(id + "-preview-controls");
-    const selectId = byId(id + "-excelid");
-
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-      return;
-    }
-
-    const file = fileInput.files[0];
-    if (statusDiv) statusDiv.innerHTML = "Leyendo archivo...";
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-        if (!jsonData || jsonData.length === 0) {
-          if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>El archivo parece estar vacío.</span>";
-          return;
-        }
-
-        // Normalize data
-        const normalizedData = jsonData.map(row => {
-          const keys = Object.keys(row);
-          let idVal = "";
-          let htmlVal = "";
-          keys.forEach(k => {
-            if (k.toLowerCase() === "id") idVal = row[k];
-            if (k.toLowerCase() === "html") htmlVal = row[k];
-          });
-          return { id: idVal, html: htmlVal };
-        });
-
-        loadedExcelData[id] = normalizedData;
-
-        // Populate dropdown
-        selectId.innerHTML = "";
-        normalizedData.forEach(item => {
-          const opt = document.createElement("option");
-          opt.value = item.id;
-          opt.textContent = item.id;
-          selectId.appendChild(opt);
-        });
-
-        if (controlsDiv) controlsDiv.style.display = "block";
-        if (statusDiv) statusDiv.innerHTML = "<span style='color:green'>Archivo cargado. Selecciona un ID para previsualizar.</span>";
-
-        // Trigger render to show first item
-        renderAll();
-
-      } catch (err) {
-        console.error(err);
-        if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al leer: " + err.message + "</span>";
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  }
-
-  function processExcel(id) {
-    const statusDiv = byId(id + "-excelstatus");
-    const data = loadedExcelData[id];
-
-    if (!data || data.length === 0) {
-      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Primero debes cargar un archivo Excel válido.</span>";
-      return;
-    }
-
-    // Generate template by temporarily hiding the specific ID selection
-    // This forces renderAll to output the placeholder
-    const savedData = loadedExcelData[id];
-    loadedExcelData[id] = null;
-
-    // We also need to ensure renderAll doesn't crash or produce empty output if it relies on loadedExcelData
-    // The modified renderAll below handles 'excel-merge' by checking if data exists.
-    // If loadedExcelData[id] is null, it should output the placeholder.
-
-    renderAll();
-    const template = byId("htmlFullOut").value;
-
-    // Restore data and view
-    loadedExcelData[id] = savedData;
-    renderAll();
-
-    if (!template.includes("<!-- [[EXCEL_MERGE_POINT]] -->")) {
-      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error: No se encontró el punto de inserción. Asegúrate de tener un módulo 'Carga Excel' activo.</span>";
-      return;
-    }
-
-    if (statusDiv) statusDiv.innerHTML = "Procesando " + data.length + " filas...";
-
-    try {
-      const outputData = [];
-
-      data.forEach(row => {
-        const newHtml = template.replace("<!-- [[EXCEL_MERGE_POINT]] -->", row.html || "");
-        outputData.push({
-          id: row.id,
-          html_original: row.html,
-          html_nuevo: newHtml
-        });
-      });
-
-      const newWs = XLSX.utils.json_to_sheet(outputData);
-      const newWb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(newWb, newWs, "Resultados");
-
-      XLSX.writeFile(newWb, "inpages_generados.xlsx");
-
-      if (statusDiv) statusDiv.innerHTML = "<span style='color:green'>¡Listo! Archivo descargado.</span>";
-    } catch (err) {
-      console.error(err);
-      if (statusDiv) statusDiv.innerHTML = "<span style='color:red'>Error al procesar: " + err.message + "</span>";
-    }
-  }
   document.addEventListener('input', function (e) {
     const el = e.target;
+
     if (el.matches('.rich-textarea')) {
       if (el.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '') {
         el.classList.add('empty');
       } else {
         el.classList.remove('empty');
       }
+
+      // si está ligado a Excel, actualizamos la plantilla de estilos
+      if (el.dataset && el.dataset.excelBound === '1') {
+        const base = el.dataset.excelBaseValue || '';
+        if (base) {
+          const html = el.innerHTML;
+          const placeholder = '__EXCEL_VALUE__';
+          const template = html.split(base).join(placeholder);
+          el.dataset.excelTemplate = template;
+        }
+      }
     }
   });
+
+
+
+
   function updateTextColorBar(input) {
     const picker = input.closest('.text-color-picker');
     if (!picker) return;
@@ -2503,5 +2954,48 @@
     if (!bar) return;
     bar.style.background = input.value || '#111827';
   }
+  // Bloquear edición manual del texto cuando viene de Excel,
+  // pero seguir permitiendo selección + estilos desde la barra.
+  document.addEventListener('keydown', function (e) {
+    const el = e.target;
+    if (!el || !el.matches('.rich-textarea')) return;
+    if (!el.dataset || el.dataset.excelBound !== '1') return;
+
+    const key = e.key;
+
+    // teclas que sí permitimos aunque venga de Excel (mover cursor, etc.)
+    const allowedNonChar = [
+      'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+      'Home', 'End', 'PageUp', 'PageDown',
+      'Shift', 'Control', 'Alt', 'Meta', 'Tab', 'Escape'
+    ];
+
+    const isChar = key.length === 1; // cualquier letra/número/signo
+    const isDeleteKey = (key === 'Backspace' || key === 'Delete' || key === 'Enter');
+
+    // si es carácter o borrado, y no viene con Ctrl/Meta/Alt → lo bloqueamos
+    if (
+      (!e.ctrlKey && !e.metaKey && !e.altKey) &&
+      (isChar || isDeleteKey) &&
+      !allowedNonChar.includes(key)
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('paste', function (e) {
+    const el = e.target;
+    if (!el || !el.classList || !el.classList.contains('rich-textarea')) return;
+
+    const fieldId = el.id;
+    const sourceSelect = byId(fieldId + '-source');
+    if (!sourceSelect) return;
+
+    const source = sourceSelect.value;
+    if (!source || source === 'manual') return;
+
+    // datos desde Excel: no dejamos pegar texto encima
+    e.preventDefault();
+  });
 
 </script>
