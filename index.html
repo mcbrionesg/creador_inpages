@@ -136,8 +136,6 @@
     font-size: 12px;
     color: #666;
   }
-
-  /* General Inputs */
   select,
   input[type="text"],
   input[type="number"],
@@ -158,8 +156,6 @@
     display: block;
     margin-bottom: 2px;
   }
-
-  /* Layout Utils */
   .row-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -185,8 +181,6 @@
   .mod-body {
     margin-top: 6px;
   }
-
-  /* Minimalist Controls - Grid Layout */
   .params-grid {
     display: flex;
     flex-wrap: wrap;
@@ -205,8 +199,6 @@
     font-size: 11px;
     color: #555;
   }
-
-  /* Compact inputs in param-item */
   .param-item select,
   .param-item input[type="text"],
   .param-item input[type="number"] {
@@ -217,7 +209,6 @@
     font-size: 12px;
   }
 
-  /* Color Picker Minimalist */
   input[type="color"].mini-color {
     width: 24px;
     height: 24px;
@@ -288,7 +279,6 @@
     height: 3px;
     border-radius: 2px;
     background: #333333;
-    /* color inicial de la barra */
   }
 
 
@@ -298,9 +288,6 @@
     position: relative;
     display: inline-block;
   }
-
-
-  /* IZQUIERDA: todas pegadas a la izquierda, distintas longitudes */
   .icon-align-left::before {
     top: 0;
     left: 0;
@@ -319,7 +306,6 @@
     width: 8px;
   }
 
-  /* CENTRO: centradas horizontalmente, distintas longitudes */
   .icon-align-center::before {
     top: 0;
     left: 50%;
@@ -341,7 +327,6 @@
     transform: translateX(-50%);
   }
 
-  /* DERECHA: pegadas al borde derecho, distintas longitudes */
   .icon-align-right::before {
     top: 0;
     right: 0;
@@ -360,7 +345,6 @@
     width: 8px;
   }
 
-  /* JUSTIFICADO: las tres líneas de ancho completo */
   .icon-align-justify::before {
     top: 0;
     left: 0;
@@ -385,7 +369,6 @@
     border-radius: 4px;
     padding: 6px;
     font-size: 22px;
-    /* ✅ MATCH con 1.4rem del wrapper y con el select */
     background: #fff;
     overflow-y: auto;
     color: #333333;
@@ -404,7 +387,6 @@
     pointer-events: none;
   }
 
-  /* pseudo-placeholder */
   .rich-textarea.empty::before {
     content: "Ingresa el texto...";
     color: #9ca3af;
@@ -417,12 +399,6 @@
     display: inline-block;
   }
 
-
-  /* ===================== */
-  /* OVERRIDES TOOLBAR FONDO CLARO */
-  /* ===================== */
-
-  /* Contenedor de la barra */
   .text-toolbar-inline {
     display: flex;
     align-items: center;
@@ -430,13 +406,11 @@
     margin: 4px 0;
     font-size: 12px;
     background: #f9fafb;
-    /* fondo claro */
     border-radius: 4px;
     padding: 4px 6px;
     border: 1px solid #e5e7eb;
   }
 
-  /* Botones de la barra */
   .text-toolbar-button {
     border: 1px solid transparent;
     border-radius: 3px;
@@ -446,7 +420,6 @@
     font-size: 12px;
     line-height: 1;
     color: #374151;
-    /* texto / iconos gris oscuro */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -454,17 +427,13 @@
 
   .text-toolbar-button:hover {
     background: #e5e7eb;
-    /* hover gris claro */
   }
 
   .text-toolbar-button.active {
     background: #d1d5db;
-    /* estado seleccionado */
     border-color: #9ca3af;
     color: #111827;
   }
-
-  /* Selects (tamaño fuente / interlineado) */
   .text-toolbar-select,
   .text-toolbar-lineheight {
     border-radius: 4px;
@@ -484,7 +453,6 @@
     font-size: 11px;
     background: #f9fafb;
     max-width: 80px;
-    /* mucho más chico que un select normal */
   }
 
   /* Separador visual */
@@ -492,10 +460,6 @@
     color: #9ca3af;
     padding: 0 2px;
   }
-
-  /* ===================== */
-  /* ÍCONOS DE ALINEACIÓN */
-  /* ===================== */
 
   .icon-align::before,
   .icon-align::after,
@@ -507,16 +471,7 @@
     background: #4b5563;
   }
 
-  /* dejamos el layout igual, solo cambia color,
-   así que no tocamos icon-align-left/center/right/justify,
-   solo se heredan estos colores */
 
-  /* ===================== */
-  /* BULLETS Y NUMERACIÓN */
-  /* ===================== */
-
-  /* Bullets: puntos + líneas */
-  /* BASE: contenedor del icono */
   .icon-list {
     width: 18px;
     height: 16px;
@@ -524,7 +479,6 @@
     display: inline-block;
   }
 
-  /* BULLETS: 3 puntos + 3 líneas, estilo similar al SVG */
   .icon-list-bullets::before,
   .icon-list-bullets::after {
     content: "";
@@ -532,7 +486,6 @@
     border-radius: 9999px;
   }
 
-  /* puntos circulares a la izquierda */
   .icon-list-bullets::before {
     left: 2px;
     top: 2px;
@@ -542,10 +495,8 @@
     box-shadow:
       0 5px 0 #343E49,
       0 10px 0 #343E49;
-    /* 3 puntos verticales */
   }
 
-  /* líneas a la derecha */
   .icon-list-bullets::after {
     left: 9px;
     right: 1px;
@@ -556,33 +507,25 @@
     box-shadow:
       0 5px 0 #343E49,
       0 10px 0 #343E49;
-    /* 3 rayas alineadas con los puntos */
   }
 
-  /* Icono lista numerada compacto, alineado al tamaño del resto */
   .icon-ordered-list {
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
     width: 14px;
-    /* más angosto que antes */
     height: 10px;
-    /* más bajo que antes */
     font-size: 0;
-    /* evita altura extra por línea de texto */
   }
 
-  /* Cada fila 1 / 2 / 3 */
   .icon-ordered-list-item {
     display: flex;
     align-items: center;
     flex: 1 0 0;
   }
 
-  /* Número a la izquierda, bien chico */
   .icon-ordered-list-num {
     font-size: 6px;
-    /* más pequeño que antes */
     font-weight: 700;
     color: #343E49;
     margin-right: 1px;
@@ -591,30 +534,20 @@
     text-align: right;
   }
 
-  /* Línea de “texto” muy fina y corta */
   .icon-ordered-list-line {
     flex-grow: 1;
     height: 1px;
-    /* más delgada */
     background-color: #343E49;
     border-radius: 1px;
   }
 
 
-
-
-  /* ===================== */
-  /* TARRO DE PINTURA */
-  /* ===================== */
-
   .icon-paint-bucket::before {
     border: 2px solid #000000;
-    /* contorno del tarro más oscuro */
   }
 
   .icon-paint-bucket::after {
     background: #2563eb;
-    /* gota azul tipo Word */
   }
 
   .icon-paint-bucket::before,
@@ -623,7 +556,6 @@
     position: absolute;
   }
 
-  /* por ejemplo, un tarro simple */
   .icon-paint-bucket::before {
     width: 10px;
     height: 8px;
@@ -634,7 +566,6 @@
     border-bottom-right-radius: 2px;
   }
 
-  /* y la gotita */
   .icon-paint-bucket::after {
     width: 4px;
     height: 6px;
@@ -652,10 +583,8 @@
     pointer-events: none;
     transform: scale(1.2);
 
-    /* para que el click pase al botón */
   }
 
-  /* ==== UI compacta para imágenes en fila ==== */
 
 
 
@@ -688,7 +617,6 @@
     max-width: 120px;
   }
 
-  /* ==== UI compacta para campos con fuente de datos ==== */
   .data-field-row {
     display: flex;
     align-items: center;
@@ -1225,6 +1153,16 @@
             <option value="16">Media</option>
             <option value="24">Alta</option>
           </select>
+        </div>
+
+        <div class="param-item">
+          <label>Tamaño img (%)</label>
+          <input id="${id}-isize"
+                 type="number"
+                 min="10"
+                 max="100"
+                 value="100"
+                 style="width:60px">
         </div>
 
         <div class="param-item">
@@ -2119,11 +2057,17 @@
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
         const align = val(id + "-ialign") || "center";
 
+        // ✅ Tamaño de imagen (% del ancho de la celda)
+        let imgSize = parseInt(val(id + "-isize") || "100", 10);
+        if (isNaN(imgSize) || imgSize < 10) imgSize = 10;
+        if (imgSize > 100) imgSize = 100;
+
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
 
         const newTab = byId(id + "-newtab")?.checked;
+
 
         const rowCls = "inpgs-row-" + modIndex;
         const cellCls = rowCls + "__cell";
@@ -2145,28 +2089,30 @@
             align === "right" ? "flex-end" :
               align === "center" ? "center" : "space-between";
 
-        css += `
-.inpgs-wrapper .${rowCls}{
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
-  margin:0 0 ${mb}px 0 !important;
-  padding:0 !important;
-  align-items:center !important;
-  justify-content:${justify} !important;
-}
-.inpgs-wrapper .${cellCls}{
-  flex:1 1 0 !important;
-  min-width:0 !important;
-  text-align:center !important;
-}
-.inpgs-wrapper .${imgCls}{
-  width:100% !important;
-  height:auto !important;
-  border-radius:${radius}px !important;
-  display:block !important;
-}
-`.trim() + "\n\n";
+      css += `
+      .inpgs-wrapper .${rowCls}{
+        display:flex !important;
+        flex-wrap:nowrap !important;
+        gap:8px !important;
+        margin:0 0 ${mb}px 0 !important;
+        padding:0 !important;
+        align-items:center !important;
+        justify-content:${justify} !important;
+      }
+      .inpgs-wrapper .${cellCls}{
+        flex:1 1 0 !important;
+        min-width:0 !important;
+        text-align:center !important;
+      }
+      .inpgs-wrapper .${imgCls}{
+        width:${imgSize}% !important;
+        max-width:100% !important;
+        height:auto !important;
+        border-radius:${radius}px !important;
+        display:block !important;
+        margin:0 auto !important;
+      }
+      `.trim() + "\n\n";
       }
 
       /* === HORIZONTAL: Texto+Imagen === */
@@ -2444,7 +2390,6 @@
     color:#333333 !important;
     font-weight:400 !important;
   }
-
   .inpgs-wrapper *,
   .inpgs-wrapper *::before,
   .inpgs-wrapper *::after{
@@ -2452,9 +2397,6 @@
     line-height:inherit !important;
   }
 
-  /* Normalizamos elementos estructurales, pero dejamos
-    span / strong / b / i / u libres para que la toolbar
-    pueda cambiar font-size en esos nodos */
   .inpgs-wrapper h1,
   .inpgs-wrapper h2,
   .inpgs-wrapper h3,
@@ -2481,12 +2423,9 @@
   .inpgs-wrapper h6{
     font-weight:400 !important;
   }
-
-  /* si quieres que el tamaño de la barra funcione, NO descomentes esto:
   .inpgs-wrapper [style*="font-size"]{
     font-size: inherit !important;
   }
-  */
   .amp::before{
     content:"\\0026";
   }
