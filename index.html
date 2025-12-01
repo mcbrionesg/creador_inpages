@@ -1162,25 +1162,15 @@
         </div>
 
         <div class="param-item">
-          <label>Tamaño img (%)</label>
+          <label>Ancho img (%)</label>
           <input id="${id}-isize"
-                 type="number"
-                 min="10"
-                 max="100"
-                 value="100"
-                 style="width:60px">
+                type="number"
+                min="10"
+                max="100"
+                value="100"
+                style="width:60px">
         </div>
 
-        <!-- 🔥 Nuevo: ancho de la imagen en % -->
-        <div class="param-item">
-          <label>Ancho img (%)</label>
-          <input id="${id}-iwidth"
-                 type="number"
-                 min="10"
-                 max="100"
-                 value="100"
-                 style="width:60px">
-        </div>
 
         <div class="param-item">
           <label>Margen inferior</label>
@@ -2074,13 +2064,9 @@
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
         const align = val(id + "-ialign") || "center";
 
-        // ✅ Tamaño de imagen (% del ancho de la celda)
-        let imgSize = parseInt(val(id + "-isize") || "100", 10);
-        if (isNaN(imgSize) || imgSize < 10) imgSize = 10;
-        if (imgSize > 100) imgSize = 100;
+        // Ancho imagen en %
+        const imgWidth = clampPct(val(id + "-isize") || "100");
 
-        // 🔥 Nuevo: ancho imagen en %
-        const imgWidth = clampPct(val(id + "-iwidth") || "100");
 
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
