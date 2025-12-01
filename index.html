@@ -1162,7 +1162,7 @@
         </div>
 
         <div class="param-item">
-          <label>Ancho img (%)</label>
+          <label>Ancho (%)</label>
           <input id="${id}-isize"
                 type="number"
                 min="10"
@@ -1170,7 +1170,6 @@
                 value="100"
                 style="width:60px">
         </div>
-
 
         <div class="param-item">
           <label>Margen inferior</label>
@@ -2293,31 +2292,42 @@
 `.trim() + "\n\n";
       }
 
-      /* === CUSTOM HTML === */
-      if (tipo === "html") {
-        const sourceSelect = byId(id + "-htmlcode-source");
-        const source = sourceSelect ? sourceSelect.value : 'manual';
+  /* === CUSTOM HTML === */
+  if (tipo === "html") {
+    const sourceSelect = byId(id + "-htmlcode-source");
+    const source = sourceSelect ? sourceSelect.value : 'manual';
 
-        let customHtml = '';
+    let customHtml = '';
 
-        if (source && source !== 'manual') {
-          const excelVal = getExcelValue(source);
-          customHtml = excelVal != null ? String(excelVal) : '';
+    if (source && source !== 'manual') {
+      const excelVal = getExcelValue(source);
+      customHtml = excelVal != null ? String(excelVal) : '';
 
-          const ta = byId(id + "-htmlcode");
-          if (ta && ta.value !== customHtml) {
-            ta.value = customHtml;
-          }
-        } else {
-          customHtml = val(id + "-htmlcode") || '';
-        }
-
-        customHtml = decodeHtmlIfNeeded(customHtml);
-
-        if (customHtml.trim()) {
-          htmlBody += customHtml + "\n";
-        }
+      const ta = byId(id + "-htmlcode");
+      if (ta && ta.value !== customHtml) {
+        ta.value = customHtml;
       }
+    } else {
+      customHtml = val(id + "-htmlcode") || '';
+    }
+
+    // Por si viene escapado tipo &lt;div&gt;
+    customHtml = decodeHtmlIfNeeded(customHtml);
+
+    if (customHtml.trim()) {
+      // 🔧 acá se aplica el “fixer” SOLO de sintaxis
+      const fixedHtml = fixHtmlFragment(customHtml);
+
+      // Si quieres ver el HTML ya corregido en el textarea, puedes actualizarlo:
+      const ta = byId(id + "-htmlcode");
+      if (ta && ta.value !== fixedHtml) {
+        ta.value = fixedHtml;
+      }
+
+      htmlBody += fixedHtml + "\n";
+    }
+  }
+
 
       /* === VIDEO AUTOPLAY === */
       if (tipo === "video-autoplay") {
@@ -2773,6 +2783,17 @@
     const txt = document.createElement('textarea');
     txt.innerHTML = str;
     return txt.value;
+  }
+
+  function fixHtmlFragment(input) {
+    if (!input || typeof input !== 'string') return '';
+
+    // El navegador parsea y “cierra” lo que esté roto
+    const container = document.createElement('div');
+    container.innerHTML = input;
+
+    // No se elimina nada: ni <script>, ni onClick, ni nada.
+    return container.innerHTML;
   }
 
   /* ========= color sync ========= */
