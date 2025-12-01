@@ -1227,6 +1227,17 @@
           </select>
         </div>
 
+        <!-- 🔥 Nuevo: ancho de la imagen en % -->
+        <div class="param-item">
+          <label>Ancho img (%)</label>
+          <input id="${id}-iwidth"
+                 type="number"
+                 min="10"
+                 max="100"
+                 value="100"
+                 style="width:60px">
+        </div>
+
         <div class="param-item">
           <label>Margen inferior</label>
           <select id="${id}-mb">
@@ -2119,6 +2130,9 @@
         const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
         const align = val(id + "-ialign") || "center";
 
+        // 🔥 Nuevo: ancho imagen en %
+        const imgWidth = clampPct(val(id + "-iwidth") || "100");
+
         let mbUnit = parseInt(val(id + "-mb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
@@ -2128,6 +2142,7 @@
         const rowCls = "inpgs-row-" + modIndex;
         const cellCls = rowCls + "__cell";
         const imgCls = rowCls + "__img";
+
 
         htmlBody += `<div class="${rowCls}">\n`;
         items.forEach(it => {
@@ -2161,12 +2176,15 @@
   text-align:center !important;
 }
 .inpgs-wrapper .${imgCls}{
-  width:100% !important;
+  width:${imgWidth}% !important;
+  max-width:100% !important;
   height:auto !important;
   border-radius:${radius}px !important;
   display:block !important;
+  margin:0 auto !important;
 }
 `.trim() + "\n\n";
+
       }
 
       /* === HORIZONTAL: Texto+Imagen === */
