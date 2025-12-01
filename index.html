@@ -380,7 +380,12 @@
     font-weight: 400;
   }
 
-
+  .rich-textarea a,
+  .rich-textarea a:link,
+  .rich-textarea a:visited {
+    color: inherit;          /* mismo color que el texto normal (#333333) */
+    text-decoration: underline; /* igual que en el inpage final */
+  }
 
   .rich-textarea.excel-bound {
     background: #f3f4f6;
@@ -2095,30 +2100,31 @@
             align === "right" ? "flex-end" :
               align === "center" ? "center" : "space-between";
 
-        css += `
-.inpgs-wrapper .${rowCls}{
-  display:flex !important;
-  flex-wrap:nowrap !important;
-  gap:8px !important;
-  margin:0 0 ${mb}px 0 !important;
-  padding:0 !important;
-  align-items:center !important;
-  justify-content:${justify} !important;
-}
-.inpgs-wrapper .${cellCls}{
-  flex:1 1 0 !important;
-  min-width:0 !important;
-  text-align:center !important;
-}
-.inpgs-wrapper .${imgCls}{
-  width:${imgWidth}% !important;
-  max-width:100% !important;
-  height:auto !important;
-  border-radius:${radius}px !important;
-  display:block !important;
-  margin:0 auto !important;
-}
-`.trim() + "\n\n";
+  css += `
+  .inpgs-wrapper .${rowCls}{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    gap:8px !important;
+    margin:0 0 ${mb}px 0 !important;
+    padding:0 !important;
+    align-items:center !important;
+    justify-content:${justify} !important;
+  }
+  .inpgs-wrapper .${cellCls}{
+    flex:1 1 0 !important;
+    min-width:0 !important;
+    text-align:center !important;
+  }
+  .inpgs-wrapper .${imgCls}{
+    width:${imgWidth}% !important;
+    max-width:100% !important;
+    height:auto !important;
+    border-radius:${radius}px !important;
+    display:block !important;
+    margin:0 auto !important;
+    padding:0 !important;
+  }
+  `.trim() + "\n\n";
 
       }
 
@@ -2288,8 +2294,10 @@
   height:auto !important;
   border-radius:${imgRadius}px !important;
   display:block !important;
+  padding:0 !important;      
 }
 `.trim() + "\n\n";
+
       }
 
   /* === CUSTOM HTML === */
