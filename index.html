@@ -383,8 +383,10 @@
   .rich-textarea a,
   .rich-textarea a:link,
   .rich-textarea a:visited {
-    color: inherit;          /* mismo color que el texto normal (#333333) */
-    text-decoration: underline; /* igual que en el inpage final */
+    color: inherit;
+    /* mismo color que el texto normal (#333333) */
+    text-decoration: underline;
+    /* igual que en el inpage final */
   }
 
   .rich-textarea.excel-bound {
@@ -676,7 +678,6 @@
   }
 
   .img-item-block {
-    margin-bottom: 10px;
     padding: 8px;
     background: #f9fafb;
     border-radius: 6px;
@@ -1344,7 +1345,7 @@
             <input
               id="${id}-video-url"
               type="text"
-              placeholder="https://example.com/video.mp4">
+              placeholder="URL .mp4 / YouTube / Vimeo / código &lt;iframe&gt;">
           </div>
           <div class="source-compact" data-source-wrapper="1">
             <select
@@ -1357,7 +1358,7 @@
           </div>
         </div>
         <p class="muted" style="margin-top:4px;">
-          Se generará un bloque 16:9 responsive con autoplay, muted, loop y playsinline.
+          Acepta: URL directa de video
         </p>
       </div>
     `;
@@ -2100,7 +2101,7 @@
             align === "right" ? "flex-end" :
               align === "center" ? "center" : "space-between";
 
-  css += `
+        css += `
   .inpgs-wrapper .${rowCls}{
     display:flex !important;
     flex-wrap:nowrap !important;
@@ -2300,75 +2301,68 @@
 
       }
 
-  /* === CUSTOM HTML === */
-  if (tipo === "html") {
-    const sourceSelect = byId(id + "-htmlcode-source");
-    const source = sourceSelect ? sourceSelect.value : 'manual';
-
-    let customHtml = '';
-
-    if (source && source !== 'manual') {
-      const excelVal = getExcelValue(source);
-      customHtml = excelVal != null ? String(excelVal) : '';
-
-      const ta = byId(id + "-htmlcode");
-      if (ta && ta.value !== customHtml) {
-        ta.value = customHtml;
-      }
-    } else {
-      customHtml = val(id + "-htmlcode") || '';
-    }
-
-    // Por si viene escapado tipo &lt;div&gt;
-    customHtml = decodeHtmlIfNeeded(customHtml);
-
-    if (customHtml.trim()) {
-      // 🔧 acá se aplica el “fixer” SOLO de sintaxis
-      const fixedHtml = fixHtmlFragment(customHtml);
-
-      // Si quieres ver el HTML ya corregido en el textarea, puedes actualizarlo:
-      const ta = byId(id + "-htmlcode");
-      if (ta && ta.value !== fixedHtml) {
-        ta.value = fixedHtml;
-      }
-
-      htmlBody += fixedHtml + "\n";
-    }
-  }
-
-
-      /* === VIDEO AUTOPLAY === */
-      if (tipo === "video-autoplay") {
-        const sourceSelect = byId(`${id}-video-url-source`);
+      /* === CUSTOM HTML === */
+      if (tipo === "html") {
+        const sourceSelect = byId(id + "-htmlcode-source");
         const source = sourceSelect ? sourceSelect.value : 'manual';
-        let videoUrl = '';
+
+        let customHtml = '';
 
         if (source && source !== 'manual') {
           const excelVal = getExcelValue(source);
-          videoUrl = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+          customHtml = excelVal != null ? String(excelVal) : '';
+
+          const ta = byId(id + "-htmlcode");
+          if (ta && ta.value !== customHtml) {
+            ta.value = customHtml;
+          }
         } else {
-          videoUrl = val(id + "-video-url");
+          customHtml = val(id + "-htmlcode") || '';
         }
 
-        if (videoUrl) {
-          const escUrl = escAttr(videoUrl);
+        // Por si viene escapado tipo &lt;div&gt;
+        customHtml = decodeHtmlIfNeeded(customHtml);
+
+        if (customHtml.trim()) {
+          // 🔧 acá se aplica el “fixer” SOLO de sintaxis
+          const fixedHtml = fixHtmlFragment(customHtml);
+
+          // Si quieres ver el HTML ya corregido en el textarea, puedes actualizarlo:
+          const ta = byId(id + "-htmlcode");
+          if (ta && ta.value !== fixedHtml) {
+            ta.value = fixedHtml;
+          }
+
+          htmlBody += fixedHtml + "\n";
+        }
+      }
+
+
+      /* === VIDEO AUTOPLAY === */
+      /* === VIDEO AUTOPLAY (flexible: mp4, YouTube, Vimeo, iframe) === */
+      if (tipo === "video-autoplay") {
+        const sourceSelect = byId(`${id}-video-url-source`);
+        const source = sourceSelect ? sourceSelect.value : 'manual';
+        let videoInput = '';
+
+        if (source && source !== 'manual') {
+          const excelVal = getExcelValue(source);
+          videoInput = (excelVal !== null && excelVal !== undefined) ? String(excelVal) : '';
+        } else {
+          videoInput = val(id + "-video-url");
+        }
+
+        if (videoInput) {
+          const embed = buildVideoEmbedHTML(videoInput, modIndex);
 
           htmlBody += `
-          <div class="inpgs-video-${modIndex}">
-            <video class="inpgs-video-${modIndex}__iframe"
-                  src="${escUrl}"
-                  autoplay
-                  muted
-                  playsinline
-                  loop
-                  controls>
-            </video>
+          <div class="${embed.wrapperClass}">
+            ${embed.innerHtml}
           </div>
           `;
 
-
           css += `
-          .inpgs-wrapper .inpgs-video-${modIndex}{
+          .inpgs-wrapper .${embed.wrapperClass}{
             position:relative !important;
             width:100% !important;
             padding-bottom:56.25% !important; /* 16:9 */
@@ -2376,7 +2370,7 @@
             margin-bottom:16px !important;
           }
 
-          .inpgs-wrapper .inpgs-video-${modIndex}__iframe{
+          .inpgs-wrapper .${embed.wrapperClass}__iframe{
             position:absolute !important;
             top:0 !important;
             left:0 !important;
@@ -2386,7 +2380,6 @@
             object-fit:cover !important;
           }
           `.trim() + "\n\n";
-
         }
       }
 
@@ -2791,6 +2784,69 @@
     const txt = document.createElement('textarea');
     txt.innerHTML = str;
     return txt.value;
+  }
+  function buildVideoEmbedHTML(raw, modIndex) {
+    const wrapperClass = `inpgs-video-${modIndex}`;
+    const baseIframeClass = `${wrapperClass}__iframe`;
+    const value = (raw || '').trim();
+
+    // 1) Si viene un <iframe> pegado
+    if (/^<iframe[\s\S]*<\/iframe>$/i.test(value) || value.toLowerCase().includes('<iframe')) {
+      // Intentamos extraer el src; si no, dejamos el iframe tal cual dentro del wrapper
+      const srcMatch = value.match(/src=["']([^"']+)["']/i);
+      if (srcMatch && srcMatch[1]) {
+        const src = escAttr(srcMatch[1]);
+        const iframeHtml =
+          `<iframe class="${baseIframeClass}" src="${src}"` +
+          ` frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"` +
+          ` allowfullscreen loading="lazy"></iframe>`;
+        return { wrapperClass, innerHtml: iframeHtml };
+      }
+
+      // fallback: si no encontramos src, devolvemos el iframe original
+      return { wrapperClass, innerHtml: value };
+    }
+
+    // 2) YouTube: watch, youtu.be o embed
+    const ytMatch = value.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]{6,})/
+    );
+    if (ytMatch && ytMatch[1]) {
+      const id = ytMatch[1];
+      const embedUrl =
+        `https://www.youtube.com/embed/${id}` +
+        `?autoplay=1&mute=1&playsinline=1&loop=1&playlist=${id}&rel=0&showinfo=0`;
+
+      const iframeHtml =
+        `<iframe class="${baseIframeClass}" src="${escAttr(embedUrl)}"` +
+        ` frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"` +
+        ` allowfullscreen loading="lazy"></iframe>`;
+      return { wrapperClass, innerHtml: iframeHtml };
+    }
+
+    // 3) Vimeo
+    const vimeoMatch = value.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/
+    );
+    if (vimeoMatch && vimeoMatch[1]) {
+      const id = vimeoMatch[1];
+      const embedUrl =
+        `https://player.vimeo.com/video/${id}` +
+        `?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0`;
+
+      const iframeHtml =
+        `<iframe class="${baseIframeClass}" src="${escAttr(embedUrl)}"` +
+        ` frameborder="0" allow="autoplay; fullscreen; picture-in-picture"` +
+        ` allowfullscreen loading="lazy"></iframe>`;
+      return { wrapperClass, innerHtml: iframeHtml };
+    }
+
+    // 4) Default: asumimos que es URL directa a vídeo (mp4, webm, etc.)
+    const escUrl = escAttr(value);
+    const videoHtml =
+      `<video class="${baseIframeClass}" src="${escUrl}"` +
+      ` autoplay muted playsinline loop controls></video>`;
+    return { wrapperClass, innerHtml: videoHtml };
   }
 
   function fixHtmlFragment(input) {
