@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Herramientas de texto masivo - Inpages</title>
+
+  <!-- Fuente y Material Symbols como en tu app, pero CSS de esta página es 100% independiente -->
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+  <!-- SheetJS para Excel -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+  <style>
+    :root{
+      --bg-body:#F8FAFC;
+      --bg-card:#FFFFFF;
+      --border:#E5E7EB;
+      --text:#111827;
+      --text-muted:#6B7280;
+      --primary:#3B82F6;
+      --success:#22C55E;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Lato', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-body);
+      color: var(--text);
+    }
+
+    .app-main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .app-title {
+      margin: 0 0 4px;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .app-subtitle {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .app-header-right {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: #EFF6FF;
+      color: #1D4ED8;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .chip .material-symbols-outlined {
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card-badge {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .file-info {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 6px 12px;
+      font-size: 13px;
+      line-height: 1.2;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    .btn-xs {
+      padding: 3px 6px;
+      font-size: 11px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-success {
+      background: var(--success);
+      border-color: var(--success);
+      color: #ffffff;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      border-color: #D1D5DB;
+      color: var(--text);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn:hover {
+      filter: brightness(0.97);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    label {
+      font-size: 12px;
+      color: #374151;
+      display: block;
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .text-muted {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .input,
+    .select,
+    textarea {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      background: #F9FAFB;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+      margin-bottom: 8px;
+    }
+
+    .panel {
+      border-radius: 10px;
+      border: 1px solid #E5E7EB;
+      background: #F9FAFB;
+      padding: 10px;
+    }
+
+    .panel-title {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .checkbox-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .checkbox-inline input {
+      margin: 0;
+    }
+
+    .replace-rules {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .replace-rule {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) auto auto auto;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .replace-rule .input {
+      padding: 4px 6px;
+      font-size: 11px;
+    }
+
+    .replace-rule .btn-ghost {
+      padding: 2px 6px;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .preview-wrapper {
+      overflow: auto;
+      max-height: 320px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #F9FAFB;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid #E5E7EB;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #F3F4F6;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tr:nth-child(even) td {
+      background: #F9FAFB;
+    }
+
+    .col-small {
+      width: 60px;
+      white-space: nowrap;
+    }
+
+    .pill-counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: #EEF2FF;
+      color: #4F46E5;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .status-ok {
+      color: #16A34A;
+      font-weight: 500;
+    }
+
+    .status-warn {
+      color: #D97706;
+      font-weight: 500;
+    }
+
+    .status-bad {
+      color: #DC2626;
+      font-weight: 500;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .replace-rule {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-main">
+    <header class="app-header">
+      <div>
+        <h1 class="app-title">Herramientas de texto masivo</h1>
+        <p class="app-subtitle">
+          Carga un Excel, manipula columnas de texto (HTML o plano) y exporta el resultado listo para usar en inpages.
+        </p>
+      </div>
+      <div class="app-header-right">
+        <span class="chip">
+          <span class="material-symbols-outlined">bolt</span>
+          Laboratorio de texto
+        </span>
+      </div>
+    </header>
+
+    <!-- 1. Carga de Excel -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">1. Cargar Excel</h2>
+          <p class="card-subtitle">
+            Se usará solo la primera hoja. Debe tener encabezados en la primera fila.
+          </p>
+        </div>
+        <div class="card-badge" id="file-summary">Sin archivo cargado.</div>
+      </div>
+
+      <div class="toolbar">
+        <label class="btn btn-primary btn-sm">
+          <span class="material-symbols-outlined">upload</span>
+          Cargar Excel
+          <input type="file"
+                 id="file-input"
+                 accept=".xlsx,.xls"
+                 hidden>
+        </label>
+
+        <div class="file-info" id="file-info">
+          Esperando archivo...
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Configuración de transformaciones -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">2. Configurar transformaciones</h2>
+          <p class="card-subtitle">
+            Elige la columna a procesar y qué operaciones aplicar de forma masiva.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Panel columna / salida -->
+        <div class="panel">
+          <h3 class="panel-title">Columna de trabajo</h3>
+          <div style="margin-bottom:8px;">
+            <label for="column-select">Columna de entrada</label>
+            <select id="column-select" class="select">
+              <option value="">Selecciona una columna…</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:8px;">
+            <label for="output-column-name">
+              Nombre columna salida
+              <span class="text-muted">(por defecto: &lt;col&gt;_OUT)</span>
+            </label>
+            <input id="output-column-name"
+                   type="text"
+                   class="input"
+                   placeholder="Ej: TEXTO_LIMPIO">
+          </div>
+
+          <div>
+            <p class="text-muted">
+              Se generará un nuevo Excel con todas las columnas originales +
+              esta columna de salida, sin tocar el archivo fuente.
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel transformaciones principales -->
+        <div class="panel">
+          <h3 class="panel-title">Transformaciones HTML / texto</h3>
+          <div class="checkbox-list">
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-decode">
+              Decodificar entidades HTML (ej: &amp;lt;div&amp;gt; → &lt;div&gt;)
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-fix-html">
+              Aplicar fixer HTML (cierra tags rotos usando el DOM)
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-encode-amp">
+              Codificar <code>&amp;</code> → <code>&amp;amp;</code> solo si no es entidad (no duplica &amp;amp;)
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-trim" checked>
+              Quitar espacios al inicio y final
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-collapse-spaces">
+              Colapsar espacios múltiples en uno
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-normalize-breaks">
+              Normalizar saltos de línea (CRLF → LF)
+            </label>
+
+            <label class="checkbox-inline">
+              <input type="checkbox" id="opt-strip-tags">
+              Quitar etiquetas HTML y dejar solo texto plano
+            </label>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de replaces -->
+      <div class="grid-3">
+        <!-- Reemplazos -->
+        <div class="panel">
+          <h3 class="panel-title">Reemplazos (find / replace)</h3>
+          <p class="text-muted" style="margin:0 0 4px;">
+            Se aplican en el orden de arriba hacia abajo sobre el valor completo de la celda.
+          </p>
+
+          <div class="replace-rules" id="replace-rules"></div>
+
+          <button type="button"
+                  class="btn btn-outline btn-xs"
+                  onclick="addReplaceRule()">
+            + Agregar regla
+          </button>
+        </div>
+
+      </div>
+
+      <div class="actions-row">
+        <div class="text-muted" id="stats-label">
+          Ninguna transformación ejecutada todavía.
+        </div>
+
+        <div style="flex:1;"></div>
+
+        <button type="button"
+                class="btn btn-success btn-sm"
+                onclick="runTransformations()">
+          <span class="material-symbols-outlined">play_arrow</span>
+          Aplicar transformaciones
+        </button>
+
+        <button type="button"
+                class="btn btn-outline btn-sm"
+                onclick="exportExcel()">
+          <span class="material-symbols-outlined">download</span>
+          Descargar Excel resultado
+        </button>
+      </div>
+    </section>
+
+    <!-- 3. Vista previa -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">3. Vista previa (primeras 20 filas)</h2>
+          <p class="card-subtitle">
+            Solo se muestra la columna original vs la columna salida. El Excel tendrá todas las columnas.
+          </p>
+        </div>
+        <div class="pill-counter" id="preview-counter">
+          0 filas
+        </div>
+      </div>
+
+      <div class="preview-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-small">#</th>
+              <th>Original</th>
+              <th>Salida</th>
+            </tr>
+          </thead>
+          <tbody id="preview-body">
+            <tr>
+              <td colspan="3" class="text-muted">
+                Carga un Excel, elige una columna y ejecuta las transformaciones para ver la vista previa.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Se eliminó la sección de HTML concatenado -->
+  </div>
+
+  <script>
+    // ======= STATE =======
+    const state = {
+      columns: [],
+      rows: [],
+      transformedRows: null,
+      sourceColumn: '',
+      outputColumn: '',
+      fileName: ''
+    };
+
+    // ======= EXCEL LOAD =======
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileSummary = document.getElementById('file-summary');
+    const columnSelect = document.getElementById('column-select');
+
+    fileInput.addEventListener('change', handleFileInput);
+
+    function handleFileInput(evt) {
+      const file = evt.target.files[0];
+      if (!file) return;
+
+      fileInfo.textContent = `Leyendo archivo "${file.name}"…`;
+      state.fileName = file.name;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+
+          const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+          if (!json || !json.length) {
+            fileInfo.textContent = 'El archivo parece estar vacío.';
+            fileSummary.textContent = 'Sin datos.';
+            state.columns = [];
+            state.rows = [];
+            renderColumns();
+            return;
+          }
+
+          state.rows = json;
+          state.columns = Object.keys(json[0] || {});
+          renderColumns();
+
+          fileInfo.textContent = `Filas detectadas: ${json.length}. Columnas: ${state.columns.join(', ')}`;
+          fileSummary.textContent = `Archivo cargado: ${file.name}`;
+
+        } catch (err) {
+          console.error(err);
+          fileInfo.textContent = 'Error al leer el archivo: ' + err.message;
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function renderColumns() {
+      columnSelect.innerHTML = '<option value="">Selecciona una columna…</option>';
+      state.columns.forEach(col => {
+        const opt = document.createElement('option');
+        opt.value = col;
+        opt.textContent = col;
+        columnSelect.appendChild(opt);
+      });
+    }
+
+    // ======= REPLACE RULES =======
+    const replaceContainer = document.getElementById('replace-rules');
+    let replaceRuleCounter = 0;
+
+    function addReplaceRule(find = '', replaceWith = '') {
+      const row = document.createElement('div');
+      row.className = 'replace-rule';
+      const id = ++replaceRuleCounter;
+
+      row.innerHTML = `
+        <input type="text"
+               class="input"
+               placeholder="Buscar…"
+               data-role="find"
+               value="${escapeHtmlAttr(find)}">
+        <input type="text"
+               class="input"
+               placeholder="Reemplazar con…"
+               data-role="replace"
+               value="${escapeHtmlAttr(replaceWith)}">
+        <label class="checkbox-inline">
+          <input type="checkbox" data-role="regex">
+          Regex
+        </label>
+        <label class="checkbox-inline">
+          <input type="checkbox" data-role="case">
+          May/min
+        </label>
+        <button type="button"
+                class="btn btn-ghost btn-xs"
+                title="Eliminar regla"
+                onclick="this.parentElement.remove()">
+          ✕
+        </button>
+      `;
+      replaceContainer.appendChild(row);
+    }
+
+    function collectReplaceRules() {
+      const rules = [];
+      document.querySelectorAll('.replace-rule').forEach(row => {
+        const findEl = row.querySelector('[data-role="find"]');
+        const replEl = row.querySelector('[data-role="replace"]');
+        if (!findEl || !replEl) return;
+        const find = findEl.value || '';
+        const replaceWith = replEl.value || '';
+        if (!find) return;
+        const useRegex = !!row.querySelector('[data-role="regex"]')?.checked;
+        const caseSensitive = !!row.querySelector('[data-role="case"]')?.checked;
+
+        rules.push({ find, replaceWith, useRegex, caseSensitive });
+      });
+      return rules;
+    }
+
+    function applyReplace(str, rule) {
+      if (!rule || !rule.find) return str;
+      const find = rule.find;
+      const repl = rule.replaceWith ?? '';
+
+      if (rule.useRegex) {
+        try {
+          const flags = rule.caseSensitive ? 'g' : 'gi';
+          const re = new RegExp(find, flags);
+          return str.replace(re, repl);
+        } catch (e) {
+          console.warn('Regex inválido:', find, e);
+          return str;
+        }
+      } else {
+        if (rule.caseSensitive) {
+          return str.split(find).join(repl);
+        } else {
+          const re = new RegExp(escapeRegExp(find), 'gi');
+          return str.replace(re, repl);
+        }
+      }
+    }
+
+    // ======= TRANSFORM PIPELINE =======
+    const statsLabel = document.getElementById('stats-label');
+    const previewBody = document.getElementById('preview-body');
+    const previewCounter = document.getElementById('preview-counter');
+
+    function runTransformations() {
+      if (!state.rows.length) {
+        alert('Primero carga un archivo Excel.');
+        return;
+      }
+
+      const col = columnSelect.value;
+      if (!col) {
+        alert('Selecciona una columna de entrada.');
+        return;
+      }
+
+      state.sourceColumn = col;
+
+      let outCol = document.getElementById('output-column-name').value.trim();
+      if (!outCol) outCol = col + '_OUT';
+      state.outputColumn = outCol;
+
+      const optDecode = document.getElementById('opt-decode').checked;
+      const optFixHtml = document.getElementById('opt-fix-html').checked;
+      const optEncodeAmp = document.getElementById('opt-encode-amp').checked;
+      const optTrim = document.getElementById('opt-trim').checked;
+      const optCollapseSpaces = document.getElementById('opt-collapse-spaces').checked;
+      const optNormalizeBreaks = document.getElementById('opt-normalize-breaks').checked;
+      const optStripTags = document.getElementById('opt-strip-tags').checked;
+
+      const replaceRules = collectReplaceRules();
+
+      const transformed = [];
+
+      state.rows.forEach((row, idx) => {
+        const raw = row[col];
+        let value = raw == null ? '' : String(raw);
+
+        // 1) HTML decode opcional
+        if (optDecode && value) {
+          value = htmlDecode(value);
+        }
+
+        // 2) Reemplazos
+        if (replaceRules.length && value) {
+          replaceRules.forEach(rule => {
+            value = applyReplace(value, rule);
+          });
+        }
+
+        // 3) Fixer HTML
+        if (optFixHtml && value) {
+          value = fixHtmlFragment(value);
+        }
+
+        // 4) Normalizar saltos / espacios
+        if (optNormalizeBreaks && value) {
+          value = value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+        }
+
+        if (optCollapseSpaces && value) {
+          // no tocamos saltos de línea, solo espacios y tabs
+          value = value.replace(/[ \t]+/g, ' ');
+        }
+
+        if (optTrim && value) {
+          value = value.trim();
+        }
+
+        // 5) Strip tags si se pide
+        if (optStripTags && value) {
+          value = stripHtmlTags(value);
+        }
+
+        // 6) Encode & seguro
+        if (optEncodeAmp && value) {
+          value = encodeAmpersandsSafe(value);
+        }
+
+        const newRow = { ...row };
+        newRow[outCol] = value;
+        transformed.push(newRow);
+
+        
+      });
+
+      state.transformedRows = transformed;
+
+      
+
+      // Vista previa
+      renderPreview(transformed, col, outCol);
+
+      // Stats
+      const total = state.rows.length;
+      const rulesCount = replaceRules.length;
+      const flags = [
+        optDecode && 'decodeHTML',
+        optFixHtml && 'fixHTML',
+        optEncodeAmp && 'encode&',
+        optStripTags && 'stripTags',
+        optTrim && 'trim',
+        optCollapseSpaces && 'colapsar espacios',
+        optNormalizeBreaks && 'normalizar saltos'
+      ].filter(Boolean);
+
+      statsLabel.innerHTML = `
+        <span class="status-ok">${total} filas procesadas</span>
+        &nbsp;·&nbsp;
+        columna <strong>${escapeHtml(col)}</strong> → <strong>${escapeHtml(outCol)}</strong>
+        ${rulesCount ? `&nbsp;·&nbsp; ${rulesCount} regla(s) de replace` : ''}
+        ${flags.length ? `&nbsp;·&nbsp; ${flags.join(', ')}` : ''}
+      `;
+    }
+
+    function renderPreview(rows, sourceCol, outCol) {
+      previewBody.innerHTML = '';
+      if (!rows || !rows.length) {
+        previewBody.innerHTML = `
+          <tr>
+            <td colspan="3" class="text-muted">
+              No hay datos para mostrar.
+            </td>
+          </tr>`;
+        previewCounter.textContent = '0 filas';
+        return;
+      }
+
+      const limit = 20;
+      const total = rows.length;
+      const count = Math.min(limit, total);
+
+      for (let i = 0; i < count; i++) {
+        const row = rows[i];
+        const tr = document.createElement('tr');
+
+        const tdIdx = document.createElement('td');
+        tdIdx.textContent = String(i + 1);
+        tdIdx.className = 'col-small';
+
+        const tdOrig = document.createElement('td');
+        const originalVal = row[sourceCol] == null ? '' : String(row[sourceCol]);
+        tdOrig.textContent = originalVal;
+
+        const tdOut = document.createElement('td');
+        const outVal = row[outCol] == null ? '' : String(row[outCol]);
+        tdOut.textContent = outVal;
+
+        tr.appendChild(tdIdx);
+        tr.appendChild(tdOrig);
+        tr.appendChild(tdOut);
+        previewBody.appendChild(tr);
+      }
+
+      previewCounter.textContent = `${total} filas (se muestran ${count})`;
+    }
+
+    // ======= EXPORT EXCEL =======
+  function exportExcel() {
+    if (!state.rows.length) {
+      alert('Primero carga un Excel.');
+      return;
+    }
+    if (!state.transformedRows || !state.transformedRows.length) {
+      alert('Aplica las transformaciones antes de exportar.');
+      return;
+    }
+
+    try {
+      // 1) Nuevo workbook
+      const wb = XLSX.utils.book_new();
+
+      // 2) Hoja "Datos": TODAS las columnas (originales + columna salida)
+      const wsDatos = XLSX.utils.json_to_sheet(state.transformedRows, {
+        defval: ''   // para que no aparezca "undefined" en celdas vacías
+      });
+      XLSX.utils.book_append_sheet(wb, wsDatos, 'Datos');
+
+      // 3) Nombre del archivo de salida
+      const baseName = state.fileName
+        ? state.fileName.replace(/\.(xlsx|xls)$/i, '')
+        : 'texto';
+      const outName = `${baseName}_transformado.xlsx`;
+
+      // 4) Guardar archivo (compatibilidad con distintas versiones de SheetJS)
+      if (typeof XLSX.writeFileXLSX === 'function') {
+        XLSX.writeFileXLSX(wb, outName, { bookType: 'xlsx' });
+      } else if (typeof XLSX.writeFile === 'function') {
+        XLSX.writeFile(wb, outName, { bookType: 'xlsx' });
+      } else {
+        console.error('SheetJS no expone writeFile / writeFileXLSX');
+        alert('No se encontró XLSX.writeFile / XLSX.writeFileXLSX. Revisa que se haya cargado bien la librería de SheetJS.');
+      }
+
+    } catch (err) {
+      console.error('Error al exportar Excel:', err);
+      alert('Ocurrió un error al generar el Excel. Revisa la consola del navegador (F12 → Console).');
+    }
+  }
+    // ======= HELPERS =======
+    function escapeHtmlAttr(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function htmlDecode(str) {
+      if (!str) return '';
+      const txt = document.createElement('textarea');
+      txt.innerHTML = str;
+      return txt.value;
+    }
+
+    function stripHtmlTags(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.innerHTML = str;
+      return (div.textContent || div.innerText || '').trim();
+    }
+
+    function encodeAmpersandsSafe(str) {
+      if (!str) return '';
+      // Reemplaza solo & que NO formen parte de entidades HTML conocidas
+      return str.replace(/&(?!amp;|lt;|gt;|quot;|apos;|#[0-9]+;|#x[0-9a-fA-F]+;)/g, '&amp;');
+    }
+
+    function fixHtmlFragment(input) {
+      if (!input || typeof input !== 'string') return '';
+      const container = document.createElement('div');
+      container.innerHTML = input;
+      return container.innerHTML;
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    // Agrego una regla de ejemplo vacía al cargar
+    window.addEventListener('DOMContentLoaded', () => {
+      addReplaceRule();
+    });
+  </script>
+</body>
+</html>
