@@ -1,18 +1,7 @@
-
 <!DOCTYPE html>
 <!-- index.html -->
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-
-<style>
-  .material-symbols-outlined {
-    font-variation-settings:
-      'FILL' 0,
-      'wght' 400,
-      'GRAD' 0,
-      'opsz' 24;
-  }
-</style>
 
 <div class="app-shell">
   <!-- SIDEBAR IZQUIERDA -->
@@ -106,68 +95,84 @@
       <!-- Columna izquierda: bloques -->
       <div class="app-column app-column--left">
         <section class="card">
-          <header class="card-header card-header--with-actions">
-            <div>
-              <h2 class="card-title">Bloques y datos</h2>
-              <p class="card-subtitle">
-                Configura los módulos y mapea columnas del Excel.
-              </p>
-            </div>
+<header class="card-header card-header--with-actions">
+  <div>
+    <h2 class="card-title">Bloques y datos</h2>
+    <p class="card-subtitle">
+      Configura los módulos y mapea columnas del Excel.
+    </p>
+  </div>
+</header>
 
-            <div class="card-actions">
-              <button type="button"
-                      class="btn btn-ghost btn-sm"
-                      onclick="collapseAll()">
-                Contraer todo
-              </button>
+<!-- 🔹 Barra principal: Bloques + Excel -->
+<div class="card-toolbar card-toolbar--split">
+  <!-- Grupo Bloques -->
+  <div class="card-toolbar-group">
+    <span class="card-toolbar-label">Bloques</span>
 
-              <label class="btn btn-primary btn-sm btn-with-icon">
-                <img src="assets/icons/upload.svg" alt="" class="btn-icon">
-                Cargar Excel
-                <input type="file"
-                       id="global-excel-upload"
-                       accept=".xlsx,.xls"
-                       style="display:none;"
-                       onchange="handleGlobalExcelUpload(event)">
-              </label>
-            </div>
-          </header>
+    <button type="button"
+            class="btn btn-primary btn-sm"
+            onclick="addMod()">
+      Agregar bloque
+    </button>
 
-          <div class="card-toolbar">
-            <div id="excel-row-selector-container"
-                 class="toolbar-item toolbar-item--hidden">
-              <span class="toolbar-label">Fila a visualizar</span>
-              <select id="excel-row-selector"
-                      class="select select-sm"
-                      onchange="handleRowChange()"></select>
-            </div>
+    <button type="button"
+            class="btn btn-ghost btn-sm"
+            onclick="collapseAll()">
+      Contraer todo
+    </button>
 
-            <button id="generate-all-btn"
-                    type="button"
-                    class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
-                    onclick="generateAllHTML()">
-              <img src="assets/icons/download.svg" alt="" class="btn-icon">
-              Descargar Excel
-            </button>
-          </div>
+    <button type="button"
+            class="btn btn-success btn-sm"
+            onclick="renderAll()">
+      Generar vista
+    </button>
+  </div>
 
-          <!-- aquí se inyectan los bloques -->
-          <div id="mods"></div>
+  <!-- Grupo Excel -->
+  <div class="card-toolbar-group">
+    <span class="card-toolbar-label">Excel</span>
 
-          <footer class="card-footer">
-            <div class="card-footer-actions">
-              <button type="button"
-                      class="btn btn-outline"
-                      onclick="addMod()">
-                Agregar bloque
-              </button>
-              <button type="button"
-                      class="btn btn-success"
-                      onclick="renderAll()">
-                Generar vista
-              </button>
-            </div>
-          </footer>
+    <!-- Cargar Excel -->
+    <label class="btn btn-primary btn-sm btn-with-icon">
+      <img src="assets/icons/upload.svg" alt="" class="btn-icon">
+      Cargar Excel
+      <input type="file"
+             id="global-excel-upload"
+             accept=".xlsx,.xls"
+             style="display:none;"
+             onchange="handleGlobalExcelUpload(event)">
+    </label>
+
+    <!-- Fila a visualizar -->
+    <div id="excel-row-selector-container"
+         class="toolbar-item toolbar-item--hidden">
+      <span class="toolbar-label">Fila</span>
+      <select id="excel-row-selector"
+              class="select select-sm"
+              onchange="handleRowChange()"></select>
+    </div>
+
+    <!-- Exportar fila actual -->
+    <button type="button"
+            class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
+            onclick="downloadSingleExcel()">
+      Exportar fila
+    </button>
+
+    <!-- Exportar todas (masivo) -->
+    <button id="generate-all-btn"
+            type="button"
+            class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
+            onclick="generateAllHTML()">
+      Exportar masivo
+    </button>
+  </div>
+</div>
+
+<!-- Lista de bloques -->
+<div id="mods"></div>
+
         </section>
       </div>
 
@@ -184,18 +189,16 @@
             </div>
 
             <div class="card-actions">
-              <!-- 🔁 Botón que cambia Vista previa / Código -->
+              <button type="button"
+                      class="btn btn-success btn-sm"
+                      onclick="renderAll()">
+                Refrescar
+              </button>
               <button type="button"
                       id="preview-toggle-btn"
                       class="btn btn-outline btn-sm"
                       onclick="togglePreviewMode()">
                 &lt;/&gt; Código
-              </button>
-
-              <button type="button"
-                      class="btn btn-success btn-sm"
-                      onclick="renderAll()">
-                Refrescar
               </button>
             </div>
           </header>
@@ -255,6 +258,15 @@
 
 
 <style>
+  /* Consolidado: solo estilos necesarios, sin duplicados ni reglas no usadas */
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
   body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -262,35 +274,151 @@
   }
 
   .mod-box {
-    background: #fff;
-    padding: 8px 12px;
-    margin: 8px 0;
-    border-radius: 8px;
-    box-shadow: 0 0 8px rgba(0, 0, 0, .06);
+    background: #f8fafc;
+    border: 1.5px solid #bfc9d9;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(60,72,100,0.05);
+    margin: 18px 0;
+    padding: 0 0 10px 0;
   }
-
+  .mod-box.collapsed {
+    background: #f1f3f7;
+    border-color: #d1d5db;
+  }
   .mod-header {
+    background: #f4f6fa;
+    color: #23272f;
+    border-radius: 12px;
+    border: 1.5px solid #bfc9d9;
+    box-shadow: 0 1px 4px rgba(60,72,100,0.04);
+    padding: 10px 20px 8px 20px;
+    font-weight: 600;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    cursor: default;
+    gap: 12px;
   }
-
-  .mod-header-left {
+  .mod-header .mod-badge {
+    color: #23272f;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .mod-header .mod-pos {
+    color: #7a869a;
+    font-size: 11px;
+  }
+  .mod-header-actions .icon-button {
+    color: #7a869a;
+    background: #f3f6fa;
+    border: 1px solid #e5e7eb;
+    margin-left: 2px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .mod-header-actions .icon-button:hover {
+    background: #e6eaf2;
+    color: #23272f;
+  }
+  .mod-header .material-symbols-outlined,
+  .mod-header .mod-type-pill-icon,
+  .mod-header .icon-button-symbol {
+    font-size: 20px !important;
+    min-width: 20px;
+    min-height: 20px;
+    color: #7a869a;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mod-type-pill {
+    background: #e6eaf2;
+    border: 1.5px solid #bfc9d9;
+    color: #23272f;
+    font-weight: 600;
+    padding: 4px 18px;
+    border-radius: 9999px;
+    font-size: 13px;
+    box-shadow: 0 1px 2px rgba(60,72,100,0.04);
+  }
+  .mod-type-pill:hover {
+    background: #e6eaf2;
+    border-color: #bfc9d9;
+  }
+  .mod-section {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    margin: 18px 18px 0 18px;
+    box-shadow: 0 1px 2px rgba(60,72,100,0.03);
+    overflow: hidden;
+  }
+  .mod-section-header {
+    background: #e6eaf2;
+    color: #23272f;
+    border-bottom: 1.5px solid #bfc9d9;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px 10px 0 0;
+    font-size: 13px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .mod-section.mod-section--collapsed .mod-section-header {
+    background: #e6eaf2;
+    color: #7a869a;
+  }
+  .mod-section-body {
+    background: #fff;
+    padding: 14px 20px 16px 20px;
+  }
+  .text-item-block, .img-item-block {
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(60,72,100,0.03);
+  }
+  .text-item-header, .img-item-header {
+    background: #f3f6fa;
+    color: #23272f;
+    border-bottom: 1.5px solid #e5e7eb;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px 8px 0 0;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
   }
 
-  .mod-header h4 {
-    margin: 0;
-    font-size: 14px;
+  .param-item label {
+    color: #3b4a62;
+    font-weight: 700;
   }
-
+  .param-item select,
+  .param-item input[type="text"],
+  .param-item input[type="number"] {
+    background: #f3f6fa;
+    border: 1.5px solid #bfc9d9;
+    color: #2d3a4b;
+    font-weight: 600;
+  }
+  .param-item select:focus,
+  .param-item input[type="text"]:focus,
+  .param-item input[type="number"]:focus {
+    border-color: #4f46e5;
+    outline: none;
+    background: #e6eaf2;
+  }
+  .checks label {
+    color: #2d3a4b;
+    font-weight: 600;
+  }
   .muted {
-    font-size: 12px;
-    color: #666;
+    color: #7a869a;
   }
 
   select,
@@ -390,7 +518,6 @@
     border-radius: 3px;
   }
 
-
   .text-toolbar-lineheight {
     max-width: 64px;
   }
@@ -400,7 +527,6 @@
     outline: 1px solid #2563eb;
     outline-offset: 1px;
   }
-
 
   .text-toolbar-color {
     position: absolute;
@@ -440,7 +566,6 @@
     border-radius: 2px;
     background: #333333;
   }
-
 
   .icon-align {
     width: 16px;
@@ -640,7 +765,6 @@
     background: #4b5563;
   }
 
-
   .icon-list {
     width: 18px;
     height: 16px;
@@ -710,7 +834,6 @@
     border-radius: 1px;
   }
 
-
   .icon-paint-bucket::before {
     border: 2px solid #000000;
   }
@@ -751,12 +874,7 @@
     object-fit: contain;
     pointer-events: none;
     transform: scale(1.2);
-
   }
-
-
-
-
 
   .img-field-row label {
     width: 70px;
@@ -774,8 +892,6 @@
     border-radius: 4px;
     margin: 0;
   }
-
-
 
   .source-compact-img select {
     padding: 2px 4px;
@@ -838,1021 +954,977 @@
     background: #f9fafb;
     border-radius: 6px;
   }
-/* === Items de texto tipo “Texto 1 / Texto 2” === */
-.text-item-block {
-  margin-bottom: 8px;
-  padding: 0;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
 
-.text-item-header {
-  width: 100%;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background: #f9fafb;
-  border: 0;
-  border-bottom: 1px solid #e5e7eb;
-  cursor: pointer;
-}
+  /* === Items de texto tipo “Texto 1 / Texto 2” === */
+  .text-item-block {
+    margin-bottom: 8px;
+    padding: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1.5px solid #d1d5db;
+    box-shadow: 0 1px 2px rgba(60, 72, 100, 0.04);
+  }
 
-.text-item-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .text-item-header {
+    width: 100%;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #e6eaf2;
+    border: 0;
+    border-bottom: 1.5px solid #d1d5db;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+  }
 
-.text-item-drag {
-  font-size: 14px;
-  color: #d1d5db;
-}
+  .text-item-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.text-item-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: #374151;
-}
+  .text-item-drag {
+    font-size: 14px;
+    color: #d1d5db;
+  }
 
+  .text-item-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2d3a4b;
+  }
 
-.text-item-body {
-  padding: 8px 10px 10px;
-}
+  .text-item-body {
+    padding: 12px 16px 14px 16px;
+  }
 
-.text-item-block.text-item--collapsed .text-item-body {
-  display: none;
-}
+  .text-item-block.text-item--collapsed .text-item-body {
+    display: none;
+  }
 
   .mod-box.dragging {
     opacity: 0.5;
-  }/* === Layout general de la app === */
-/* === Layout con barra lateral === */
-/* === Layout con barra lateral === */
+  }
 
-.app-shell {
-  display: flex;
-  min-height: 100vh;
-  background: #f3f4f6; /* gris claro de fondo general */
-}
+  /* === Layout general de la app === */
+  /* === Layout con barra lateral === */
+  /* === Layout con barra lateral === */
 
-/* Sidebar izquierda */
-.sidebar {
-  width: 240px;
-  flex-shrink: 0;
-  background: #ffffff;              /* ⬅️ ahora blanca */
-  color: #111827;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 16px;
-  gap: 16px;
-  border-right: 1px solid #e5e7eb;  /* línea suave de separación */
-}
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+    background: #f3f4f6;
+    /* gris claro de fondo general */
+  }
 
-/* Logo / título app */
-.sidebar-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 4px;
-}
+  /* Sidebar izquierda */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: #ffffff;
+    /* ⬅️ ahora blanca */
+    color: #111827;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 16px;
+    border-right: 1px solid #e5e7eb;
+    /* línea suave de separación */
+  }
 
-.sidebar-logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #4f46e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  color: #ffffff;
-}
+  /* Logo / título app */
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 4px;
+  }
 
-.sidebar-logo-title {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-}
+  .sidebar-logo-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+  }
 
-.sidebar-logo-subtitle {
-  display: block;
-  font-size: 11px;
-  color: #6b7280;
-}
+  .sidebar-logo-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+  }
 
-/* Navegación */
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
-}
+  .sidebar-logo-subtitle {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+  }
 
-.sidebar-nav-item {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  border-radius: 8px;
-  padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #4B5563;
-  text-align: left;
-  cursor: pointer;
-}
-.sidebar-nav-item--active .material-symbols-outlined {
-  /* icono “relleno” como en Content Blocks */
-  font-variation-settings:
-    'FILL' 1,
-    'wght' 500,
-    'GRAD' 0,
-    'opsz' 24;
-}
+  /* Navegación */
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+  }
 
-.sidebar-logout-icon .material-symbols-outlined {
-  font-size: 18px;
-}
-.sidebar-nav-item:hover {
-  background: rgba(0, 123, 255, 0.06); /* similar al primary/10 del ejemplo */
-}
+  .sidebar-nav-item {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #4B5563;
+    text-align: left;
+    cursor: pointer;
+  }
 
-.sidebar-nav-item--active {
-  background: rgba(0, 123, 255, 0.08);
-  color: #007BFF;
-}
+  .sidebar-nav-item--active .material-symbols-outlined {
+    /* icono “relleno” como en Content Blocks */
+    font-variation-settings:
+      'FILL' 1,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 24;
+  }
 
-.sidebar-nav-icon svg {
-  width: 16px;
-  height: 16px;
-  stroke: currentColor;
-}
-.sidebar-nav-icon {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.sidebar-nav-icon .material-symbols-outlined {
-  font-size: 20px;
-}
+  .sidebar-logout-icon .material-symbols-outlined {
+    font-size: 18px;
+  }
 
-.sidebar-nav-label {
-  flex: 1;
-}
+  .sidebar-nav-item:hover {
+    background: rgba(0, 123, 255, 0.06);
+    /* similar al primary/10 del ejemplo */
+  }
 
-/* Footer: usuario + logout */
-.sidebar-footer {
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+  .sidebar-nav-item--active {
+    background: rgba(0, 123, 255, 0.08);
+    color: #007BFF;
+  }
 
-.sidebar-user {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .sidebar-nav-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+  }
 
-.sidebar-user-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 9999px;
-  background: #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 600;
-  color: #111827;
-}
+  .sidebar-nav-icon {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
 
-.sidebar-user-meta {
-  display: flex;
-  flex-direction: column;
-}
+  .sidebar-nav-icon .material-symbols-outlined {
+    font-size: 20px;
+  }
 
-.sidebar-user-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: #111827;
-}
+  .sidebar-nav-label {
+    flex: 1;
+  }
 
-.sidebar-user-role {
-  font-size: 11px;
-  color: #6b7280;
-}
+  /* Footer: usuario + logout */
+  .sidebar-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-.sidebar-logout {
-  margin-top: 4px;
-  border: 0;
-  background: transparent;
-  padding: 6px 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #6b7280;
-  cursor: pointer;
-}
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-.sidebar-logout:hover {
-  color: #111827;
-}
+  .sidebar-user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
 
-/* El área principal se adapta al lado de la barra */
-.app-main {
-  flex: 1;
-}
+  .sidebar-user-meta {
+    display: flex;
+    flex-direction: column;
+  }
 
+  .sidebar-user-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111827;
+  }
 
-/* Que el área principal se adapte al lado de la barra */
-.app-main {
-  flex: 1;
-}
+  .sidebar-user-role {
+    font-size: 11px;
+    color: #6b7280;
+  }
 
-body {
-  margin: 0;
-  font-family: 'Lato', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f3f4f6;  /* mismo gris del app-shell */
-  color: #111827;
-}
+  .sidebar-logout {
+    margin-top: 4px;
+    border: 0;
+    background: transparent;
+    padding: 6px 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    cursor: pointer;
+  }
 
+  .sidebar-logout:hover {
+    color: #111827;
+  }
 
-.app-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 24px 40px;
-}
+  /* El área principal se adapta al lado de la barra */
+  .app-main {
+    flex: 1;
+  }
 
-.app-header {
-  margin-bottom: 24px;
-}
+  /* Que el área principal se adapte al lado de la barra */
+  .app-main {
+    flex: 1;
+  }
 
-.app-title {
-  margin: 0 0 4px;
-  font-size: 24px;
-  font-weight: 700;
-}
+  body {
+    margin: 0;
+    font-family: 'Lato', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f3f4f6;
+    /* mismo gris del app-shell */
+    color: #111827;
+  }
 
-.app-subtitle {
-  margin: 0;
-  font-size: 14px;
-  color: #6b7280;
-}
+  .app-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 24px 40px;
+  }
 
-.app-content {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
-  gap: 16px;
-  align-items: flex-start;
-}
+  .app-header {
+    margin-bottom: 24px;
+  }
 
-.app-column {
-  min-width: 0;
-}
+  .app-title {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+  }
 
-.app-column--right {
-  position: sticky;
-  top: 16px;
-}
+  .app-subtitle {
+    margin: 0;
+    font-size: 14px;
+    color: #6b7280;
+  }
 
-/* === Cards / contenedores === */
-.card {
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
-  padding: 16px 16px 12px;
-}
+  .app-content {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+    gap: 16px;
+    align-items: flex-start;
+  }
 
-.card-header {
-  display: flex;
+  .app-column {
+    min-width: 0;
+  }
+
+  .app-column--right {
+    position: sticky;
+    top: 16px;
+  }
+
+  /* === Cards / contenedores === */
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+    padding: 16px 16px 12px;
+  }
+
+  .card-header, .card-header--with-actions, .card-header--compact {
+    padding: 10px 18px 8px 18px;
+    border-radius: 12px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .card-title {
+    margin: 0 0 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #23272f;
+  }
+
+  .card-subtitle {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .card-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+.card-toolbar--split {
   justify-content: space-between;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.card-header--with-actions {
+  align-items: center;
+  padding: 8px 18px 4px 18px;
+  border-bottom: 1px solid #e5e7eb;
   margin-bottom: 12px;
 }
 
-.card-header--compact {
-  margin-bottom: 8px;
+.card-toolbar-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.card-title {
-  margin: 0 0 2px;
-  font-size: 16px;
+.card-toolbar-label {
+  font-size: 11px;
   font-weight: 600;
-}
-
-.card-subtitle {
-  margin: 0;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.card-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.card-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.card-footer {
-  margin-top: 8px;
-}
-
-.card-footer-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-/* === Botones reutilizables === */
-.btn {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 6px 12px;
-  font-size: 13px;
-  line-height: 1.2;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: #ffffff;
-  color: #111827;
-}
-
-.btn-sm {
-  padding: 4px 8px;
-  font-size: 12px;
-}
-
-.btn-with-icon .btn-icon {
-  width: 14px;
-  height: 14px;
-}
-
-.btn-primary {
-  background: #4f46e5;
-  border-color: #4f46e5;
-  color: #ffffff;
-}
-
-.btn-success {
-  background: #10b981;
-  border-color: #10b981;
-  color: #ffffff;
-}
-
-.btn-outline {
-  background: #ffffff;
-  border-color: #d1d5db;
-  color: #111827;
-}
-
-.btn-ghost {
-  background: transparent;
-  border-color: transparent;
-  color: #4b5563;
-}
-
-.btn:hover {
-  filter: brightness(0.97);
-}
-
-/* === Toolbar Excel === */
-.toolbar-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.toolbar-item--hidden {
-  display: none;
-}
-
-.toolbar-label {
-  font-size: 12px;
-  color: #6b7280;
-}
-
-.select {
-  width: 100%;
-  padding: 6px 8px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 12px;
-  box-sizing: border-box;
-}
-
-.select-sm {
-  padding: 4px 6px;
-  font-size: 12px;
-}
-
-/* === Vista previa y panel de código === */
-.preview-box {
-  border-radius: 8px;
-  border: 1px dashed #d1d5db;
-  padding: 10px;
-  min-height: 120px;
-  background: #ffffff;
-}
-
-.preview-empty {
-  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: #9ca3af;
+  margin-right: 4px;
 }
 
-.export-panel--hidden {
-  display: none;
-}
-
-.export-section {
-  margin-top: 10px;
-}
-
-.export-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.export-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: #374151;
-}
-
-.code-textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 6px 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 12px;
-  border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  background: #f9fafb;
-  resize: vertical;
-}
-
-
-.mod-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  cursor: pointer;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 4px;
-}
-/* Zona central del header del bloque: nombre de módulo */
-.mod-header-type {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-.mod-type-pill {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 10px;
-  border-radius: 9999px;
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-  font-size: 11px;
-  font-weight: 500;
-  color: #374151;
-  cursor: pointer;
-  transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-}
-.mod-type-pill:hover {
-  background: #EEF2FF;
-  border-color: #CBD5F5;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-}
-.mod-type-pill-icon {
-  font-size: 16px;
-  color: #6B7280;
-}
-.mod-type-pill-text {
-  white-space: nowrap;
-}
-.mod-type-pill-caret {
-  font-size: 16px;
-  color: #9CA3AF;
-}
-.mod-type-select-native {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-.mod-type-select:focus {
-  border-color: #007BFF;
-  box-shadow: 0 0 0 1px rgba(0,123,255,0.25);
-}
-.mod-type-select {
-  min-width: 140px;
-  padding: 2px 10px;
-  border-radius: 9999px;
-  border: 1px solid #E5E7EB;
-  background: #F9FAFB;
-  font-size: 11px;
-  font-weight: 500;
-  color: #374151;
-  outline: none;
-  cursor: pointer;
-}
-.mod-type-label {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px 10px;
-  border-radius: 9999px;
-  background: #E5E7EB;
-  font-size: 11px;
-  font-weight: 500;
-  color: #374151;
-  text-transform: none; /* que respete el texto del select (Texto, Imagen, etc.) */
-}
-
-.mod-box {
-  background: #f3f4f6;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  padding: 10px 12px;
-  margin: 10px 0;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
-}
-
-
-.mod-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mod-drag-handle {
-  font-size: 16px;
-  color: #9ca3af;
-  cursor: grab;
-}
-
-.mod-header-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.mod-badge {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111827;
-}
-
-.mod-pos {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-.mod-header-actions {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.icon-button {
-  border-radius: 6px;
-  border: 1px solid transparent;
-  background: transparent;
-  font-size: 11px;
-  padding: 2px 6px;
-  cursor: pointer;
-  color: #6b7280;
-}
-
-.icon-button.mod-toggle {
-  font-size: 18px;   /* ⬅️ triángulo más grande en el header de bloque */
-  line-height: 1;
-}
-
-.icon-button:hover {
-  background: #f3f4f6;
-}
-
-.mod-toggle {
-  transition: transform 0.15s ease;
-}
-
-.mod-body {
-  margin-top: 10px;
-}
-
-.mod-box.collapsed .mod-body {
-  display: none;
-}
-
-
-
-/* Drag visual */
-.mod-box.dragging {
-  opacity: 0.5;
-}
-/* === Secciones internas de cada bloque === */
-.mod-section {
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;      /* ⬅️ antes era #f9fafb */
-  margin-bottom: 8px;
-  overflow: hidden;
-}
-
-.mod-section-header {
-  width: 100%;
-  padding: 6px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffffff;
-  border: 0;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: 500;
-  color: #374151;
-}
-
-.mod-section-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-
-
-.mod-section-body {
-  padding: 8px 10px 10px;
-}
-
-.mod-section.mod-section--collapsed .mod-section-body {
-  display: none;
-}
-
-
-
-/* === Items de imagen tipo “Imagen 1 / Imagen 2” === */
-.img-item-block {
-  margin-bottom: 8px;
-  padding: 0;
-  background: #ffffff;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.img-item-header {
-  width: 100%;
-  padding: 6px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background: #f9fafb;
-  border: 0;
-  border-bottom: 1px solid #e5e7eb;
-  cursor: pointer;
-}
-
-.img-item-header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.img-item-drag {
-  font-size: 14px;
-  color: #d1d5db;
-}
-
-.img-item-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: #374151;
-}
-
-
-
-.img-item-body {
-  padding: 8px 10px 10px;
-}
-
-.img-item-block.img-item--collapsed .img-item-body {
-  display: none;
-}
-
-/* === Flechitas tipo "pescadito" (solo punta) === */
-
-/* Toggle del bloque */
-.mod-toggle-icon {
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-right: 2px solid #6b7280;
-  border-bottom: 2px solid #6b7280;
-  transform: rotate(45deg);          /* ▼ (punta hacia abajo) */
-  transition: transform 0.15s ease;
-}
-
-.mod-box.collapsed .mod-toggle-icon {
-  transform: rotate(-135deg);        /* ▲ (punta hacia arriba) */
-}
-
-/* Chevrons de secciones e items */
-.mod-section-chevron,
-.text-item-chevron,
-.img-item-chevron {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-right: 2px solid #9ca3af;
-  border-bottom: 2px solid #9ca3af;
-  transform: rotate(45deg);          /* ▼ por defecto */
-  transition: transform 0.15s ease;
-}
-
-/* Cuando está colapsado, punta hacia arriba */
-.mod-section.mod-section--collapsed .mod-section-chevron,
-.text-item-block.text-item--collapsed .text-item-chevron,
-.img-item-block.img-item--collapsed .img-item-chevron {
-  transform: rotate(-135deg);        /* ▲ */
-}
-
-
-/* checks alineados a la derecha dentro de secciones */
-.checks--inline {
-  justify-content: flex-end;
-}
-.export-panel {
-  margin-top: 12px;
-}
-/* === Override colores según maqueta === */
-
-/* Fondo general gris claro */
-body,
-.app-shell {
-  background: #F8FAFC; /* gris clarito de la maqueta */
-}
-
-/* Tarjetas y bloques blancos */
-.card,
-.mod-box,
-.mod-section,
-.text-item-block,
-.img-item-block,
-.preview-box {
-  background: #FFFFFF;
-}
-
-/* Bordes suaves */
-.card,
-.mod-box,
-.mod-section,
-.text-item-block,
-.img-item-block,
-.preview-box,
-.select,
-input[type="text"],
-input[type="number"],
-textarea {
-  border-color: #E5E7EB;
-}
-
-/* Botón principal azul (tipo "Cargar Excel") */
-.btn-primary {
-  background: #3B82F6;   /* azul botón maqueta */
-  border-color: #3B82F6;
-  color: #FFFFFF;
-}
-
-/* Botón éxito en verde */
-.btn-success {
-  background: #22C55E;
-  border-color: #22C55E;
-  color: #FFFFFF;
-}
-
-/* Botón outline gris */
-.btn-outline {
-  background: #FFFFFF;
-  border-color: #D1D5DB;
-  color: #111827;
-}
-
-/* Textos secundarios grises */
-.app-subtitle,
-.card-subtitle,
-.toolbar-label {
-  color: #6B7280;
-}
-
-/* Inputs estilo maqueta */
-input[type="text"],
-input[type="number"],
-textarea,
-.select {
-  background: #FFFFFF;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-/* Módulos con sombra suave tipo tarjeta */
-.mod-box {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-}
-
-/* === Fila de inputs "Imagen 1" → 3 columnas === */
-
-.img-fields-row {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
-  gap: 12px;
-}
-
-.img-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.img-field label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #4B5563;
-}
-
-.img-field-input input[type="text"] {
-  width: 100%;
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  border: 1px solid #E5E7EB;
-}
-
-.img-field .source-compact {
-  margin-top: 4px;
-  align-self: flex-end;
-}
-
-.img-field .source-compact select {
-  font-size: 11px;
-}
-
-/* En pantallas chicas, apilar los tres campos */
-@media (max-width: 960px) {
-  .img-fields-row {
-    grid-template-columns: 1fr;
+  .card-footer {
+    margin-top: 8px;
   }
-}
-/* === Layout general: fondo blanco === */
-body,
-.app-shell,
-.app-main {
-  background: #FFFFFF;
-}
 
-/* Sidebar sigue blanca */
-.sidebar {
-  background: #FFFFFF;
-}
-
-/* Todas las cards por defecto, blancas */
-.card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-}
-
-/* 👉 Sección de bloques (lado izquierdo) en gris */
-.app-column--left .card {
-  background: #F3F4F6; /* gris contenedor de bloques */
-}
-
-/* Los bloques individuales y secciones internas, blancos encima del gris */
-.mod-box,
-.mod-section,
-.text-item-block,
-.img-item-block {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-}
-
-/* Vista previa a la derecha, limpia en blanco */
-.preview-box {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-}
-
-/* Panel de código igual que preview */
-#export-panel {
-  background: #FFFFFF;
-}
-
-/* Inputs de información: gris clarito tipo UI moderna */
-input[type="text"],
-input[type="number"],
-textarea,
-.select {
-  background: #F9FAFB;       /* un poco más gris claro que el card gris */
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-/* Select pequeño también */
-.select-sm {
-  background: #F9FAFB;
-}
-
-/* Fila de inputs de imágenes (se mantiene el layout horizontal) */
-.img-fields-row {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
-  gap: 12px;
-}
-
-.img-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.img-field label {
-  font-size: 12px;
-  font-weight: 500;
-  color: #4B5563;
-}
-
-.img-field-input input[type="text"] {
-  width: 100%;
-  padding: 6px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  border: 1px solid #E5E7EB;
-  background: #F9FAFB;
-}
-
-.img-field .source-compact {
-  margin-top: 4px;
-  align-self: flex-end;
-}
-
-.img-field .source-compact select {
-  font-size: 11px;
-  background: #F9FAFB;
-}
-/* Iconos dentro de los botones de acción de bloque */
-.icon-button-symbol {
-  font-size: 18px;
-  color: #6B7280; /* gris sobrio, igual línea que la sidebar */
-}
-
-/* Por si antes tenías algo rojo, esto lo pisa */
-.icon-button-trash .icon-button-symbol {
-  color: #6B7280;
-}
-
-/* Responsive: en pantallas chicas, apilar los 3 campos */
-@media (max-width: 960px) {
-  .img-fields-row {
-    grid-template-columns: 1fr;
+  .card-footer-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
   }
-}
 
+  /* === Botones reutilizables === */
+  .btn {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    color: #111827;
+  }
+
+  .btn-sm {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .btn-with-icon .btn-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .btn-primary {
+    background: #e5e7eb;
+    border-color: #e5e7eb;
+    color: #23272f;
+  }
+
+  .btn-primary:hover {
+    background: #d1d5db;
+    border-color: #d1d5db;
+    color: #23272f;
+  }
+
+  .btn-success {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+
+  .btn-outline {
+    background: #ffffff;
+    border-color: #d1d5db;
+    color: #111827;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: #4b5563;
+  }
+
+  .btn:hover {
+    filter: brightness(0.97);
+  }
+
+  /* === Toolbar Excel === */
+  .toolbar-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .toolbar-item--hidden {
+    display: none;
+  }
+
+  .toolbar-label {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .select {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1.5px solid #bfc9d9;
+    font-size: 12px;
+    box-sizing: border-box;
+    background: #f3f6fa;
+    color: #2d3a4b;
+    font-weight: 600;
+  }
+
+  .select-sm {
+    padding: 4px 6px;
+    font-size: 12px;
+  }
+
+  /* === Vista previa y panel de código === */
+  .preview-box {
+    border-radius: 8px;
+    border: 1px dashed #d1d5db;
+    padding: 10px;
+    min-height: 120px;
+    background: #ffffff;
+  }
+
+  .preview-empty {
+    font-size: 13px;
+    color: #9ca3af;
+  }
+
+  .export-panel--hidden {
+    display: none;
+  }
+
+  .export-section {
+    margin-top: 10px;
+  }
+
+  .export-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .export-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .code-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 6px 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    resize: vertical;
+  }
+
+  .mod-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    border: 2px solid #e5e7eb;
+    padding-bottom: 4px;
+  }
+
+  /* Zona central del header del bloque: nombre de módulo */
+  .mod-header-type {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mod-type-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    background: #e6eaf2;
+    border: 1.5px solid #bfc9d9;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2d3a4b;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .mod-type-pill:hover {
+    background: #dbe3f2;
+    border-color: #8fa3c7;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  }
+
+  .mod-type-pill-icon {
+    font-size: 16px;
+    color: #6B7280;
+  }
+
+  .mod-type-pill-text {
+    white-space: nowrap;
+  }
+
+  .mod-type-pill-caret {
+    font-size: 16px;
+    color: #9CA3AF;
+  }
+
+  .mod-type-select-native {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .mod-type-select:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
+  }
+
+  .mod-type-select {
+    min-width: 140px;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    border: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    font-size: 11px;
+    font-weight: 500;
+    color: #374151;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .mod-type-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 10px;
+    border-radius: 9999px;
+    background: #E5E7EB;
+    font-size: 11px;
+    font-weight: 500;
+    color: #374151;
+    text-transform: none;
+    /* que respete el texto del select (Texto, Imagen, etc.) */
+  }
+
+  .mod-box {
+    background: #f7f9fc;
+    border-radius: 10px;
+    border: 1.5px solid #bfc9d9;
+    padding: 10px 12px;
+    margin: 10px 0;
+    box-shadow: 0 2px 8px rgba(60, 72, 100, 0.08);
+  }
+
+  .mod-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mod-drag-handle {
+    font-size: 16px;
+    color: #9ca3af;
+    cursor: grab;
+  }
+
+  .mod-header-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mod-badge {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .mod-pos {
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  .mod-header-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .icon-button {
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: #22304a;
+    font-size: 11px;
+    padding: 2px 6px;
+    cursor: pointer;
+    color: #bfc9d9;
+    transition: background 0.12s, color 0.12s;
+  }
+
+  .icon-button.mod-toggle {
+    font-size: 18px;
+    /* ⬅️ triángulo más grande en el header de bloque */
+    line-height: 1;
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 2px 6px;
+    color: inherit;
+  }
+
+  .icon-button:hover {
+    background: #3b4a62;
+    color: #fff;
+  }
+
+  .mod-toggle {
+    transition: transform 0.15s ease;
+  }
+
+  .mod-body {
+    margin-top: 10px;
+  }
+
+  .mod-box.collapsed .mod-body {
+    display: none;
+  }
+
+  /* Drag visual */
+  .mod-box.dragging {
+    opacity: 0.5;
+  }
+
+  /* === Secciones internas de cada bloque === */
+  .mod-section {
+    border-radius: 8px;
+    border: 1.5px solid #e5e7eb;
+    background: #ffffff;
+    /* ⬅️ antes era #f9fafb */
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .mod-section-header {
+    width: 100%;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f3f6fa;
+    border: 0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2d3a4b;
+    border-bottom: 1.5px solid #e5e7eb;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .mod-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mod-section-body {
+    padding: 14px 18px 16px 18px;
+  }
+
+  .mod-section.mod-section--collapsed .mod-section-body {
+    display: none;
+  }
+
+  /* === Items de imagen tipo “Imagen 1 / Imagen 2” === */
+  .img-item-block {
+    margin-bottom: 8px;
+    padding: 0;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1.5px solid #d1d5db;
+    box-shadow: 0 1px 2px rgba(60, 72, 100, 0.04);
+  }
+
+  .img-item-header {
+    width: 100%;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #e6eaf2;
+    border: 0;
+    border-bottom: 1.5px solid #d1d5db;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .img-item-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .img-item-drag {
+    font-size: 14px;
+    color: #d1d5db;
+  }
+
+  .img-item-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #2d3a4b;
+  }
+
+  .img-item-body {
+    padding: 12px 16px 14px 16px;
+  }
+
+  .img-item-block.img-item--collapsed .img-item-body {
+    display: none;
+  }
+
+  /* === Flechitas tipo "pescadito" (solo punta) === */
+
+  /* Toggle del bloque */
+  .mod-toggle-icon {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-right: 2px solid #6b7280;
+    border-bottom: 2px solid #6b7280;
+    transform: rotate(45deg);
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-top: none;
+    /* Sin recuadro, solo la flecha */
+    transition: transform 0.15s ease;
+  }
+
+  .mod-box.collapsed .mod-toggle-icon {
+    transform: rotate(-135deg);
+    /* ▲ (punta hacia arriba) */
+  }
+
+  /* Chevrons de secciones e items */
+  .mod-section-chevron,
+  .text-item-block.text-item--collapsed .text-item-chevron,
+  .img-item-block.img-item--collapsed .img-item-chevron {
+    transform: rotate(-135deg);
+    /* ▲ */
+  }
+
+  /* checks alineados a la derecha dentro de secciones */
+  .checks--inline {
+    justify-content: flex-end;
+  }
+
+  .export-panel {
+    margin-top: 12px;
+  }
+
+  /* === Override colores según maqueta === */
+
+  /* Fondo general gris claro */
+  body,
+  .app-shell {
+    background: #F8FAFC;
+    /* gris clarito de la maqueta */
+  }
+
+  /* Tarjetas y bloques blancos */
+  .card,
+  .mod-box,
+  .mod-section,
+  .text-item-block,
+  .img-item-block,
+  .preview-box {
+    background: #FFFFFF;
+  }
+
+  /* Bordes suaves */
+  .card,
+  .mod-box,
+  .mod-section,
+  .text-item-block,
+  .img-item-block,
+  .preview-box,
+  .select,
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    border-color: #E5E7EB;
+  }
+
+  /* Botón principal azul (tipo "Cargar Excel") */
+  .btn-primary {
+    background: #e5e7eb;
+    border-color: #e5e7eb;
+    color: #23272f;
+  }
+
+  .btn-primary:hover {
+    background: #d1d5db;
+    border-color: #d1d5db;
+    color: #23272f;
+  }
+
+  /* Botón éxito en verde */
+  .btn-success {
+    background: #22C55E;
+    border-color: #22C55E;
+    color: #FFFFFF;
+  }
+
+  /* Botón outline gris */
+  .btn-outline {
+    background: #FFFFFF;
+    border-color: #D1D5DB;
+    color: #111827;
+  }
+
+  /* Textos secundarios grises */
+  .app-subtitle,
+  .card-subtitle,
+  .toolbar-label {
+    color: #6B7280;
+  }
+
+  /* Inputs estilo maqueta */
+  input[type="text"],
+  input[type="number"],
+  textarea,
+  .select {
+    background: #FFFFFF;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  /* Select pequeño también */
+  .select-sm {
+    background: #F9FAFB;
+  }
+
+  /* Fila de inputs de imágenes (se mantiene el layout horizontal) */
+  .img-fields-row {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
+    gap: 12px;
+  }
+
+  .img-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .img-field label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #4B5563;
+  }
+
+  .img-field-input input[type="text"] {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid #E5E7EB;
+    background: #F9FAFB;
+  }
+
+  .img-field .source-compact {
+    margin-top: 4px;
+    align-self: flex-end;
+  }
+
+  .img-field .source-compact select {
+    font-size: 11px;
+    background: #F9FAFB;
+  }
+
+  /* Iconos dentro de los botones de acción de bloque */
+  .icon-button-symbol {
+    font-size: 18px;
+    color: #6B7280;
+    /* gris sobrio, igual línea que la sidebar */
+  }
+
+  /* Por si antes tenías algo rojo, esto lo pisa */
+  .icon-button-trash .icon-button-symbol {
+    color: #6B7280;
+  }
+
+  /* Responsive: en pantallas chicas, apilar los 3 campos */
+  @media (max-width: 960px) {
+    .img-fields-row {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 
 <!-- SheetJS for Excel processing -->
@@ -2141,8 +2213,8 @@ const MOD_TYPE_META = {
       const html = byId('htmlFullOut').value;
 
       results.push({
-        [firstCol]: row[firstCol],
-        HTML: html
+        id: index + 1,
+        longDescription: html
       });
     });
 
@@ -2160,6 +2232,32 @@ const MOD_TYPE_META = {
     XLSX.utils.book_append_sheet(wb, ws, 'HTMLs Generados');
     XLSX.writeFile(wb, 'inpages_generados.xlsx');
     alert(`¡Listo! Se generaron ${results.length} HTMLs y se descargó el archivo Excel.`);
+  }
+
+  function downloadSingleExcel() {
+    // Si hay carga masiva, usar la lógica existente
+    if (globalExcelData.rows && globalExcelData.rows.length > 1) {
+      // Descarga masiva: id y longDescription
+      const results = [];
+      globalExcelData.rows.forEach((row, index) => {
+        const html = byId('htmlFullOut').value;
+        results.push({ id: index + 1, longDescription: html });
+      });
+      const ws = XLSX.utils.json_to_sheet(results);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'HTMLs Generados');
+      XLSX.writeFile(wb, 'inpages_generados.xlsx');
+      alert(`¡Listo! Se generaron ${results.length} HTMLs y se descargó el archivo Excel.`);
+      return;
+    }
+    // Descarga individual: id=1 y longDescription=html generado
+    const html = byId('htmlFullOut').value;
+    const data = [{ id: 1, longDescription: html }];
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'HTML Generado');
+    XLSX.writeFile(wb, 'inpage_generado.xlsx');
+    alert('¡Listo! Se descargó el Excel con el HTML generado.');
   }
 
   /* ========= creación / inserción / orden ========= */
@@ -2247,7 +2345,8 @@ function createModuleBox(id, index) {
           <select id="${id}-tipo"
                   class="mod-type-select-native"
                   onchange="handleTipoChange('${id}')">
-            <option value="texto" selected>Texto</option>
+            <option value="" selected>Módulo</option>
+            <option value="texto">Texto</option>
             <option value="imagen">Imagen</option>
             <option value="texto-imagen-h">Texto + Imagen</option>
             <option value="html">HTML personalizado</option>
@@ -2260,12 +2359,12 @@ function createModuleBox(id, index) {
         <button type="button"
                 class="icon-button"
                 onclick="moveMod('${id}','up')">
-          ↑
+          <span class="material-symbols-outlined icon-button-symbol">arrow_upward</span>
         </button>
         <button type="button"
                 class="icon-button"
                 onclick="moveMod('${id}','down')">
-          ↓
+          <span class="material-symbols-outlined icon-button-symbol">arrow_downward</span>
         </button>
         <button type="button"
                 class="icon-button icon-button-trash"
@@ -4500,7 +4599,7 @@ document.addEventListener('change', function (e) {
     ];
 
     const isChar = key.length === 1; // cualquier letra/número/signo
-    const isDeleteKey = (key === 'Backspace' || key === 'Delete' || key === 'Enter');
+    const isDeleteKey = (key === 'Backspace' || 'Delete' || 'Enter');
 
     // si es carácter o borrado, y no viene con Ctrl/Meta/Alt → lo bloqueamos
     if (
