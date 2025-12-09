@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <!-- index.html -->
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
@@ -111,22 +111,19 @@
     <span class="card-toolbar-label">Bloques</span>
 
     <button type="button"
-            class="btn btn-primary btn-sm"
+            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
             onclick="addMod()">
-      Agregar bloque
+      <span class="material-symbols-outlined toolbar-btn__icon">add_circle</span>
+      Agregar
     </button>
 
     <button type="button"
-            class="btn btn-ghost btn-sm"
+            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
             onclick="collapseAll()">
-      Contraer todo
+      <span class="material-symbols-outlined toolbar-btn__icon">unfold_less</span>
+      Contraer
     </button>
 
-    <button type="button"
-            class="btn btn-success btn-sm"
-            onclick="renderAll()">
-      Generar vista
-    </button>
   </div>
 
   <!-- Grupo Excel -->
@@ -134,15 +131,26 @@
     <span class="card-toolbar-label">Excel</span>
 
     <!-- Cargar Excel -->
-    <label class="btn btn-primary btn-sm btn-with-icon">
-      <img src="assets/icons/upload.svg" alt="" class="btn-icon">
-      Cargar Excel
-      <input type="file"
-             id="global-excel-upload"
-             accept=".xlsx,.xls"
-             style="display:none;"
-             onchange="handleGlobalExcelUpload(event)">
-    </label>
+    <button type="button"
+            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
+            onclick="document.getElementById('global-excel-upload').click()">
+      <span class="material-symbols-outlined toolbar-btn__icon">upload</span>
+      Cargar
+    </button>
+    <input type="file"
+           id="global-excel-upload"
+           accept=".xlsx,.xls"
+           style="display:none;"
+           onchange="handleGlobalExcelUpload(event)">
+
+    <!-- Descargar Excel -->
+    <button type="button"
+            id="download-excel-btn"
+            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
+            onclick="downloadExcel()">
+      <span class="material-symbols-outlined toolbar-btn__icon">download</span>
+      Descargar
+    </button>
 
     <!-- Fila a visualizar -->
     <div id="excel-row-selector-container"
@@ -158,14 +166,6 @@
             class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
             onclick="downloadSingleExcel()">
       Exportar fila
-    </button>
-
-    <!-- Exportar todas (masivo) -->
-    <button id="generate-all-btn"
-            type="button"
-            class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
-            onclick="generateAllHTML()">
-      Exportar masivo
     </button>
   </div>
 </div>
@@ -188,24 +188,25 @@
               </p>
             </div>
 
-            <div class="card-actions">
-              <button type="button"
-                      class="btn btn-success btn-sm"
-                      onclick="renderAll()">
-                Refrescar
-              </button>
-              <button type="button"
-                      id="preview-toggle-btn"
-                      class="btn btn-outline btn-sm"
-                      onclick="togglePreviewMode()">
-                &lt;/&gt; Código
-              </button>
-            </div>
-          </header>
+          <div class="card-actions">
+            <button type="button"
+                    class="btn btn-success btn-sm"
+                    onclick="renderAll()">
+              Refrescar
+            </button>
+            <button type="button"
+                    id="preview-toggle-btn"
+                    class="btn btn-outline btn-sm"
+                    onclick="togglePreviewMode()">
+              &lt;/&gt; Código
+            </button>
+          </div>
+        </header>
 
           <!-- Vista previa normal -->
           <div id="preview" class="preview-box">
             <span class="preview-empty">No hay módulos válidos.</span>
+
           </div>
 
           <!-- Código del inpage (mismo contenido que antes) -->
@@ -258,7 +259,6 @@
 
 
 <style>
-  /* Consolidado: solo estilos necesarios, sin duplicados ni reglas no usadas */
   .material-symbols-outlined {
     font-variation-settings:
       'FILL' 0,
@@ -291,7 +291,7 @@
     border-radius: 12px;
     border: 1.5px solid #bfc9d9;
     box-shadow: 0 1px 4px rgba(60,72,100,0.04);
-    padding: 10px 20px 8px 20px;
+    padding: 5px 20px 8px 20px;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -665,9 +665,7 @@
   .rich-textarea a:link,
   .rich-textarea a:visited {
     color: inherit;
-    /* mismo color que el texto normal (#333333) */
     text-decoration: underline;
-    /* igual que en el inpage final */
   }
 
   .rich-textarea.excel-bound {
@@ -955,7 +953,6 @@
     border-radius: 6px;
   }
 
-  /* === Items de texto tipo “Texto 1 / Texto 2” === */
   .text-item-block {
     margin-bottom: 8px;
     padding: 0;
@@ -988,7 +985,7 @@
 
   .text-item-drag {
     font-size: 14px;
-    color: #d1d5db;
+    color: #2d3a4b;
   }
 
   .text-item-title {
@@ -1009,15 +1006,11 @@
     opacity: 0.5;
   }
 
-  /* === Layout general de la app === */
-  /* === Layout con barra lateral === */
-  /* === Layout con barra lateral === */
-
   .app-shell {
     display: flex;
     min-height: 100vh;
     background: #f3f4f6;
-    /* gris claro de fondo general */
+
   }
 
   /* Sidebar izquierda */
@@ -1025,14 +1018,13 @@
     width: 240px;
     flex-shrink: 0;
     background: #ffffff;
-    /* ⬅️ ahora blanca */
     color: #111827;
     display: flex;
     flex-direction: column;
     padding: 20px 16px;
     gap: 16px;
     border-right: 1px solid #e5e7eb;
-    /* línea suave de separación */
+
   }
 
   /* Logo / título app */
@@ -1093,7 +1085,6 @@
   }
 
   .sidebar-nav-item--active .material-symbols-outlined {
-    /* icono “relleno” como en Content Blocks */
     font-variation-settings:
       'FILL' 1,
       'wght' 500,
@@ -1212,9 +1203,7 @@
 
   body {
     margin: 0;
-    font-family: 'Lato', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     background: #f3f4f6;
-    /* mismo gris del app-shell */
     color: #111827;
   }
 
@@ -1242,7 +1231,7 @@
 
   .app-content {
     display: grid;
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
     gap: 16px;
     align-items: flex-start;
   }
@@ -1315,7 +1304,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
 }
 
 .card-toolbar-label {
@@ -1325,6 +1314,51 @@
   letter-spacing: 0.04em;
   color: #9ca3af;
   margin-right: 4px;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-weight: 600;
+  line-height: 1;
+  height: 32px;
+  box-shadow: none;
+}
+
+.toolbar-btn__icon {
+  font-size: 16px !important;
+  line-height: 1;
+}
+
+.toolbar-btn--excel {
+  min-width: auto;
+  justify-content: center;
+}
+
+.toolbar-btn--primary {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.toolbar-btn--secondary {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.toolbar-btn--ghost {
+  background: transparent;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.toolbar-btn:hover {
+  filter: none;
+  background: rgba(37, 99, 235, 0.06);
 }
 
   .card-footer {
@@ -1437,6 +1471,7 @@
     padding: 10px;
     min-height: 120px;
     background: #ffffff;
+    position: relative;
   }
 
   .preview-empty {
@@ -1566,7 +1601,6 @@
     font-weight: 500;
     color: #374151;
     text-transform: none;
-    /* que respete el texto del select (Texto, Imagen, etc.) */
   }
 
   .mod-box {
@@ -1625,7 +1659,6 @@
 
   .icon-button.mod-toggle {
     font-size: 18px;
-    /* ⬅️ triángulo más grande en el header de bloque */
     line-height: 1;
     background: none;
     border: none;
@@ -1729,7 +1762,7 @@
 
   .img-item-drag {
     font-size: 14px;
-    color: #d1d5db;
+    color: #2d3a4b;
   }
 
   .img-item-title {
@@ -1767,15 +1800,34 @@
 
   .mod-box.collapsed .mod-toggle-icon {
     transform: rotate(-135deg);
-    /* ▲ (punta hacia arriba) */
   }
 
   /* Chevrons de secciones e items */
   .mod-section-chevron,
+  .text-item-chevron,
+  .img-item-chevron {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+    transition: transform 0.18s ease;
+  }
+  .mod-section-chevron::before,
+  .text-item-chevron::before,
+  .img-item-chevron::before {
+    content: "expand_more";
+    font-family: "Material Symbols Outlined";
+    font-size: 18px;
+    color: #6b7280;
+    line-height: 1;
+  }
+  .mod-section.mod-section--collapsed .mod-section-chevron,
   .text-item-block.text-item--collapsed .text-item-chevron,
   .img-item-block.img-item--collapsed .img-item-chevron {
-    transform: rotate(-135deg);
-    /* ▲ */
+    transform: rotate(-90deg);
   }
 
   /* checks alineados a la derecha dentro de secciones */
@@ -1793,7 +1845,6 @@
   body,
   .app-shell {
     background: #F8FAFC;
-    /* gris clarito de la maqueta */
   }
 
   /* Tarjetas y bloques blancos */
@@ -1911,7 +1962,6 @@
   .icon-button-symbol {
     font-size: 18px;
     color: #6B7280;
-    /* gris sobrio, igual línea que la sidebar */
   }
 
   /* Por si antes tenías algo rojo, esto lo pisa */
@@ -2045,11 +2095,9 @@ const MOD_TYPE_META = {
         // Row selector
         populateRowSelector();
 
-        // Mostrar selector y botón generar
+        // Mostrar selector (boton descargar siempre visible)
         const selectorContainer = byId('excel-row-selector-container');
-        const generateBtn = byId('generate-all-btn');
         if (selectorContainer) selectorContainer.classList.remove('toolbar-item--hidden');
-        if (generateBtn) generateBtn.classList.remove('toolbar-item--hidden');
 
 
 
@@ -2067,6 +2115,29 @@ const MOD_TYPE_META = {
       }
     };
     reader.readAsArrayBuffer(file);
+  }
+
+  function downloadExcel() {
+    // Si hay Excel cargado, descargamos todos los datos; si no, exportamos el HTML actual.
+    if (isExcelLoaded() && globalExcelData.rows && globalExcelData.rows.length) {
+      downloadCurrentExcel();
+    } else {
+      downloadSingleExcel();
+    }
+  }
+
+  function downloadCurrentExcel() {
+    if (!isExcelLoaded() || !globalExcelData.rows || !globalExcelData.rows.length) {
+      alert('Primero carga un archivo Excel.');
+      return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(globalExcelData.rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Datos');
+
+    const baseName = (globalExcelData.fileName || 'excel_cargado').replace(/\\.xlsx?$/i, '');
+    XLSX.writeFile(wb, `${baseName}_descarga.xlsx`);
   }
 
   function populateRowSelector() {
@@ -2535,13 +2606,13 @@ if (tipo === "imagen") {
           </div>
 
           <div class="param-item">
-            <label>Curva</label>
-            <select id="${id}-radius">
-              <option value="0" selected>Ninguna</option>
-              <option value="8">Baja</option>
-              <option value="16">Media</option>
-              <option value="24">Alta</option>
-            </select>
+            <label>Curva (%)</label>
+            <input id="${id}-radius"
+                   type="number"
+                   min="0"
+                   max="100"
+                   value="0"
+                   style="width:60px">
           </div>
 
           <div class="param-item">
@@ -2577,13 +2648,6 @@ if (tipo === "imagen") {
       </button>
       <div class="mod-section-body">
         <div id="${id}-items"></div>
-
-        <div class="checks checks--inline">
-          <label>
-            <input type="checkbox" id="${id}-newtab" checked>
-            Abrir enlaces en pestaña nueva
-          </label>
-        </div>
       </div>
     </div>
   `;
@@ -2718,24 +2782,17 @@ if (tipo === "texto-imagen-h") {
           </div>
 
           <div class="param-item">
-            <label>Curva</label>
-            <select id="${id}-hiradius">
-              <option value="0" selected>Ninguna</option>
-              <option value="8">Baja</option>
-              <option value="16">Media</option>
-              <option value="24">Alta</option>
-            </select>
+            <label>Curva (%)</label>
+            <input id="${id}-hiradius"
+                   type="number"
+                   min="0"
+                   max="100"
+                   value="0"
+                   style="width:60px">
           </div>
         </div>
 
         <div id="${id}-hitems"></div>
-
-        <div class="checks checks--inline">
-          <label>
-            <input type="checkbox" id="${id}-hinewtab" checked>
-            Abrir enlaces en pestaña nueva
-          </label>
-        </div>
       </div>
     </div>
   `;
@@ -3162,7 +3219,7 @@ function updateImgCount(id) {
 
           <!-- Columna 2: ALT -->
           <div class="img-field">
-            <label>Texto alternativo</label>
+            <label>Texto alt (opcional)</label>
             <div class="img-field-input">
               <input
                 type="text"
@@ -3601,7 +3658,7 @@ function updateHTextCount(id) {
 
         if (items.length === 0) return;
 
-        const radius = parseInt(val(id + "-radius") || "0", 10) || 0;
+        const radius = clampPctAllowZero(val(id + "-radius") || "0");
         const align = val(id + "-ialign") || "center";
 
         // Ancho imagen en %
@@ -3612,7 +3669,7 @@ function updateHTextCount(id) {
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
 
-        const newTab = byId(id + "-newtab")?.checked;
+        const newTab = false;
 
 
         const rowCls = "inpgs-row-" + modIndex;
@@ -3624,8 +3681,7 @@ function updateHTextCount(id) {
         items.forEach(it => {
           let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
           if (it.link) {
-            const targetAttr = newTab ? ' target="_blank" rel="noopener noreferrer"' : "";
-            innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+            innerImg = `<a href="${escAttr(it.link)}">${innerImg}</a>`;
           }
           htmlBody += `  <div class="${cellCls}">${innerImg}</div>\n`;
         });
@@ -3655,7 +3711,7 @@ function updateHTextCount(id) {
     width:${imgWidth}% !important;
     max-width:100% !important;
     height:auto !important;
-    border-radius:${radius}px !important;
+    border-radius:${radius}% !important;
     display:block !important;
     margin:0 auto !important;
     padding:0 !important;
@@ -3709,8 +3765,8 @@ function updateHTextCount(id) {
         }
 
         const imgAlign = val(id + "-hialign") || "center";
-        const imgRadius = parseInt(val(id + "-hiradius") || "0", 10) || 0;
-        const imgNewTab = byId(id + "-hinewtab")?.checked;
+        const imgRadius = clampPctAllowZero(val(id + "-hiradius") || "0");
+        const imgNewTab = false;
 
         // ✅ Margen inferior común del bloque Texto + Imagen
         let mbUnit = parseInt(val(id + "-hmb") || "0", 10);
@@ -3745,8 +3801,7 @@ function updateHTextCount(id) {
           images.forEach(it => {
             let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
             if (it.link) {
-              const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
-              innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+              innerImg = `<a href="${escAttr(it.link)}">${innerImg}</a>`;
             }
             htmlBody += `      <div class="${imgCellCls}">${innerImg}</div>\n`;
           });
@@ -3768,8 +3823,7 @@ function updateHTextCount(id) {
           images.forEach(it => {
             let innerImg = `<img class="${imgCls}" src="${escAttr(it.src)}" alt="${escAttr(it.alt)}">`;
             if (it.link) {
-              const targetAttr = imgNewTab ? ' target="_blank" rel="noopener noreferrer"' : "";
-              innerImg = `<a href="${escAttr(it.link)}"${targetAttr}>${innerImg}</a>`;
+              innerImg = `<a href="${escAttr(it.link)}">${innerImg}</a>`;
             }
             htmlBody += `      <div class="${imgCellCls}">${innerImg}</div>\n`;
           });
@@ -3789,7 +3843,7 @@ function updateHTextCount(id) {
   flex-direction:row !important;
   gap:0 !important;
   background:${bg} !important;
-  margin:0 0 ${mb}px 0 !important;   /* ✅ antes usaba imgMb */
+  margin:0 0 ${mb}px 0 !important;   
   padding:0 !important;
 }
 .inpgs-wrapper .${leftCls}{
@@ -3828,7 +3882,7 @@ function updateHTextCount(id) {
 .inpgs-wrapper .${imgCls}{
   width:100% !important;
   height:auto !important;
-  border-radius:${imgRadius}px !important;
+  border-radius:${imgRadius}% !important;
   display:block !important;
   padding:0 !important;      
 }
@@ -3900,7 +3954,7 @@ function updateHTextCount(id) {
           .inpgs-wrapper .${embed.wrapperClass}{
             position:relative !important;
             width:100% !important;
-            padding-bottom:56.25% !important; /* 16:9 */
+            padding-bottom:56.25% !important;
             height:0 !important;
             margin-bottom:16px !important;
           }
@@ -3936,13 +3990,11 @@ function updateHTextCount(id) {
 
 const cssWrapper = `
   .inpgs-wrapper{
-    font-family:'Lato',sans-serif !important;
-    --inpgs-fs:1.4rem;
-    font-size:var(--inpgs-fs) !important;
-    line-height:1.35 !important;
+    font: inherit !important;
+    line-height:1.35 !important;   
     padding:0 !important;
-    color:#333333 !important;
-    font-weight:400 !important;
+    color:inherit !important;    
+    font-weight:inherit !important;
   }
   .inpgs-wrapper *,
   .inpgs-wrapper *::before,
@@ -3950,7 +4002,6 @@ const cssWrapper = `
     box-sizing:border-box !important;
     line-height:inherit !important;
   }
-
   .inpgs-wrapper h1,
   .inpgs-wrapper h2,
   .inpgs-wrapper h3,
@@ -3984,13 +4035,6 @@ const cssWrapper = `
   .inpgs-wrapper h6{
     font-weight:400 !important;
   }
-
-  /* 🔥 IMPORTANTE: elimina esto
-  .inpgs-wrapper [style*="font-size"]{
-    font-size: inherit !important;
-  }
-  */
-
   .amp::before{
     content:"\\0026";
   }
@@ -4024,7 +4068,6 @@ const cssWrapper = `
     byId("jsOut").value = js;
 
     let fullHtml =
-      '<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&amp;display=swap" rel="stylesheet">\n' +
       "<style>\n" + finalCSS + "\n</style>\n" +
       htmlWrapper;
 
@@ -4032,7 +4075,7 @@ const cssWrapper = `
       fullHtml += "\n<script>\n" + js + "\n</scr" + "ipt>\n";
     }
 
-    fullHtml += '\n<span hidden>INPAGE ESPECIALISTA/IA</span>';
+    fullHtml += '\n<span hidden>CREADOR INPAGE ESPECIALISTA/IA </span>';
 
     byId("htmlFullOut").value = fullHtml;
   }
@@ -4148,8 +4191,6 @@ const cssWrapper = `
       btn.title = "Ver HTML / CSS / JS generados";
     }
   }
-
-
 
   function copyHtmlFinal() {
     const ta = byId("htmlFullOut");
@@ -4325,6 +4366,12 @@ const cssWrapper = `
     const n = parseInt(v || "100", 10);
     if (isNaN(n)) return 100;
     return Math.min(100, Math.max(10, n));
+  }
+
+  function clampPctAllowZero(v) {
+    const n = parseInt(v || "0", 10);
+    if (isNaN(n)) return 0;
+    return Math.min(100, Math.max(0, n));
   }
   function escHTML(s) {
     return (s || "").replace(/[&<>]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]));
