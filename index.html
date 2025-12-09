@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!-- index.html -->
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
@@ -86,7 +86,7 @@
       <div>
         <h1 class="app-title">Constructor de Inpages</h1>
         <p class="app-subtitle">
-          Arma bloques, y obten el código final
+          Arma bloques, y obten el cÃ³digo final
         </p>
       </div>
     </header>
@@ -99,12 +99,12 @@
   <div>
     <h2 class="card-title">Bloques y datos</h2>
     <p class="card-subtitle">
-      Configura los módulos y mapea columnas del Excel.
+      Configura los mÃ³dulos y mapea columnas del Excel.
     </p>
   </div>
 </header>
 
-<!-- 🔹 Barra principal: Bloques + Excel -->
+<!-- ðŸ”¹ Barra principal: Bloques + Excel -->
 <div class="card-toolbar card-toolbar--split">
   <!-- Grupo Bloques -->
   <div class="card-toolbar-group">
@@ -177,38 +177,53 @@
       </div>
 
 
-      <!-- Columna derecha: vista + código unidos -->
+      <!-- Columna derecha: vista + cÃ³digo unidos -->
       <aside class="app-column app-column--right">
         <section class="card">
           <header class="card-header card-header--compact">
             <div>
               <h3 class="card-title">Vista previa</h3>
               <p class="card-subtitle">
-                Diseño final aproximado y detalles de código
+                DiseÃ±o final aproximado y detalles de cÃ³digo
               </p>
             </div>
 
-            <div class="card-actions">
+          <div class="card-actions">
+            <button type="button"
+                    class="btn btn-success btn-sm"
+                    onclick="renderAll()">
+              Refrescar
+            </button>
+            <button type="button"
+                    id="preview-toggle-btn"
+                    class="btn btn-outline btn-sm"
+                    onclick="togglePreviewMode()">
+              &lt;/&gt; CÃ³digo
+            </button>
               <button type="button"
-                      class="btn btn-success btn-sm"
-                      onclick="renderAll()">
-                Refrescar
-              </button>
-              <button type="button"
-                      id="preview-toggle-btn"
+                      id="falabella-preview-btn"
                       class="btn btn-outline btn-sm"
-                      onclick="togglePreviewMode()">
-                &lt;/&gt; Código
+                      onclick="toggleFalabellaPreview()">
+                Preview Falabella
               </button>
-            </div>
-          </header>
+          </div>
+        </header>
 
           <!-- Vista previa normal -->
           <div id="preview" class="preview-box">
-            <span class="preview-empty">No hay módulos válidos.</span>
+            <span class="preview-empty">No hay mÃ³dulos vÃ¡lidos.</span>
+            <div id="falabella-preview-overlay" class="falabella-preview-overlay">
+              <div class="falabella-preview-fade"></div>
+            <button type="button"
+                    id="falabella-preview-more"
+                    class="falabella-preview-more"
+                    onclick="expandFalabellaPreview()">
+              Mostrar mÃ¡s
+            </button>
+            </div>
           </div>
 
-          <!-- Código del inpage (mismo contenido que antes) -->
+          <!-- CÃ³digo del inpage (mismo contenido que antes) -->
           <div id="export-panel" class="export-panel export-panel--hidden">
             <div class="export-section">
               <div class="export-header">
@@ -234,7 +249,7 @@
             </div>
 
             <div class="export-section">
-              <span class="export-title">CSS (módulos inpgs)</span>
+              <span class="export-title">CSS (mÃ³dulos inpgs)</span>
               <textarea id="cssOut"
                         rows="6"
                         readonly
@@ -955,7 +970,7 @@
     border-radius: 6px;
   }
 
-  /* === Items de texto tipo “Texto 1 / Texto 2” === */
+  /* === Items de texto tipo â€œTexto 1 / Texto 2â€ === */
   .text-item-block {
     margin-bottom: 8px;
     padding: 0;
@@ -1025,17 +1040,17 @@
     width: 240px;
     flex-shrink: 0;
     background: #ffffff;
-    /* ⬅️ ahora blanca */
+    /* â¬…ï¸ ahora blanca */
     color: #111827;
     display: flex;
     flex-direction: column;
     padding: 20px 16px;
     gap: 16px;
     border-right: 1px solid #e5e7eb;
-    /* línea suave de separación */
+    /* lÃ­nea suave de separaciÃ³n */
   }
 
-  /* Logo / título app */
+  /* Logo / tÃ­tulo app */
   .sidebar-logo {
     display: flex;
     align-items: center;
@@ -1069,7 +1084,7 @@
     color: #6b7280;
   }
 
-  /* Navegación */
+  /* NavegaciÃ³n */
   .sidebar-nav {
     display: flex;
     flex-direction: column;
@@ -1093,7 +1108,7 @@
   }
 
   .sidebar-nav-item--active .material-symbols-outlined {
-    /* icono “relleno” como en Content Blocks */
+    /* icono â€œrellenoâ€ como en Content Blocks */
     font-variation-settings:
       'FILL' 1,
       'wght' 500,
@@ -1200,12 +1215,12 @@
     color: #111827;
   }
 
-  /* El área principal se adapta al lado de la barra */
+  /* El Ã¡rea principal se adapta al lado de la barra */
   .app-main {
     flex: 1;
   }
 
-  /* Que el área principal se adapte al lado de la barra */
+  /* Que el Ã¡rea principal se adapte al lado de la barra */
   .app-main {
     flex: 1;
   }
@@ -1430,13 +1445,64 @@
     font-size: 12px;
   }
 
-  /* === Vista previa y panel de código === */
+  /* === Vista previa y panel de cÃ³digo === */
   .preview-box {
     border-radius: 8px;
     border: 1px dashed #d1d5db;
     padding: 10px;
     min-height: 120px;
     background: #ffffff;
+    position: relative;
+  }
+
+  .preview-box.falabella-mode {
+    max-height: 16.5em;
+    overflow: hidden;
+  }
+
+  .preview-box.falabella-expanded {
+    max-height: none;
+  }
+
+  .falabella-preview-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+  }
+
+  .falabella-preview-overlay.active {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .falabella-preview-fade {
+    width: 100%;
+    height: 4em;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 90%);
+    pointer-events: none;
+  }
+
+  .falabella-preview-overlay.expanded .falabella-preview-fade {
+    display: none;
+  }
+
+  .falabella-preview-more {
+    border: none;
+    background: none;
+    color: #111827;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    pointer-events: auto;
+    z-index: 3;
   }
 
   .preview-empty {
@@ -1487,7 +1553,7 @@
     padding-bottom: 4px;
   }
 
-  /* Zona central del header del bloque: nombre de módulo */
+  /* Zona central del header del bloque: nombre de mÃ³dulo */
   .mod-header-type {
     flex: 1;
     display: flex;
@@ -1625,7 +1691,7 @@
 
   .icon-button.mod-toggle {
     font-size: 18px;
-    /* ⬅️ triángulo más grande en el header de bloque */
+    /* â¬…ï¸ triÃ¡ngulo mÃ¡s grande en el header de bloque */
     line-height: 1;
     background: none;
     border: none;
@@ -1661,7 +1727,7 @@
     border-radius: 8px;
     border: 1.5px solid #e5e7eb;
     background: #ffffff;
-    /* ⬅️ antes era #f9fafb */
+    /* â¬…ï¸ antes era #f9fafb */
     margin-bottom: 8px;
     overflow: hidden;
   }
@@ -1696,7 +1762,7 @@
     display: none;
   }
 
-  /* === Items de imagen tipo “Imagen 1 / Imagen 2” === */
+  /* === Items de imagen tipo â€œImagen 1 / Imagen 2â€ === */
   .img-item-block {
     margin-bottom: 8px;
     padding: 0;
@@ -1767,7 +1833,7 @@
 
   .mod-box.collapsed .mod-toggle-icon {
     transform: rotate(-135deg);
-    /* ▲ (punta hacia arriba) */
+    /* â–² (punta hacia arriba) */
   }
 
   /* Chevrons de secciones e items */
@@ -1775,7 +1841,7 @@
   .text-item-block.text-item--collapsed .text-item-chevron,
   .img-item-block.img-item--collapsed .img-item-chevron {
     transform: rotate(-135deg);
-    /* ▲ */
+    /* â–² */
   }
 
   /* checks alineados a la derecha dentro de secciones */
@@ -1787,7 +1853,7 @@
     margin-top: 12px;
   }
 
-  /* === Override colores según maqueta === */
+  /* === Override colores segÃºn maqueta === */
 
   /* Fondo general gris claro */
   body,
@@ -1820,7 +1886,7 @@
     border-color: #E5E7EB;
   }
 
-  /* Botón principal azul (tipo "Cargar Excel") */
+  /* BotÃ³n principal azul (tipo "Cargar Excel") */
   .btn-primary {
     background: #e5e7eb;
     border-color: #e5e7eb;
@@ -1833,14 +1899,14 @@
     color: #23272f;
   }
 
-  /* Botón éxito en verde */
+  /* BotÃ³n Ã©xito en verde */
   .btn-success {
     background: #22C55E;
     border-color: #22C55E;
     color: #FFFFFF;
   }
 
-  /* Botón outline gris */
+  /* BotÃ³n outline gris */
   .btn-outline {
     background: #FFFFFF;
     border-color: #D1D5DB;
@@ -1864,12 +1930,12 @@
     font-size: 13px;
   }
 
-  /* Select pequeño también */
+  /* Select pequeÃ±o tambiÃ©n */
   .select-sm {
     background: #F9FAFB;
   }
 
-  /* Fila de inputs de imágenes (se mantiene el layout horizontal) */
+  /* Fila de inputs de imÃ¡genes (se mantiene el layout horizontal) */
   .img-fields-row {
     display: grid;
     grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr) minmax(0, 1.5fr);
@@ -1907,14 +1973,14 @@
     background: #F9FAFB;
   }
 
-  /* Iconos dentro de los botones de acción de bloque */
+  /* Iconos dentro de los botones de acciÃ³n de bloque */
   .icon-button-symbol {
     font-size: 18px;
     color: #6B7280;
-    /* gris sobrio, igual línea que la sidebar */
+    /* gris sobrio, igual lÃ­nea que la sidebar */
   }
 
-  /* Por si antes tenías algo rojo, esto lo pisa */
+  /* Por si antes tenÃ­as algo rojo, esto lo pisa */
   .icon-button-trash .icon-button-symbol {
     color: #6B7280;
   }
@@ -1967,7 +2033,7 @@ const MOD_TYPE_META = {
   let currentEditor = null;
   // === Auto-preview: render con debounce ===
   let renderTimeout = null;
-  let isCodeView = false;  // false = vista previa, true = código
+  let isCodeView = false;  // false = vista previa, true = cÃ³digo
 
   function scheduleRender() {
     if (renderTimeout) {
@@ -1976,7 +2042,7 @@ const MOD_TYPE_META = {
     renderTimeout = setTimeout(() => {
       renderAll();
       renderTimeout = null;
-    }, 200); // puedes subir/bajar este número si quieres más o menos delay
+    }, 200); // puedes subir/bajar este nÃºmero si quieres mÃ¡s o menos delay
   }
 
     function isExcelLoaded() {
@@ -1998,7 +2064,7 @@ const MOD_TYPE_META = {
     selects.forEach(sel => {
       const previousValue = sel.value || 'manual';
 
-      // Reconstruimos opciones según el Excel actual
+      // Reconstruimos opciones segÃºn el Excel actual
       sel.innerHTML = getColumnOptions();
 
       if (hasExcel && Array.from(sel.options).some(o => o.value === previousValue)) {
@@ -2010,7 +2076,7 @@ const MOD_TYPE_META = {
       sel.disabled = !hasExcel;
       sel.title = hasExcel
         ? 'Selecciona columna del Excel'
-        : 'Carga un Excel para activar esta opción';
+        : 'Carga un Excel para activar esta opciÃ³n';
     });
   }
 
@@ -2030,7 +2096,7 @@ const MOD_TYPE_META = {
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
         if (!jsonData || jsonData.length === 0) {
-          alert('El archivo parece estar vacío.');
+          alert('El archivo parece estar vacÃ­o.');
           return;
         }
         // Extract column names
@@ -2045,7 +2111,7 @@ const MOD_TYPE_META = {
         // Row selector
         populateRowSelector();
 
-        // Mostrar selector y botón generar
+        // Mostrar selector y botÃ³n generar
         const selectorContainer = byId('excel-row-selector-container');
         const generateBtn = byId('generate-all-btn');
         if (selectorContainer) selectorContainer.classList.remove('toolbar-item--hidden');
@@ -2056,7 +2122,7 @@ const MOD_TYPE_META = {
         // Habilitar selects de fuente de datos
         refreshSourceSelects();
 
-        // 🔄 Muy importante: refrescar campos ya vinculados (si es que hay)
+        // ðŸ”„ Muy importante: refrescar campos ya vinculados (si es que hay)
         refreshBoundFieldsForCurrentRow();
 
         // Render inicial con la fila seleccionada
@@ -2097,7 +2163,7 @@ const MOD_TYPE_META = {
   function getCurrentRowIndex() {
     if (!globalExcelData.rows || !globalExcelData.rows.length) return 0;
 
-    // generación masiva (generateAllHTML)
+    // generaciÃ³n masiva (generateAllHTML)
     if (currentRenderRowIndex !== null) {
       return currentRenderRowIndex;
     }
@@ -2141,7 +2207,7 @@ const MOD_TYPE_META = {
           field.dataset.excelTemplate = template;
           newHtml = template.split('__EXCEL_VALUE__').join(value);
         } else {
-          // sin estilos definidos todavía: usamos el valor plano
+          // sin estilos definidos todavÃ­a: usamos el valor plano
           newHtml = value;
           field.dataset.excelTemplate = value;
         }
@@ -2231,11 +2297,11 @@ const MOD_TYPE_META = {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'HTMLs Generados');
     XLSX.writeFile(wb, 'inpages_generados.xlsx');
-    alert(`¡Listo! Se generaron ${results.length} HTMLs y se descargó el archivo Excel.`);
+    alert(`Â¡Listo! Se generaron ${results.length} HTMLs y se descargÃ³ el archivo Excel.`);
   }
 
   function downloadSingleExcel() {
-    // Si hay carga masiva, usar la lógica existente
+    // Si hay carga masiva, usar la lÃ³gica existente
     if (globalExcelData.rows && globalExcelData.rows.length > 1) {
       // Descarga masiva: id y longDescription
       const results = [];
@@ -2247,7 +2313,7 @@ const MOD_TYPE_META = {
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'HTMLs Generados');
       XLSX.writeFile(wb, 'inpages_generados.xlsx');
-      alert(`¡Listo! Se generaron ${results.length} HTMLs y se descargó el archivo Excel.`);
+      alert(`Â¡Listo! Se generaron ${results.length} HTMLs y se descargÃ³ el archivo Excel.`);
       return;
     }
     // Descarga individual: id=1 y longDescription=html generado
@@ -2257,10 +2323,10 @@ const MOD_TYPE_META = {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'HTML Generado');
     XLSX.writeFile(wb, 'inpage_generado.xlsx');
-    alert('¡Listo! Se descargó el Excel con el HTML generado.');
+    alert('Â¡Listo! Se descargÃ³ el Excel con el HTML generado.');
   }
 
-  /* ========= creación / inserción / orden ========= */
+  /* ========= creaciÃ³n / inserciÃ³n / orden ========= */
 
   function addMod() {
     addModAt("end", null);
@@ -2300,7 +2366,7 @@ const MOD_TYPE_META = {
     const boxes = Array.from(container.children).filter(el => el.classList.contains("mod-box"));
     boxes.forEach((box, i) => {
       const posLabel = box.querySelector(".mod-pos");
-      if (posLabel) posLabel.textContent = "Posición " + (i + 1);
+      if (posLabel) posLabel.textContent = "PosiciÃ³n " + (i + 1);
     });
   }
 
@@ -2319,14 +2385,14 @@ function createModuleBox(id, index) {
          onclick="toggleBody('${id}')">
 
       <div class="mod-header-left">
-        <span class="mod-drag-handle" title="Arrastrar para mover">☰</span>
+        <span class="mod-drag-handle" title="Arrastrar para mover">â˜°</span>
         <div class="mod-header-text">
           <span class="mod-badge">Bloque ${index}</span>
-          <span class="mod-pos">Posición ${index}</span>
+          <span class="mod-pos">PosiciÃ³n ${index}</span>
         </div>
       </div>
 
-      <!-- PILL CENTRAL: por defecto dice "Módulo" -->
+      <!-- PILL CENTRAL: por defecto dice "MÃ³dulo" -->
       <div class="mod-header-type" onclick="event.stopPropagation();">
         <div class="mod-type-pill">
           <span id="${id}-tipo-icon"
@@ -2335,7 +2401,7 @@ function createModuleBox(id, index) {
           </span>
           <span id="${id}-tipo-label"
                 class="mod-type-pill-text">
-            Módulo
+            MÃ³dulo
           </span>
           <span class="material-symbols-outlined mod-type-pill-caret">
             expand_more
@@ -2345,7 +2411,7 @@ function createModuleBox(id, index) {
           <select id="${id}-tipo"
                   class="mod-type-select-native"
                   onchange="handleTipoChange('${id}')">
-            <option value="" selected>Módulo</option>
+            <option value="" selected>MÃ³dulo</option>
             <option value="texto">Texto</option>
             <option value="imagen">Imagen</option>
             <option value="texto-imagen-h">Texto + Imagen</option>
@@ -2387,8 +2453,8 @@ function createModuleBox(id, index) {
     </div>
   `;
 
-  // 👇 OJO: acá solo renderizamos inputs,
-  // ya NO llamamos a updateModTypeUI para no pisar "Módulo"
+  // ðŸ‘‡ OJO: acÃ¡ solo renderizamos inputs,
+  // ya NO llamamos a updateModTypeUI para no pisar "MÃ³dulo"
   setTimeout(() => {
     renderInputs(id);
   }, 0);
@@ -2439,7 +2505,7 @@ if (tipo === "texto") {
       <button type="button"
               class="mod-section-header"
               onclick="toggleSection(this)">
-        <span class="mod-section-title">Configuración</span>
+        <span class="mod-section-title">ConfiguraciÃ³n</span>
 <span class="mod-section-chevron"></span>
       </button>
       <div class="mod-section-body">
@@ -2508,7 +2574,7 @@ if (tipo === "imagen") {
       <button type="button"
               class="mod-section-header"
               onclick="toggleSection(this)">
-        <span class="mod-section-title">Configuración</span>
+        <span class="mod-section-title">ConfiguraciÃ³n</span>
       <span class="mod-section-chevron"></span>
       </button>
       <div class="mod-section-body">
@@ -2525,7 +2591,7 @@ if (tipo === "imagen") {
           </div>
 
           <div class="param-item">
-            <label>Posición</label>
+            <label>PosiciÃ³n</label>
             <select id="${id}-ialign">
               <option value="left">Izquierda</option>
               <option value="center" selected>Centro</option>
@@ -2572,8 +2638,8 @@ if (tipo === "imagen") {
       <button type="button"
               class="mod-section-header"
               onclick="toggleSection(this)">
-        <span class="mod-section-title">Imágenes</span>
-        <span class="mod-section-chevron">▾</span>
+        <span class="mod-section-title">ImÃ¡genes</span>
+        <span class="mod-section-chevron">â–¾</span>
       </button>
       <div class="mod-section-body">
         <div id="${id}-items"></div>
@@ -2581,7 +2647,7 @@ if (tipo === "imagen") {
         <div class="checks checks--inline">
           <label>
             <input type="checkbox" id="${id}-newtab" checked>
-            Abrir enlaces en pestaña nueva
+            Abrir enlaces en pestaÃ±a nueva
           </label>
         </div>
       </div>
@@ -2600,8 +2666,8 @@ if (tipo === "texto-imagen-h") {
       <button type="button"
               class="mod-section-header"
               onclick="toggleSection(this)">
-        <span class="mod-section-title">Configuración</span>
-        <span class="mod-section-chevron">▾</span>
+        <span class="mod-section-title">ConfiguraciÃ³n</span>
+        <span class="mod-section-chevron">â–¾</span>
       </button>
       <div class="mod-section-body">
         <div class="params-grid">
@@ -2668,7 +2734,7 @@ if (tipo === "texto-imagen-h") {
               class="mod-section-header"
               onclick="toggleSection(this)">
         <span class="mod-section-title">Texto</span>
-        <span class="mod-section-chevron">▾</span>
+        <span class="mod-section-chevron">â–¾</span>
       </button>
       <div class="mod-section-body">
         <div class="params-grid">
@@ -2692,8 +2758,8 @@ if (tipo === "texto-imagen-h") {
       <button type="button"
               class="mod-section-header"
               onclick="toggleSection(this)">
-        <span class="mod-section-title">Imágenes</span>
-        <span class="mod-section-chevron">▾</span>
+        <span class="mod-section-title">ImÃ¡genes</span>
+        <span class="mod-section-chevron">â–¾</span>
       </button>
       <div class="mod-section-body">
         <div class="params-grid">
@@ -2709,7 +2775,7 @@ if (tipo === "texto-imagen-h") {
           </div>
 
           <div class="param-item">
-            <label>Posición</label>
+            <label>PosiciÃ³n</label>
             <select id="${id}-hialign">
               <option value="left">Izquierda</option>
               <option value="center" selected>Centro</option>
@@ -2733,7 +2799,7 @@ if (tipo === "texto-imagen-h") {
         <div class="checks checks--inline">
           <label>
             <input type="checkbox" id="${id}-hinewtab" checked>
-            Abrir enlaces en pestaña nueva
+            Abrir enlaces en pestaÃ±a nueva
           </label>
         </div>
       </div>
@@ -2755,7 +2821,7 @@ if (tipo === "texto-imagen-h") {
             <textarea
               id="${id}-htmlcode"
               rows="8"
-              placeholder="<div>Tu HTML aquí...</div>"
+              placeholder="<div>Tu HTML aquÃ­...</div>"
               style="font-family:monospace; font-size:12px;"></textarea>
           </div>
 
@@ -2786,7 +2852,7 @@ if (tipo === "texto-imagen-h") {
                   class="mod-section-header"
                   onclick="toggleSection(this)">
             <span class="mod-section-title">Video</span>
-            <span class="mod-section-chevron">▾</span>
+            <span class="mod-section-chevron">â–¾</span>
           </button>
           <div class="mod-section-body">
             <div class="data-field-row">
@@ -2808,7 +2874,7 @@ if (tipo === "texto-imagen-h") {
               </div>
             </div>
             <p class="muted" style="margin-top:4px;">
-              Se generará un bloque 16:9 responsive con autoplay, muted, loop y playsinline.
+              Se generarÃ¡ un bloque 16:9 responsive con autoplay, muted, loop y playsinline.
             </p>
           </div>
         </div>
@@ -2817,9 +2883,9 @@ if (tipo === "texto-imagen-h") {
       return;
     }
 
-    cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
+    cont.innerHTML = `<span class="muted">Selecciona un tipo de mÃ³dulo para ver sus opciones.</span>`;
   }
-  /* ========= textos con múltiples items ========= */
+  /* ========= textos con mÃºltiples items ========= */
 function handleTipoChange(id) {
   updateModTypeUI(id);  // refresca texto + icono del pill
   renderInputs(id);     // redibuja contenido del bloque
@@ -2847,7 +2913,7 @@ function updateModTypeLabel(id) {
   if (!sel || !labelEl) return;
 
   const opt = sel.options[sel.selectedIndex];
-  const text = opt ? opt.textContent.trim() : 'Módulo';
+  const text = opt ? opt.textContent.trim() : 'MÃ³dulo';
 
   labelEl.textContent = text;
 }
@@ -2877,7 +2943,7 @@ function updateTextCount(id) {
               class="text-item-header"
               onclick="toggleTextItem(this)">
         <div class="text-item-header-left">
-          <span class="text-item-drag">⋮⋮</span>
+          <span class="text-item-drag">â‹®â‹®</span>
           <span class="text-item-title">Texto ${i}</span>
         </div>
         <span class="text-item-chevron"></span>
@@ -2927,22 +2993,22 @@ function updateTextCount(id) {
                       class="text-toolbar-button"
                       data-cmd="createLink"
                       onmousedown="toolbarCommand(this, event)">
-                🔗
+                ðŸ”—
               </button>
 
               <button type="button"
                       class="text-toolbar-button"
                       onmousedown="applyInlineFormat('insertUnorderedList', event)"
-                      title="Viñetas">
+                      title="ViÃ±etas">
                 <img src="./assets/icons/list-ul.svg"
-                     alt="Lista con viñetas"
+                     alt="Lista con viÃ±etas"
                      class="toolbar-icon-img">
               </button>
 
               <button type="button"
                       class="text-toolbar-button"
                       onmousedown="applyInlineFormat('insertOrderedList', event)"
-                      title="Numeración">
+                      title="NumeraciÃ³n">
                 <img src="assets/icons/list-ol.svg"
                      alt="Lista numerada"
                      class="toolbar-icon-img">
@@ -2970,7 +3036,7 @@ function updateTextCount(id) {
               <select class="text-toolbar-select text-toolbar-lineheight"
                       onchange="applyLineHeight(this, event)"
                       title="Interlineado">
-                <option value="">↕</option>
+                <option value="">â†•</option>
                 <option value="1">1.0</option>
                 <option value="1.15">1.15</option>
                 <option value="1.5">1.5</option>
@@ -3050,7 +3116,7 @@ function updateTextCount(id) {
       delete field.dataset.excelColumn;
     }
 
-    // MODO MANUAL → editable normal
+    // MODO MANUAL â†’ editable normal
     if (source === 'manual') {
       if (isRich) {
         if (field.innerHTML.replace(/<br\s*\/?>/gi, '').trim() === '') {
@@ -3069,7 +3135,7 @@ function updateTextCount(id) {
       return;
     }
 
-    // MODO EXCEL → trae el valor de la columna
+    // MODO EXCEL â†’ trae el valor de la columna
     const excelValue = getExcelValue(source);
     const v = (excelValue !== null && excelValue !== undefined) ? String(excelValue) : '';
 
@@ -3081,7 +3147,7 @@ function updateTextCount(id) {
       } else {
         field.classList.remove('empty');
       }
-      // activamos editor (cursor + barra apuntando acá)
+      // activamos editor (cursor + barra apuntando acÃ¡)
       activateRichEditor(field);
     } else {
       // inputs normales: solo lectura si vienen de Excel
@@ -3091,13 +3157,13 @@ function updateTextCount(id) {
       if ('disabled' in field) field.disabled = false;
     }
 
-    // marcamos que este campo depende de Excel (para cambios de fila y bloqueo de edición de texto)
+    // marcamos que este campo depende de Excel (para cambios de fila y bloqueo de ediciÃ³n de texto)
     if (field.dataset) {
       field.dataset.excelBound = '1';
       field.dataset.excelColumn = source;
     }
 
-    // refrescar preview automáticamente
+    // refrescar preview automÃ¡ticamente
     scheduleRender();
   }
 
@@ -3105,7 +3171,7 @@ function updateTextCount(id) {
 
   }
 
-  /* ========= imágenes con input+lista ========= */
+  /* ========= imÃ¡genes con input+lista ========= */
 
 function updateImgCount(id) {
   const container = byId(id + "-items");
@@ -3132,7 +3198,7 @@ function updateImgCount(id) {
               class="img-item-header"
               onclick="toggleImgItem(this)">
         <div class="img-item-header-left">
-          <span class="img-item-drag">⋮⋮</span>
+          <span class="img-item-drag">â‹®â‹®</span>
           <span class="img-item-title">Imagen ${i}</span>
         </div>
         <span class="img-item-chevron"></span>
@@ -3167,7 +3233,7 @@ function updateImgCount(id) {
               <input
                 type="text"
                 id="${id}-alt${i}"
-                placeholder="Descripción de la imagen">
+                placeholder="DescripciÃ³n de la imagen">
             </div>
             <div class="source-compact" data-source-wrapper="1">
               <select
@@ -3238,7 +3304,7 @@ function updateHTextCount(id) {
               class="text-item-header"
               onclick="toggleTextItem(this)">
         <div class="text-item-header-left">
-          <span class="text-item-drag">⋮⋮</span>
+          <span class="text-item-drag">â‹®â‹®</span>
           <span class="text-item-title">Texto ${i}</span>
         </div>
         <span class="text-item-chevron"></span>
@@ -3290,22 +3356,22 @@ function updateHTextCount(id) {
                       class="text-toolbar-button"
                       data-cmd="createLink"
                       onmousedown="toolbarCommand(this, event)">
-                🔗
+                ðŸ”—
               </button>
 
               <button type="button"
                       class="text-toolbar-button"
                       onmousedown="applyInlineFormat('insertUnorderedList', event)"
-                      title="Viñetas">
+                      title="ViÃ±etas">
                 <img src="./assets/icons/list-ul.svg"
-                     alt="Lista con viñetas"
+                     alt="Lista con viÃ±etas"
                      class="toolbar-icon-img">
               </button>
 
               <button type="button"
                       class="text-toolbar-button"
                       onmousedown="applyInlineFormat('insertOrderedList', event)"
-                      title="Numeración">
+                      title="NumeraciÃ³n">
                 <img src="assets/icons/list-ol.svg"
                      alt="Lista numerada"
                      class="toolbar-icon-img">
@@ -3333,7 +3399,7 @@ function updateHTextCount(id) {
               <select class="text-toolbar-select text-toolbar-lineheight"
                       onchange="applyLineHeight(this, event)"
                       title="Interlineado">
-                <option value="">↕</option>
+                <option value="">â†•</option>
                 <option value="1">1.0</option>
                 <option value="1.15">1.15</option>
                 <option value="1.5">1.5</option>
@@ -3420,7 +3486,7 @@ function updateHTextCount(id) {
               class="img-item-header"
               onclick="toggleImgItem(this)">
         <div class="img-item-header-left">
-          <span class="img-item-drag">⋮⋮</span>
+          <span class="img-item-drag">â‹®â‹®</span>
           <span class="img-item-title">Imagen ${i}</span>
         </div>
         <span class="img-item-chevron"></span>
@@ -3569,7 +3635,7 @@ function updateHTextCount(id) {
 `.trim() + "\n\n";
       }
 
-      /* === IMÁGENES EN FILA === */
+      /* === IMÃGENES EN FILA === */
       if (tipo === "imagen") {
         const rawCount = (val(id + "-count") || "").trim();
         let count = parseInt(rawCount || "1", 10);
@@ -3691,7 +3757,7 @@ function updateHTextCount(id) {
           texts.push({ html, size });
         }
 
-        // IMÁGENES
+        // IMÃGENES
         const rawImgCount = (val(id + "-hicount") || "").trim();
         let imgCount = parseInt(rawImgCount || "1", 10);
         if (isNaN(imgCount) || imgCount < 1) imgCount = 1;
@@ -3712,7 +3778,7 @@ function updateHTextCount(id) {
         const imgRadius = parseInt(val(id + "-hiradius") || "0", 10) || 0;
         const imgNewTab = byId(id + "-hinewtab")?.checked;
 
-        // ✅ Margen inferior común del bloque Texto + Imagen
+        // âœ… Margen inferior comÃºn del bloque Texto + Imagen
         let mbUnit = parseInt(val(id + "-hmb") || "0", 10);
         if (isNaN(mbUnit) || mbUnit < 0) mbUnit = 0;
         const mb = mbUnit * 5;
@@ -3789,7 +3855,7 @@ function updateHTextCount(id) {
   flex-direction:row !important;
   gap:0 !important;
   background:${bg} !important;
-  margin:0 0 ${mb}px 0 !important;   /* ✅ antes usaba imgMb */
+  margin:0 0 ${mb}px 0 !important;   /* âœ… antes usaba imgMb */
   padding:0 !important;
 }
 .inpgs-wrapper .${leftCls}{
@@ -3859,7 +3925,7 @@ function updateHTextCount(id) {
         customHtml = decodeHtmlIfNeeded(customHtml);
 
         if (customHtml.trim()) {
-          // 🔧 acá se aplica el “fixer” SOLO de sintaxis
+          // ðŸ”§ acÃ¡ se aplica el â€œfixerâ€ SOLO de sintaxis
           const fixedHtml = fixHtmlFragment(customHtml);
 
           // Si quieres ver el HTML ya corregido en el textarea, puedes actualizarlo:
@@ -3922,7 +3988,7 @@ function updateHTextCount(id) {
     });
 
     if (htmlBody.trim() === "") {
-      byId("preview").innerHTML = "<div class='muted'>No hay módulos válidos.</div>";
+      byId("preview").innerHTML = "<div class='muted'>No hay mÃ³dulos vÃ¡lidos.</div>";
       byId("htmlOut").value = "";
       byId("cssOut").value = "";
       byId("jsOut").value = "";
@@ -3985,7 +4051,7 @@ const cssWrapper = `
     font-weight:400 !important;
   }
 
-  /* 🔥 IMPORTANTE: elimina esto
+  /* ðŸ”¥ IMPORTANTE: elimina esto
   .inpgs-wrapper [style*="font-size"]{
     font-size: inherit !important;
   }
@@ -4135,17 +4201,80 @@ const cssWrapper = `
     isCodeView = !isCodeView;
 
     if (isCodeView) {
-      // 👉 Modo CÓDIGO
+      // ðŸ‘‰ Modo CÃ“DIGO
       preview.style.display = "none";
       codePanel.classList.remove("export-panel--hidden");
-      btn.innerHTML = "👁 Vista";
+      btn.innerHTML = "ðŸ‘ Vista";
       btn.title = "Volver a la vista previa";
     } else {
-      // 👉 Modo VISTA PREVIA
+      // ðŸ‘‰ Modo VISTA PREVIA
       preview.style.display = "";
       codePanel.classList.add("export-panel--hidden");
-      btn.innerHTML = "&lt;/&gt; Código";
+      btn.innerHTML = "&lt;/&gt; CÃ³digo";
       btn.title = "Ver HTML / CSS / JS generados";
+    }
+  }
+
+
+  let falabellaPreviewVisible = false;
+  let falabellaPreviewExpanded = false;
+
+  function toggleFalabellaPreview() {
+    const preview = byId("preview");
+    const overlay = byId("falabella-preview-overlay");
+    const more = byId("falabella-preview-more");
+    if (!preview || !overlay || !more) return;
+
+    if (isCodeView) {
+      togglePreviewMode();
+    }
+
+    falabellaPreviewVisible = !falabellaPreviewVisible;
+
+    if (!falabellaPreviewVisible) {
+      preview.classList.remove("falabella-mode", "falabella-expanded");
+      overlay.classList.remove("active", "expanded");
+      more.textContent = "Mostrar más";
+      const fade = overlay.querySelector(".falabella-preview-fade");
+      if (fade) fade.style.display = "";
+      falabellaPreviewExpanded = false;
+      return;
+    }
+
+    preview.classList.add("falabella-mode");
+    preview.classList.remove("falabella-expanded");
+    overlay.classList.add("active");
+    overlay.classList.remove("expanded");
+    more.textContent = "Mostrar más";
+    const fade = overlay.querySelector(".falabella-preview-fade");
+    if (fade) fade.style.display = "";
+    falabellaPreviewExpanded = false;
+  }
+
+  function expandFalabellaPreview() {
+    if (!falabellaPreviewVisible) return;
+    const preview = byId("preview");
+    const overlay = byId("falabella-preview-overlay");
+    const more = byId("falabella-preview-more");
+    if (!preview || !overlay || !more) return;
+
+    falabellaPreviewExpanded = !falabellaPreviewExpanded;
+    const fade = overlay.querySelector(".falabella-preview-fade");
+
+    if (falabellaPreviewExpanded) {
+      preview.classList.remove("falabella-mode");
+      preview.classList.add("falabella-expanded");
+      overlay.classList.remove("active");
+      overlay.classList.add("expanded");
+      more.textContent = "Mostrar menos";
+      if (fade) fade.style.display = "none";
+    } else {
+      preview.classList.add("falabella-mode");
+      preview.classList.remove("falabella-expanded");
+      overlay.classList.add("active");
+      overlay.classList.remove("expanded");
+      more.textContent = "Mostrar mÃ¡s";
+      if (fade) fade.style.display = "";
     }
   }
 
@@ -4266,7 +4395,7 @@ const cssWrapper = `
   }
 
 
-  // Guardar selección cuando se interactúa con el editor
+  // Guardar selecciÃ³n cuando se interactÃºa con el editor
   document.addEventListener('mouseup', saveSelection);
   document.addEventListener('keyup', saveSelection);
   document.addEventListener('selectionchange', function () {
@@ -4298,11 +4427,11 @@ const cssWrapper = `
     const px = select.value; // "" o "10", "12", "14", etc.
 
     if (!px) {
-      // "Normal": volvemos al tamaño base (heredado)
+      // "Normal": volvemos al tamaÃ±o base (heredado)
       editor.style.fontSize = '';
       delete editor.dataset.fontSize;
     } else {
-      // guardamos el tamaño en el editor y lo aplicamos visualmente
+      // guardamos el tamaÃ±o en el editor y lo aplicamos visualmente
       editor.style.fontSize = px + 'px';
       editor.dataset.fontSize = px;
     }
@@ -4400,7 +4529,7 @@ const cssWrapper = `
       return { wrapperClass, innerHtml: iframeHtml };
     }
 
-    // 4) Default: asumimos que es URL directa a vídeo (mp4, webm, etc.)
+    // 4) Default: asumimos que es URL directa a vÃ­deo (mp4, webm, etc.)
     const escUrl = escAttr(value);
     const videoHtml =
       `<video class="${baseIframeClass}" src="${escUrl}"` +
@@ -4411,7 +4540,7 @@ const cssWrapper = `
   function fixHtmlFragment(input) {
     if (!input || typeof input !== 'string') return '';
 
-    // El navegador parsea y “cierra” lo que esté roto
+    // El navegador parsea y â€œcierraâ€ lo que estÃ© roto
     const container = document.createElement('div');
     container.innerHTML = input;
 
@@ -4487,7 +4616,7 @@ const cssWrapper = `
       // si estoy debajo de todo, lo mando al final
       container.appendChild(draggedItem);
     } else {
-      // si estoy sobre algún bloque, lo inserto antes de ese bloque
+      // si estoy sobre algÃºn bloque, lo inserto antes de ese bloque
       container.insertBefore(draggedItem, afterElement);
     }
   }
@@ -4514,7 +4643,7 @@ const cssWrapper = `
     }
   }
 
-  // calcula delante de qué bloque soltar según la posición Y del mouse
+  // calcula delante de quÃ© bloque soltar segÃºn la posiciÃ³n Y del mouse
   function getDragAfterElement(container, y) {
     const draggableElements = [
       ...container.querySelectorAll(".mod-box:not(.dragging)")
@@ -4526,8 +4655,8 @@ const cssWrapper = `
       const box = child.getBoundingClientRect();
       const offset = y - box.top - box.height / 2;
 
-      // offset < 0  → el mouse está por encima del centro del bloque
-      // elegimos el más cercano a 0 (pero negativo)
+      // offset < 0  â†’ el mouse estÃ¡ por encima del centro del bloque
+      // elegimos el mÃ¡s cercano a 0 (pero negativo)
       if (offset < 0 && offset > closest.offset) {
         closest = { offset, element: child };
       }
@@ -4548,7 +4677,7 @@ const cssWrapper = `
         el.classList.remove('empty');
       }
 
-      // si está ligado a Excel, actualizamos la plantilla de estilos
+      // si estÃ¡ ligado a Excel, actualizamos la plantilla de estilos
       if (el.dataset && el.dataset.excelBound === '1') {
         const base = el.dataset.excelBaseValue || '';
         if (base) {
@@ -4582,8 +4711,8 @@ document.addEventListener('change', function (e) {
     if (!bar) return;
     bar.style.background = input.value || '#111827';
   }
-  // Bloquear edición manual del texto cuando viene de Excel,
-  // pero seguir permitiendo selección + estilos desde la barra.
+  // Bloquear ediciÃ³n manual del texto cuando viene de Excel,
+  // pero seguir permitiendo selecciÃ³n + estilos desde la barra.
   document.addEventListener('keydown', function (e) {
     const el = e.target;
     if (!el || !el.matches('.rich-textarea')) return;
@@ -4591,17 +4720,17 @@ document.addEventListener('change', function (e) {
 
     const key = e.key;
 
-    // teclas que sí permitimos aunque venga de Excel (mover cursor, etc.)
+    // teclas que sÃ­ permitimos aunque venga de Excel (mover cursor, etc.)
     const allowedNonChar = [
       'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
       'Home', 'End', 'PageUp', 'PageDown',
       'Shift', 'Control', 'Alt', 'Meta', 'Tab', 'Escape'
     ];
 
-    const isChar = key.length === 1; // cualquier letra/número/signo
+    const isChar = key.length === 1; // cualquier letra/nÃºmero/signo
     const isDeleteKey = (key === 'Backspace' || 'Delete' || 'Enter');
 
-    // si es carácter o borrado, y no viene con Ctrl/Meta/Alt → lo bloqueamos
+    // si es carÃ¡cter o borrado, y no viene con Ctrl/Meta/Alt â†’ lo bloqueamos
     if (
       (!e.ctrlKey && !e.metaKey && !e.altKey) &&
       (isChar || isDeleteKey) &&
@@ -4627,3 +4756,4 @@ document.addEventListener('change', function (e) {
   });
 
 </script>
+
