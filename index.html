@@ -1,7 +1,7 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <!-- index.html -->
 <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
 <div class="app-shell">
   <!-- SIDEBAR IZQUIERDA -->
@@ -14,50 +14,48 @@
       </div>
     </div>
 
-  <nav class="sidebar-nav">
-    <button type="button" class="sidebar-nav-item">
-      <span class="sidebar-nav-icon">
-        <span class="material-symbols-outlined">dashboard</span>
-      </span>
-      <span class="sidebar-nav-label">Dashboard</span>
-    </button>
+    <nav class="sidebar-nav">
+      <button type="button" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">
+          <span class="material-symbols-outlined">dashboard</span>
+        </span>
+        <span class="sidebar-nav-label">Dashboard</span>
+      </button>
 
-    <button type="button" class="sidebar-nav-item sidebar-nav-item--active">
-      <span class="sidebar-nav-icon">
-        <!-- como el "Content Blocks" del ejemplo -->
-        <span class="material-symbols-outlined">view_carousel</span>
-      </span>
-      <span class="sidebar-nav-label">Constructor</span>
-    </button>
-    <button type="button"
-            class="sidebar-nav-item"
-            onclick="window.open('text-tools.html', '_blank')">
-      <span class="sidebar-nav-icon">
-        <span class="material-symbols-outlined">text_fields</span>
-      </span>
-      <span class="sidebar-nav-label">Texto masivo</span>
-    </button>
-    <button type="button" class="sidebar-nav-item">
-      <span class="sidebar-nav-icon">
-        <span class="material-symbols-outlined">layers</span>
-      </span>
-      <span class="sidebar-nav-label">Bloques</span>
-    </button>
+      <button type="button" class="sidebar-nav-item sidebar-nav-item--active">
+        <span class="sidebar-nav-icon">
+          <!-- como el "Content Blocks" del ejemplo -->
+          <span class="material-symbols-outlined">view_carousel</span>
+        </span>
+        <span class="sidebar-nav-label">Constructor</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" onclick="window.open('text-tools.html', '_blank')">
+        <span class="sidebar-nav-icon">
+          <span class="material-symbols-outlined">text_fields</span>
+        </span>
+        <span class="sidebar-nav-label">Texto masivo</span>
+      </button>
+      <button type="button" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">
+          <span class="material-symbols-outlined">layers</span>
+        </span>
+        <span class="sidebar-nav-label">Bloques</span>
+      </button>
 
-    <button type="button" class="sidebar-nav-item">
-      <span class="sidebar-nav-icon">
-        <span class="material-symbols-outlined">perm_media</span>
-      </span>
-      <span class="sidebar-nav-label">Asset Library</span>
-    </button>
+      <button type="button" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">
+          <span class="material-symbols-outlined">perm_media</span>
+        </span>
+        <span class="sidebar-nav-label">Asset Library</span>
+      </button>
 
-    <button type="button" class="sidebar-nav-item">
-      <span class="sidebar-nav-icon">
-        <span class="material-symbols-outlined">settings</span>
-      </span>
-      <span class="sidebar-nav-label">Settings</span>
-    </button>
-  </nav>
+      <button type="button" class="sidebar-nav-item">
+        <span class="sidebar-nav-icon">
+          <span class="material-symbols-outlined">settings</span>
+        </span>
+        <span class="sidebar-nav-label">Settings</span>
+      </button>
+    </nav>
 
 
 
@@ -70,12 +68,12 @@
         </div>
       </div>
 
-    <button type="button" class="sidebar-logout">
-      <span class="sidebar-logout-icon">
-        <span class="material-symbols-outlined">logout</span>
-      </span>
-      <span class="sidebar-logout-label">Salir</span>
-    </button>
+      <button type="button" class="sidebar-logout">
+        <span class="sidebar-logout-icon">
+          <span class="material-symbols-outlined">logout</span>
+        </span>
+        <span class="sidebar-logout-label">Salir</span>
+      </button>
 
     </div>
   </aside>
@@ -95,83 +93,72 @@
       <!-- Columna izquierda: bloques -->
       <div class="app-column app-column--left">
         <section class="card">
-<header class="card-header card-header--with-actions">
-  <div>
-    <h2 class="card-title">Bloques y datos</h2>
-    <p class="card-subtitle">
-      Configura los módulos y mapea columnas del Excel.
-    </p>
-  </div>
-</header>
+          <header class="card-header card-header--with-actions">
+            <div>
+              <h2 class="card-title">Bloques y datos</h2>
+              <p class="card-subtitle">
+                Configura los módulos y mapea columnas del Excel.
+              </p>
+            </div>
+          </header>
 
-<!-- 🔹 Barra principal: Bloques + Excel -->
-<div class="card-toolbar card-toolbar--split">
-  <!-- Grupo Bloques -->
-  <div class="card-toolbar-group">
-    <span class="card-toolbar-label">Bloques</span>
+          <!-- 🔹 Barra principal: Bloques + Excel -->
+          <div class="card-toolbar card-toolbar--split">
+            <!-- Grupo Bloques -->
+            <div class="card-toolbar-group">
+              <span class="card-toolbar-label">Bloques</span>
 
-    <button type="button"
-            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
-            onclick="addMod()">
-      <span class="material-symbols-outlined toolbar-btn__icon">add_circle</span>
-      Agregar
-    </button>
+              <button type="button" class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
+                onclick="addMod()">
+                <span class="material-symbols-outlined toolbar-btn__icon">add_circle</span>
+                Agregar
+              </button>
 
-    <button type="button"
-            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
-            onclick="collapseAll()">
-      <span class="material-symbols-outlined toolbar-btn__icon">unfold_less</span>
-      Contraer
-    </button>
+              <button type="button" class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary"
+                onclick="collapseAll()">
+                <span class="material-symbols-outlined toolbar-btn__icon">unfold_less</span>
+                Contraer
+              </button>
 
-  </div>
+            </div>
 
-  <!-- Grupo Excel -->
-  <div class="card-toolbar-group">
-    <span class="card-toolbar-label">Excel</span>
+            <!-- Grupo Excel -->
+            <div class="card-toolbar-group">
+              <span class="card-toolbar-label">Excel</span>
 
-    <!-- Cargar Excel -->
-    <button type="button"
-            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
-            onclick="document.getElementById('global-excel-upload').click()">
-      <span class="material-symbols-outlined toolbar-btn__icon">upload</span>
-      Cargar
-    </button>
-    <input type="file"
-           id="global-excel-upload"
-           accept=".xlsx,.xls"
-           style="display:none;"
-           onchange="handleGlobalExcelUpload(event)">
+              <!-- Cargar Excel -->
+              <button type="button" class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
+                onclick="document.getElementById('global-excel-upload').click()">
+                <span class="material-symbols-outlined toolbar-btn__icon">upload</span>
+                Cargar
+              </button>
+              <input type="file" id="global-excel-upload" accept=".xlsx,.xls" style="display:none;"
+                onchange="handleGlobalExcelUpload(event)">
 
-    <!-- Descargar Excel -->
-    <button type="button"
-            id="download-excel-btn"
-            class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
-            onclick="downloadExcel()">
-      <span class="material-symbols-outlined toolbar-btn__icon">download</span>
-      Descargar
-    </button>
+              <!-- Descargar Excel -->
+              <button type="button" id="download-excel-btn"
+                class="btn btn-outline btn-sm toolbar-btn toolbar-btn--secondary toolbar-btn--excel"
+                onclick="downloadExcel()">
+                <span class="material-symbols-outlined toolbar-btn__icon">download</span>
+                Descargar
+              </button>
 
-    <!-- Fila a visualizar -->
-    <div id="excel-row-selector-container"
-         class="toolbar-item toolbar-item--hidden">
-      <span class="toolbar-label">Fila</span>
-      <select id="excel-row-selector"
-              class="select select-sm"
-              onchange="handleRowChange()"></select>
-    </div>
+              <!-- Fila a visualizar -->
+              <div id="excel-row-selector-container" class="toolbar-item toolbar-item--hidden">
+                <span class="toolbar-label">Fila</span>
+                <select id="excel-row-selector" class="select select-sm" onchange="handleRowChange()"></select>
+              </div>
 
-    <!-- Exportar fila actual -->
-    <button type="button"
-            class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
-            onclick="downloadSingleExcel()">
-      Exportar fila
-    </button>
-  </div>
-</div>
+              <!-- Exportar fila actual -->
+              <button type="button" class="btn btn-outline btn-sm toolbar-item toolbar-item--hidden"
+                onclick="downloadSingleExcel()">
+                Exportar fila
+              </button>
+            </div>
+          </div>
 
-<!-- Lista de bloques -->
-<div id="mods"></div>
+          <!-- Lista de bloques -->
+          <div id="mods"></div>
 
         </section>
       </div>
@@ -188,20 +175,20 @@
               </p>
             </div>
 
-          <div class="card-actions">
-            <button type="button"
-                    class="btn btn-success btn-sm"
-                    onclick="renderAll()">
-              Refrescar
-            </button>
-            <button type="button"
-                    id="preview-toggle-btn"
-                    class="btn btn-outline btn-sm"
-                    onclick="togglePreviewMode()">
-              &lt;/&gt; Código
-            </button>
-          </div>
-        </header>
+            <div class="card-actions">
+              <button type="button" id="mobile-toggle-btn" class="btn btn-outline btn-sm" onclick="toggleMobileView()"
+                title="Cambiar a vista móvil">
+                <span class="material-symbols-outlined" style="font-size: 18px;">smartphone</span>
+              </button>
+              <button type="button" class="btn btn-success btn-sm" onclick="renderAll()">
+                Refrescar
+              </button>
+              <button type="button" id="preview-toggle-btn" class="btn btn-outline btn-sm"
+                onclick="togglePreviewMode()">
+                &lt;/&gt; Código
+              </button>
+            </div>
+          </header>
 
           <!-- Vista previa normal -->
           <div id="preview" class="preview-box">
@@ -214,40 +201,26 @@
             <div class="export-section">
               <div class="export-header">
                 <span class="export-title">HTML final (snippet listo para pegar)</span>
-                <button type="button"
-                        class="btn btn-ghost btn-sm"
-                        onclick="copyHtmlFinal()">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="copyHtmlFinal()">
                   Copiar
                 </button>
               </div>
-              <textarea id="htmlFullOut"
-                        rows="6"
-                        readonly
-                        class="code-textarea"></textarea>
+              <textarea id="htmlFullOut" rows="6" readonly class="code-textarea"></textarea>
             </div>
 
             <div class="export-section">
               <span class="export-title">HTML (solo wrapper)</span>
-              <textarea id="htmlOut"
-                        rows="5"
-                        readonly
-                        class="code-textarea"></textarea>
+              <textarea id="htmlOut" rows="5" readonly class="code-textarea"></textarea>
             </div>
 
             <div class="export-section">
               <span class="export-title">CSS (módulos inpgs)</span>
-              <textarea id="cssOut"
-                        rows="6"
-                        readonly
-                        class="code-textarea"></textarea>
+              <textarea id="cssOut" rows="6" readonly class="code-textarea"></textarea>
             </div>
 
             <div class="export-section">
               <span class="export-title">JS (si lo hubiera)</span>
-              <textarea id="jsOut"
-                        rows="3"
-                        readonly
-                        class="code-textarea"></textarea>
+              <textarea id="jsOut" rows="3" readonly class="code-textarea"></textarea>
             </div>
           </div>
         </section>
@@ -277,20 +250,22 @@
     background: #f8fafc;
     border: 1.5px solid #bfc9d9;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(60,72,100,0.05);
+    box-shadow: 0 2px 8px rgba(60, 72, 100, 0.05);
     margin: 18px 0;
     padding: 0 0 10px 0;
   }
+
   .mod-box.collapsed {
     background: #f1f3f7;
     border-color: #d1d5db;
   }
+
   .mod-header {
     background: #f4f6fa;
     color: #23272f;
     border-radius: 12px;
     border: 1.5px solid #bfc9d9;
-    box-shadow: 0 1px 4px rgba(60,72,100,0.04);
+    box-shadow: 0 1px 4px rgba(60, 72, 100, 0.04);
     padding: 5px 20px 8px 20px;
     font-weight: 600;
     display: flex;
@@ -298,15 +273,18 @@
     justify-content: space-between;
     gap: 12px;
   }
+
   .mod-header .mod-badge {
     color: #23272f;
     font-size: 14px;
     font-weight: 700;
   }
+
   .mod-header .mod-pos {
     color: #7a869a;
     font-size: 11px;
   }
+
   .mod-header-actions .icon-button {
     color: #7a869a;
     background: #f3f6fa;
@@ -314,10 +292,12 @@
     margin-left: 2px;
     transition: background 0.12s, color 0.12s;
   }
+
   .mod-header-actions .icon-button:hover {
     background: #e6eaf2;
     color: #23272f;
   }
+
   .mod-header .material-symbols-outlined,
   .mod-header .mod-type-pill-icon,
   .mod-header .icon-button-symbol {
@@ -330,6 +310,7 @@
     align-items: center;
     justify-content: center;
   }
+
   .mod-type-pill {
     background: #e6eaf2;
     border: 1.5px solid #bfc9d9;
@@ -338,20 +319,23 @@
     padding: 4px 18px;
     border-radius: 9999px;
     font-size: 13px;
-    box-shadow: 0 1px 2px rgba(60,72,100,0.04);
+    box-shadow: 0 1px 2px rgba(60, 72, 100, 0.04);
   }
+
   .mod-type-pill:hover {
     background: #e6eaf2;
     border-color: #bfc9d9;
   }
+
   .mod-section {
     background: #fff;
     border: 1.5px solid #e5e7eb;
     border-radius: 10px;
     margin: 18px 18px 0 18px;
-    box-shadow: 0 1px 2px rgba(60,72,100,0.03);
+    box-shadow: 0 1px 2px rgba(60, 72, 100, 0.03);
     overflow: hidden;
   }
+
   .mod-section-header {
     background: #e6eaf2;
     color: #23272f;
@@ -365,22 +349,28 @@
     justify-content: space-between;
     gap: 8px;
   }
+
   .mod-section.mod-section--collapsed .mod-section-header {
     background: #e6eaf2;
     color: #7a869a;
   }
+
   .mod-section-body {
     background: #fff;
     padding: 14px 20px 16px 20px;
   }
-  .text-item-block, .img-item-block {
+
+  .text-item-block,
+  .img-item-block {
     background: #fff;
     border: 1.5px solid #e5e7eb;
     border-radius: 8px;
     margin-bottom: 12px;
-    box-shadow: 0 1px 2px rgba(60,72,100,0.03);
+    box-shadow: 0 1px 2px rgba(60, 72, 100, 0.03);
   }
-  .text-item-header, .img-item-header {
+
+  .text-item-header,
+  .img-item-header {
     background: #f3f6fa;
     color: #23272f;
     border-bottom: 1.5px solid #e5e7eb;
@@ -398,6 +388,7 @@
     color: #3b4a62;
     font-weight: 700;
   }
+
   .param-item select,
   .param-item input[type="text"],
   .param-item input[type="number"] {
@@ -406,6 +397,7 @@
     color: #2d3a4b;
     font-weight: 600;
   }
+
   .param-item select:focus,
   .param-item input[type="text"]:focus,
   .param-item input[type="number"]:focus {
@@ -413,10 +405,12 @@
     outline: none;
     background: #e6eaf2;
   }
+
   .checks label {
     color: #2d3a4b;
     font-weight: 600;
   }
+
   .muted {
     color: #7a869a;
   }
@@ -671,6 +665,16 @@
   .rich-textarea.excel-bound {
     background: #f3f4f6;
     cursor: default;
+  }
+
+  .rich-textarea ul {
+    margin: 8px 0;
+    padding-left: 24px;
+  }
+
+  .rich-textarea li {
+    padding: 4px 8px;
+    font-size: 0.9em;
   }
 
   .text-toolbar-inline.excel-bound-toolbar {
@@ -1208,7 +1212,7 @@
   }
 
   .app-main {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 24px 24px 40px;
   }
@@ -1254,7 +1258,9 @@
     padding: 16px 16px 12px;
   }
 
-  .card-header, .card-header--with-actions, .card-header--compact {
+  .card-header,
+  .card-header--with-actions,
+  .card-header--compact {
     padding: 10px 18px 8px 18px;
     border-radius: 12px;
     background: #fff;
@@ -1292,74 +1298,75 @@
     align-items: center;
     margin-bottom: 12px;
   }
-.card-toolbar--split {
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 18px 4px 18px;
-  border-bottom: 1px solid #e5e7eb;
-  margin-bottom: 12px;
-}
 
-.card-toolbar-group {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+  .card-toolbar--split {
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 18px 4px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 12px;
+  }
 
-.card-toolbar-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #9ca3af;
-  margin-right: 4px;
-}
+  .card-toolbar-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 
-.toolbar-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-weight: 600;
-  line-height: 1;
-  height: 32px;
-  box-shadow: none;
-}
+  .card-toolbar-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #9ca3af;
+    margin-right: 4px;
+  }
 
-.toolbar-btn__icon {
-  font-size: 16px !important;
-  line-height: 1;
-}
+  .toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-weight: 600;
+    line-height: 1;
+    height: 32px;
+    box-shadow: none;
+  }
 
-.toolbar-btn--excel {
-  min-width: auto;
-  justify-content: center;
-}
+  .toolbar-btn__icon {
+    font-size: 16px !important;
+    line-height: 1;
+  }
 
-.toolbar-btn--primary {
-  background: #2563eb;
-  border-color: #1d4ed8;
-  color: #fff;
-}
+  .toolbar-btn--excel {
+    min-width: auto;
+    justify-content: center;
+  }
 
-.toolbar-btn--secondary {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
+  .toolbar-btn--primary {
+    background: #2563eb;
+    border-color: #1d4ed8;
+    color: #fff;
+  }
 
-.toolbar-btn--ghost {
-  background: transparent;
-  border-color: #d1d5db;
-  color: #374151;
-}
+  .toolbar-btn--secondary {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #0f172a;
+  }
 
-.toolbar-btn:hover {
-  filter: none;
-  background: rgba(37, 99, 235, 0.06);
-}
+  .toolbar-btn--ghost {
+    background: transparent;
+    border-color: #d1d5db;
+    color: #374151;
+  }
+
+  .toolbar-btn:hover {
+    filter: none;
+    background: rgba(37, 99, 235, 0.06);
+  }
 
   .card-footer {
     margin-top: 8px;
@@ -1472,6 +1479,19 @@
     min-height: 120px;
     background: #ffffff;
     position: relative;
+    transition: max-width 0.3s ease, border-style 0.3s ease;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .preview-box--mobile {
+    max-width: 375px;
+    border-style: solid;
+    border-width: 12px 8px;
+    border-color: #333;
+    border-radius: 24px;
+    height: 667px;
+    overflow-y: auto;
   }
 
   .preview-empty {
@@ -1815,6 +1835,7 @@
     font-size: 0;
     transition: transform 0.18s ease;
   }
+
   .mod-section-chevron::before,
   .text-item-chevron::before,
   .img-item-chevron::before {
@@ -1824,6 +1845,7 @@
     color: #6b7280;
     line-height: 1;
   }
+
   .mod-section.mod-section--collapsed .mod-section-chevron,
   .text-item-block.text-item--collapsed .text-item-chevron,
   .img-item-block.img-item--collapsed .img-item-chevron {
@@ -1981,29 +2003,29 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 
 <script>
-const MOD_TYPE_META = {
-  "texto": {
-    label: "Texto",
-    icon: "article"
-  },
-  "imagen": {
-    label: "Imagen",
-    icon: "image"
-  },
-  "texto-imagen-h": {
-    label: "Texto + Imagen",
-    icon: "view_sidebar"
-  },
-  "html": {
-    label: "HTML personalizado",
-    icon: "code"
-  },
-  "video-autoplay": {
-    label: "Video",
-    icon: "smart_display"
-  }
+  const MOD_TYPE_META = {
+    "texto": {
+      label: "Texto",
+      icon: "article"
+    },
+    "imagen": {
+      label: "Imagen",
+      icon: "image"
+    },
+    "texto-imagen-h": {
+      label: "Texto + Imagen",
+      icon: "view_sidebar"
+    },
+    "html": {
+      label: "HTML personalizado",
+      icon: "code"
+    },
+    "video-autoplay": {
+      label: "Video",
+      icon: "smart_display"
+    }
 
-};
+  };
 
   let modCount = 0;
 
@@ -2029,9 +2051,9 @@ const MOD_TYPE_META = {
     }, 200); // puedes subir/bajar este número si quieres más o menos delay
   }
 
-    function isExcelLoaded() {
-      return Array.isArray(globalExcelData.columns) && globalExcelData.columns.length > 0;
-    }
+  function isExcelLoaded() {
+    return Array.isArray(globalExcelData.columns) && globalExcelData.columns.length > 0;
+  }
 
 
   function refreshSourceSelects() {
@@ -2375,14 +2397,14 @@ const MOD_TYPE_META = {
     });
   }
 
-function createModuleBox(id, index) {
-  const box = document.createElement("div");
-  box.className = "mod-box";
-  box.id = id;
-  box.ondragover = (e) => dragOver(e);
-  box.ondrop = (e) => drop(e, id);
+  function createModuleBox(id, index) {
+    const box = document.createElement("div");
+    box.className = "mod-box";
+    box.id = id;
+    box.ondragover = (e) => dragOver(e);
+    box.ondrop = (e) => drop(e, id);
 
-  box.innerHTML = `
+    box.innerHTML = `
     <div class="mod-header"
          draggable="true"
          ondragstart="dragStart(event, '${id}')"
@@ -2458,16 +2480,16 @@ function createModuleBox(id, index) {
     </div>
   `;
 
-  // 👇 OJO: acá solo renderizamos inputs,
-  // ya NO llamamos a updateModTypeUI para no pisar "Módulo"
-  setTimeout(() => {
-    renderInputs(id);
-  }, 0);
+    // 👇 OJO: acá solo renderizamos inputs,
+    // ya NO llamamos a updateModTypeUI para no pisar "Módulo"
+    setTimeout(() => {
+      renderInputs(id);
+    }, 0);
 
-  return box;
-}
+    return box;
+  }
 
-function moveMod(id, dir) {
+  function moveMod(id, dir) {
     const el = document.getElementById(id);
     if (!el) return;
     const parent = el.parentElement;
@@ -2504,8 +2526,8 @@ function moveMod(id, dir) {
     const tipo = val(id + "-tipo");
     const cont = byId(id + "-inputs");
 
-if (tipo === "texto") {
-  cont.innerHTML = `
+    if (tipo === "texto") {
+      cont.innerHTML = `
     <div class="mod-section mod-section--open">
       <button type="button"
               class="mod-section-header"
@@ -2570,11 +2592,11 @@ if (tipo === "texto") {
       </div>
     </div>
   `;
-  updateTextCount(id);
-  return;
-}
-if (tipo === "imagen") {
-  cont.innerHTML = `
+      updateTextCount(id);
+      return;
+    }
+    if (tipo === "imagen") {
+      cont.innerHTML = `
     <div class="mod-section mod-section--open">
       <button type="button"
               class="mod-section-header"
@@ -2651,15 +2673,15 @@ if (tipo === "imagen") {
       </div>
     </div>
   `;
-  updateImgCount(id);
-  return;
-}
+      updateImgCount(id);
+      return;
+    }
 
-if (tipo === "texto-imagen-h") {
-  const defaultLeft = "texto";
-  const defaultRight = "imagen";
+    if (tipo === "texto-imagen-h") {
+      const defaultLeft = "texto";
+      const defaultRight = "imagen";
 
-  cont.innerHTML = `
+      cont.innerHTML = `
     <div class="mod-section mod-section--open">
       <button type="button"
               class="mod-section-header"
@@ -2797,10 +2819,10 @@ if (tipo === "texto-imagen-h") {
     </div>
   `;
 
-  updateHTextCount(id);
-  updateHImgCount(id);
-  return;
-}
+      updateHTextCount(id);
+      updateHImgCount(id);
+      return;
+    }
 
     if (tipo === "html") {
       cont.innerHTML = `
@@ -2877,59 +2899,59 @@ if (tipo === "texto-imagen-h") {
     cont.innerHTML = `<span class="muted">Selecciona un tipo de módulo para ver sus opciones.</span>`;
   }
   /* ========= textos con múltiples items ========= */
-function handleTipoChange(id) {
-  updateModTypeUI(id);  // refresca texto + icono del pill
-  renderInputs(id);     // redibuja contenido del bloque
-  scheduleRender();     // opcional, pero ayuda a ver el cambio al tiro
-}
-function updateModTypeUI(id) {
-  const sel = byId(id + "-tipo");
-  const labelEl = byId(id + "-tipo-label");
-  const iconEl = byId(id + "-tipo-icon");
-  if (!sel || !labelEl) return;
-
-  const value = sel.value;
-  const meta = MOD_TYPE_META[value] || { label: value, icon: "tune" };
-
-  labelEl.textContent = meta.label;
-  if (iconEl) {
-    iconEl.textContent = meta.icon;
+  function handleTipoChange(id) {
+    updateModTypeUI(id);  // refresca texto + icono del pill
+    renderInputs(id);     // redibuja contenido del bloque
+    scheduleRender();     // opcional, pero ayuda a ver el cambio al tiro
   }
-}
+  function updateModTypeUI(id) {
+    const sel = byId(id + "-tipo");
+    const labelEl = byId(id + "-tipo-label");
+    const iconEl = byId(id + "-tipo-icon");
+    if (!sel || !labelEl) return;
+
+    const value = sel.value;
+    const meta = MOD_TYPE_META[value] || { label: value, icon: "tune" };
+
+    labelEl.textContent = meta.label;
+    if (iconEl) {
+      iconEl.textContent = meta.icon;
+    }
+  }
 
 
-function updateModTypeLabel(id) {
-  const sel = byId(id + "-tipo");
-  const labelEl = byId(id + "-tipo-label");
-  if (!sel || !labelEl) return;
+  function updateModTypeLabel(id) {
+    const sel = byId(id + "-tipo");
+    const labelEl = byId(id + "-tipo-label");
+    if (!sel || !labelEl) return;
 
-  const opt = sel.options[sel.selectedIndex];
-  const text = opt ? opt.textContent.trim() : 'Módulo';
+    const opt = sel.options[sel.selectedIndex];
+    const text = opt ? opt.textContent.trim() : 'Módulo';
 
-  labelEl.textContent = text;
-}
+    labelEl.textContent = text;
+  }
 
-function updateTextCount(id) {
-  const container = byId(id + "-titems");
-  if (!container) return;
+  function updateTextCount(id) {
+    const container = byId(id + "-titems");
+    if (!container) return;
 
-  // 1) Guardar lo que ya hay
-  const snapshot = snapshotModuleFields(container);
+    // 1) Guardar lo que ya hay
+    const snapshot = snapshotModuleFields(container);
 
-  // 2) Normalizar cantidad
-  let count = parseInt(val(id + "-tcount"), 10) || 1;
-  if (count < 1) count = 1;
-  if (count > 10) count = 10;
-  byId(id + "-tcount").value = String(count);
+    // 2) Normalizar cantidad
+    let count = parseInt(val(id + "-tcount"), 10) || 1;
+    if (count < 1) count = 1;
+    if (count > 10) count = 10;
+    byId(id + "-tcount").value = String(count);
 
-  // 3) Recrear markup
-  container.innerHTML = "";
+    // 3) Recrear markup
+    container.innerHTML = "";
 
-  for (let i = 1; i <= count; i++) {
-    const wrapper = document.createElement("div");
-    wrapper.className = "text-item-block";
+    for (let i = 1; i <= count; i++) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "text-item-block";
 
-    wrapper.innerHTML = `
+      wrapper.innerHTML = `
       <button type="button"
               class="text-item-header"
               onclick="toggleTextItem(this)">
@@ -3085,13 +3107,13 @@ function updateTextCount(id) {
       </div>
     `;
 
-    container.appendChild(wrapper);
-  }
+      container.appendChild(wrapper);
+    }
 
-  // 4) Refrescar selects Excel y restaurar valores
-  refreshSourceSelects();
-  restoreModuleFields(snapshot);
-}
+    // 4) Refrescar selects Excel y restaurar valores
+    refreshSourceSelects();
+    restoreModuleFields(snapshot);
+  }
 
   function handleSourceChange(fieldId) {
     const sourceSelect = byId(fieldId + '-source');
@@ -3164,27 +3186,27 @@ function updateTextCount(id) {
 
   /* ========= imágenes con input+lista ========= */
 
-function updateImgCount(id) {
-  const container = byId(id + "-items");
-  if (!container) return;
+  function updateImgCount(id) {
+    const container = byId(id + "-items");
+    if (!container) return;
 
-  // 1) Guardar lo ya ingresado
-  const snapshot = snapshotModuleFields(container);
+    // 1) Guardar lo ya ingresado
+    const snapshot = snapshotModuleFields(container);
 
-  // 2) Normalizar cantidad
-  let count = parseInt(val(id + "-count"), 10) || 1;
-  if (count < 1) count = 1;
-  if (count > 10) count = 10;
-  byId(id + "-count").value = String(count);
+    // 2) Normalizar cantidad
+    let count = parseInt(val(id + "-count"), 10) || 1;
+    if (count < 1) count = 1;
+    if (count > 10) count = 10;
+    byId(id + "-count").value = String(count);
 
-  // 3) Recrear UI
-  container.innerHTML = "";
+    // 3) Recrear UI
+    container.innerHTML = "";
 
-  for (let i = 1; i <= count; i++) {
-    const div = document.createElement("div");
-    div.className = "img-item-block";
+    for (let i = 1; i <= count; i++) {
+      const div = document.createElement("div");
+      div.className = "img-item-block";
 
-    div.innerHTML = `
+      div.innerHTML = `
       <button type="button"
               class="img-item-header"
               onclick="toggleImgItem(this)">
@@ -3260,37 +3282,37 @@ function updateImgCount(id) {
       </div>
     `;
 
-    container.appendChild(div);
-  }
+      container.appendChild(div);
+    }
 
-  // 4) Refrescar selects Excel y restaurar valores
-  refreshSourceSelects();
-  restoreModuleFields(snapshot);
-}
+    // 4) Refrescar selects Excel y restaurar valores
+    refreshSourceSelects();
+    restoreModuleFields(snapshot);
+  }
 
   /* ========= horizontal layout helpers ========= */
 
-function updateHTextCount(id) {
-  const cont = byId(id + "-htitems");
-  if (!cont) return;
+  function updateHTextCount(id) {
+    const cont = byId(id + "-htitems");
+    if (!cont) return;
 
-  const snapshot = snapshotModuleFields(cont);
+    const snapshot = snapshotModuleFields(cont);
 
-  const raw = (val(id + "-htcount") || "").trim();
-  if (raw === "") return;
+    const raw = (val(id + "-htcount") || "").trim();
+    if (raw === "") return;
 
-  let n = parseInt(raw, 10);
-  if (isNaN(n) || n < 1) n = 1;
-  if (n > 10) n = 10;
-  byId(id + "-htcount").value = String(n);
+    let n = parseInt(raw, 10);
+    if (isNaN(n) || n < 1) n = 1;
+    if (n > 10) n = 10;
+    byId(id + "-htcount").value = String(n);
 
-  cont.innerHTML = "";
+    cont.innerHTML = "";
 
-  for (let i = 1; i <= n; i++) {
-    const box = document.createElement("div");
-    box.className = "text-item-block";
+    for (let i = 1; i <= n; i++) {
+      const box = document.createElement("div");
+      box.className = "text-item-block";
 
-    box.innerHTML = `
+      box.innerHTML = `
       <button type="button"
               class="text-item-header"
               onclick="toggleTextItem(this)">
@@ -3448,31 +3470,31 @@ function updateHTextCount(id) {
       </div>
     `;
 
-    cont.appendChild(box);
+      cont.appendChild(box);
+    }
+
+    refreshSourceSelects();
+    restoreModuleFields(snapshot);
   }
 
-  refreshSourceSelects();
-  restoreModuleFields(snapshot);
-}
-
   function updateHImgCount(id) {
-  const raw = (val(id + "-hicount") || "").trim();
-  if (raw === "") return;
+    const raw = (val(id + "-hicount") || "").trim();
+    if (raw === "") return;
 
-  let n = parseInt(raw, 10);
-  if (isNaN(n) || n < 1) n = 1;
-  if (n > 10) n = 10;
-  byId(id + "-hicount").value = String(n);
+    let n = parseInt(raw, 10);
+    if (isNaN(n) || n < 1) n = 1;
+    if (n > 10) n = 10;
+    byId(id + "-hicount").value = String(n);
 
-  const cont = byId(id + "-hitems");
-  if (!cont) return;
-  cont.innerHTML = "";
+    const cont = byId(id + "-hitems");
+    if (!cont) return;
+    cont.innerHTML = "";
 
-  for (let i = 1; i <= n; i++) {
-    const box = document.createElement("div");
-    box.className = "img-item-block";
+    for (let i = 1; i <= n; i++) {
+      const box = document.createElement("div");
+      box.className = "img-item-block";
 
-    box.innerHTML = `
+      box.innerHTML = `
       <button type="button"
               class="img-item-header"
               onclick="toggleImgItem(this)">
@@ -3540,11 +3562,11 @@ function updateHTextCount(id) {
       </div>
     `;
 
-    cont.appendChild(box);
-  }
+      cont.appendChild(box);
+    }
 
-  refreshSourceSelects();
-}
+    refreshSourceSelects();
+  }
 
   /* ========= RENDER: genera HTML, CSS, JS para inpgs-wrapper ========= */
 
@@ -3988,7 +4010,7 @@ function updateHTextCount(id) {
     const wrapperEnd = `</div>`;
     const htmlWrapper = wrapperStart + "\n" + htmlBody.trim() + "\n" + wrapperEnd;
 
-const cssWrapper = `
+    const cssWrapper = `
   .inpgs-wrapper{
     font: inherit !important;
     line-height:1.35 !important;   
@@ -4018,6 +4040,16 @@ const cssWrapper = `
   .inpgs-wrapper button{
     font-size:inherit !important;
     line-height:inherit !important;
+  }
+
+  .inpgs-wrapper ul {
+    margin: 10px 0 !important;
+    padding-left: 25px !important;
+  }
+
+  .inpgs-wrapper li {
+    padding: 4px 10px !important;
+    font-size: 0.9em !important;
   }
 
   .inpgs-wrapper a,
@@ -4172,6 +4204,7 @@ const cssWrapper = `
     const preview = byId("preview");
     const codePanel = byId("export-panel");
     const btn = byId("preview-toggle-btn");
+    const mobileBtn = byId("mobile-toggle-btn");
 
     if (!preview || !codePanel || !btn) return;
 
@@ -4180,15 +4213,36 @@ const cssWrapper = `
     if (isCodeView) {
       // 👉 Modo CÓDIGO
       preview.style.display = "none";
+      if (mobileBtn) mobileBtn.style.display = "none";
       codePanel.classList.remove("export-panel--hidden");
       btn.innerHTML = "👁 Vista";
       btn.title = "Volver a la vista previa";
     } else {
       // 👉 Modo VISTA PREVIA
       preview.style.display = "";
+      if (mobileBtn) mobileBtn.style.display = "";
       codePanel.classList.add("export-panel--hidden");
       btn.innerHTML = "&lt;/&gt; Código";
       btn.title = "Ver HTML / CSS / JS generados";
+    }
+  }
+
+  function toggleMobileView() {
+    const preview = byId("preview");
+    const btn = byId("mobile-toggle-btn");
+    if (!preview || !btn) return;
+
+    preview.classList.toggle("preview-box--mobile");
+    const isMobile = preview.classList.contains("preview-box--mobile");
+
+    if (isMobile) {
+      btn.classList.add("btn-primary");
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">desktop_windows</span>';
+      btn.title = "Cambiar a vista escritorio";
+    } else {
+      btn.classList.remove("btn-primary");
+      btn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 18px;">smartphone</span>';
+      btn.title = "Cambiar a vista móvil";
     }
   }
 
@@ -4614,11 +4668,11 @@ const cssWrapper = `
   });
 
 
-document.addEventListener('change', function (e) {
-  const el = e.target;
-  if (!el || !el.closest || !el.closest('#mods')) return;
-  scheduleRender();
-});
+  document.addEventListener('change', function (e) {
+    const el = e.target;
+    if (!el || !el.closest || !el.closest('#mods')) return;
+    scheduleRender();
+  });
 
 
 
@@ -4674,5 +4728,3 @@ document.addEventListener('change', function (e) {
   });
 
 </script>
-
-
